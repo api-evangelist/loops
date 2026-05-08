@@ -5,7 +5,7 @@ provider: Loops
 providerId: loops
 created: '2026-05-08'
 modified: '2026-05-08'
-reconciled: false
+reconciled: true
 tags:
 - Email Marketing
 - Transactional
@@ -15,21 +15,24 @@ tags:
 - Rate Limiting
 - Quotas
 - Throttling
-description: Placeholder rate-limit artifact for Loops. Replace with real limits once researched.
-notes: Initial scaffold — limits have not yet been reconciled.
+description: Loops API rate limits per the official documentation. Baseline is 10 requests per second per team, with higher limits available on request to support.
+notes: Reconciled against https://loops.so/docs/api-reference/intro on 2026-05-08.
 sources:
-- https://loops.so/
+- https://loops.so/docs/api-reference/intro
 responseCodes:
   throttled: 429
 limits:
-- name: Default
-  scope: account
-  metric: varies
-  limit: see provider documentation
-  notes: Pending reconciliation.
+- name: Default Team Rate Limit
+  scope: team
+  metric: requests
+  limit: 10
+  timeFrame: second
+  notes: Baseline limit per team. Higher limits available on request to Loops support.
 policies:
 - name: Backoff Strategy
-  description: Clients should implement exponential backoff with jitter and honor any Retry-After header.
+  description: Clients should implement exponential backoff with jitter and honor any Retry-After header on 429 responses.
+- name: Higher Limits
+  description: Contact Loops support for an increased limit if your application requires throughput above 10 req/s.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

@@ -3,21 +3,39 @@ url: https://raw.githubusercontent.com/api-evangelist/loops/refs/heads/main/apis
 name: Loops
 x-type: company
 description: >-
-  Loops is a modern email marketing platform built for software companies, combining transactional and marketing emails, audience management, and event-driven journeys.
+  Loops is an email platform for SaaS companies, combining marketing campaigns, transactional emails, and contact management with a developer-first API.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-  - Email Marketing
-  - Transactional
-  - Automation
+  - Email
+  - Marketing Automation
+  - Transactional Email
   - SaaS
-  - Campaigns
+  - Communications
 created: '2026-05-08'
 modified: '2026-05-08'
 specificationVersion: '0.19'
-apis: []
+apis:
+  - aid: loops:loops-api
+    name: Loops API
+    description: >-
+      Loops API v1 manages contacts, contact properties, mailing lists, campaigns, email messages, themes, components, events, transactional emails, dedicated sending IPs, and API key validation.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://loops.so/docs/api-reference/intro
+    baseURL: https://app.loops.so/api/v1
+    tags:
+      - Email
+      - Marketing
+      - REST
+    properties:
+      - type: Documentation
+        url: https://loops.so/docs/api-reference/intro
+      - type: OpenAPI
+        url: openapi/loops-openapi.yaml
 common:
   - type: Website
     url: https://loops.so/
+  - type: Documentation
+    url: https://loops.so/docs/api-reference/intro
   - type: Plans
     url: plans/loops-plans-pricing.yml
   - type: RateLimits
