@@ -1,7 +1,7 @@
 aid: loops
 url: https://raw.githubusercontent.com/api-evangelist/loops/refs/heads/main/apis.yml
 name: Loops
-x-type: company
+kind: company
 description: >-
   Loops is an email platform for SaaS companies, combining marketing campaigns, transactional emails, and contact management with a developer-first API.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
