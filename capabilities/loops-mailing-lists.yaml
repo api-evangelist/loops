@@ -1,0 +1,70 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Loops OpenAPI Spec — Mailing lists
+  description: 'Loops OpenAPI Spec — Mailing lists. 1 operations. Lead operation: Get a list of mailing lists. Self-contained
+    Naftiko capability covering one Loops business surface.'
+  tags:
+  - Loops
+  - Mailing lists
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LOOPS_API_KEY: LOOPS_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: loops-mailing-lists
+    baseUri: https://app.loops.so/api/v1
+    description: Loops OpenAPI Spec — Mailing lists business capability. Self-contained, no shared references.
+    resources:
+    - name: lists
+      path: /lists
+      operations:
+      - name: get
+        method: GET
+        description: Get a list of mailing lists
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: bearer
+      token: '{{env.LOOPS_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: loops-mailing-lists-rest
+    port: 8080
+    description: REST adapter for Loops OpenAPI Spec — Mailing lists. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/lists
+      name: lists
+      description: REST surface for lists.
+      operations:
+      - method: GET
+        name: get
+        description: Get a list of mailing lists
+        call: loops-mailing-lists.get
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: loops-mailing-lists-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Loops OpenAPI Spec — Mailing lists. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: get-list-mailing-lists
+      description: Get a list of mailing lists
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: loops-mailing-lists.get
+      outputParameters:
+      - type: object
+        mapping: $.

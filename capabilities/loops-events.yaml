@@ -1,0 +1,86 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Loops OpenAPI Spec — Events
+  description: 'Loops OpenAPI Spec — Events. 1 operations. Lead operation: Send an event. Self-contained Naftiko capability
+    covering one Loops business surface.'
+  tags:
+  - Loops
+  - Events
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LOOPS_API_KEY: LOOPS_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: loops-events
+    baseUri: https://app.loops.so/api/v1
+    description: Loops OpenAPI Spec — Events business capability. Self-contained, no shared references.
+    resources:
+    - name: events-send
+      path: /events/send
+      operations:
+      - name: post
+        method: POST
+        description: Send an event
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: Idempotency-Key
+          in: header
+          type: string
+          description: Include a unique ID for this request (maximum 100 characters) to avoid duplicate events. [More info](https://loops.so/docs/api-reference/send-event#param-idempo
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: bearer
+      token: '{{env.LOOPS_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: loops-events-rest
+    port: 8080
+    description: REST adapter for Loops OpenAPI Spec — Events. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/events/send
+      name: events-send
+      description: REST surface for events-send.
+      operations:
+      - method: POST
+        name: post
+        description: Send an event
+        call: loops-events.post
+        with:
+          Idempotency-Key: rest.Idempotency-Key
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: loops-events-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Loops OpenAPI Spec — Events. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: send-event
+      description: Send an event
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: loops-events.post
+      with:
+        Idempotency-Key: tools.Idempotency-Key
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

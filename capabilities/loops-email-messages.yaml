@@ -1,0 +1,105 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Loops OpenAPI Spec — Email messages
+  description: 'Loops OpenAPI Spec — Email messages. 2 operations. Lead operation: Get an email message. Self-contained Naftiko
+    capability covering one Loops business surface.'
+  tags:
+  - Loops
+  - Email messages
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LOOPS_API_KEY: LOOPS_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: loops-email-messages
+    baseUri: https://app.loops.so/api/v1
+    description: Loops OpenAPI Spec — Email messages business capability. Self-contained, no shared references.
+    resources:
+    - name: email-messages-emailMessageId
+      path: /email-messages/{emailMessageId}
+      operations:
+      - name: get
+        method: GET
+        description: Get an email message
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: post
+        method: POST
+        description: Update an email message
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: bearer
+      token: '{{env.LOOPS_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: loops-email-messages-rest
+    port: 8080
+    description: REST adapter for Loops OpenAPI Spec — Email messages. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/email-messages/{emailmessageid}
+      name: email-messages-emailmessageid
+      description: REST surface for email-messages-emailMessageId.
+      operations:
+      - method: GET
+        name: get
+        description: Get an email message
+        call: loops-email-messages.get
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: post
+        description: Update an email message
+        call: loops-email-messages.post
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: loops-email-messages-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Loops OpenAPI Spec — Email messages. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: get-email-message
+      description: Get an email message
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: loops-email-messages.get
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-email-message
+      description: Update an email message
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: loops-email-messages.post
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

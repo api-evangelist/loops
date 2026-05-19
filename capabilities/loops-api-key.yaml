@@ -1,0 +1,70 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Loops OpenAPI Spec — API key
+  description: 'Loops OpenAPI Spec — API key. 1 operations. Lead operation: Test your API key. Self-contained Naftiko capability
+    covering one Loops business surface.'
+  tags:
+  - Loops
+  - API key
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LOOPS_API_KEY: LOOPS_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: loops-api-key
+    baseUri: https://app.loops.so/api/v1
+    description: Loops OpenAPI Spec — API key business capability. Self-contained, no shared references.
+    resources:
+    - name: api-key
+      path: /api-key
+      operations:
+      - name: get
+        method: GET
+        description: Test your API key
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    authentication:
+      type: bearer
+      token: '{{env.LOOPS_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: loops-api-key-rest
+    port: 8080
+    description: REST adapter for Loops OpenAPI Spec — API key. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api-key
+      name: api-key
+      description: REST surface for api-key.
+      operations:
+      - method: GET
+        name: get
+        description: Test your API key
+        call: loops-api-key.get
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: loops-api-key-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Loops OpenAPI Spec — API key. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: test-your-api-key
+      description: Test your API key
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: loops-api-key.get
+      outputParameters:
+      - type: object
+        mapping: $.
