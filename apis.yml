@@ -4,7 +4,7 @@ name: Loops
 kind: company
 description: Loops is an email platform for SaaS companies, combining marketing campaigns, transactional emails, and contact
   management with a developer-first API.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - Email
   - Marketing Automation
@@ -19,7 +19,7 @@ apis:
     name: Loops API
     description: Loops API v1 manages contacts, contact properties, mailing lists, campaigns, email messages, themes, components,
       events, transactional emails, dedicated sending IPs, and API key validation.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://loops.so/docs/api-reference/intro
     baseURL: https://app.loops.so/api/v1
     tags:
