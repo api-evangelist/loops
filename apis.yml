@@ -31,27 +31,27 @@ apis:
       url: https://loops.so/docs/api-reference/intro
     - type: OpenAPI
       url: openapi/loops-openapi.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-api-key.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-campaigns.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-components.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-contact-properties.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-contacts.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-dedicated-sending-ips.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-email-messages.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-events.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-mailing-lists.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-themes.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: capabilities/loops-transactional-emails.yaml
 common:
   - type: GitHubOrganization
@@ -68,7 +68,7 @@ common:
     url: rate-limits/loops-rate-limits.yml
   - type: FinOps
     url: finops/loops-finops.yml
-  - type: LLMsTxt
+  - type: LlmsText
     url: https://loops.so/llms.txt
 maintainers:
   - FN: Kin Lane
