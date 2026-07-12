@@ -54,6 +54,10 @@ apis:
     - type: X-NaftikoCapability
       url: capabilities/loops-transactional-emails.yaml
 common:
+  - type: DomainSecurity
+    url: security/loops-domain-security.yml
+  - type: Authentication
+    url: authentication/loops-authentication.yml
   - type: GitHubOrganization
     url: https://github.com/Loops-so
   - type: LinkedIn
@@ -70,6 +74,8 @@ common:
     url: finops/loops-finops.yml
   - type: LlmsText
     url: https://loops.so/llms.txt
+  - url: https://loops.so/changelog
+    type: Blog
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
