@@ -1,0 +1,14 @@
+{
+  "repo": "loops",
+  "feeds": [
+    {
+      "source": "https://loops.so/changelog",
+      "feed_url": "https://loops.so/changelog",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "fetched": "2026-07-11T11:50:51Z",
+  "post_count": 8
+}
