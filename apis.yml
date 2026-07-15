@@ -54,6 +54,8 @@ apis:
     - type: X-NaftikoCapability
       url: capabilities/loops-transactional-emails.yaml
 common:
+  - type: AgenticAccess
+    url: agentic-access/loops-agentic-access.yml
   - type: DomainSecurity
     url: security/loops-domain-security.yml
   - type: Authentication
