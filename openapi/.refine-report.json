@@ -1,0 +1,34 @@
+{
+  "provider": "loops",
+  "sources": [
+    "loops-api-key-api-openapi.yml",
+    "loops-campaigns-api-openapi.yml",
+    "loops-components-api-openapi.yml",
+    "loops-contact-properties-api-openapi.yml",
+    "loops-contacts-api-openapi.yml",
+    "loops-dedicated-sending-ips-api-openapi.yml",
+    "loops-email-messages-api-openapi.yml",
+    "loops-events-api-openapi.yml",
+    "loops-mailing-lists-api-openapi.yml",
+    "loops-themes-api-openapi.yml",
+    "loops-transactional-emails-api-openapi.yml"
+  ],
+  "outputs": [
+    "loops-api-key-api-openapi.yml",
+    "loops-campaigns-api-openapi.yml",
+    "loops-components-api-openapi.yml",
+    "loops-contact-properties-api-openapi.yml",
+    "loops-contacts-api-openapi.yml",
+    "loops-dedicated-sending-ips-api-openapi.yml",
+    "loops-email-messages-api-openapi.yml",
+    "loops-events-api-openapi.yml",
+    "loops-mailing-lists-api-openapi.yml",
+    "loops-themes-api-openapi.yml",
+    "loops-transactional-emails-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
