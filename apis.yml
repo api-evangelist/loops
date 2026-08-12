@@ -40,28 +40,6 @@ apis:
     url: openapi/loops-api-key-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 - aid: loops:loops-campaigns-api
   name: Loops Campaigns API
   description: Create and manage email campaigns
@@ -74,28 +52,6 @@ apis:
     url: openapi/loops-campaigns-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 - aid: loops:loops-components-api
   name: Loops Components API
   description: View email components
@@ -108,28 +64,6 @@ apis:
     url: openapi/loops-components-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 - aid: loops:loops-contact-properties-api
   name: Loops Contact properties API
   description: Manage contact properties
@@ -142,28 +76,6 @@ apis:
     url: openapi/loops-contact-properties-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 - aid: loops:loops-contacts-api
   name: Loops Contacts API
   description: Manage contacts in your audience
@@ -176,28 +88,6 @@ apis:
     url: openapi/loops-contacts-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 - aid: loops:loops-dedicated-sending-ips-api
   name: Loops Dedicated sending IPs API
   description: View dedicated sending IP addresses
@@ -210,28 +100,6 @@ apis:
     url: openapi/loops-dedicated-sending-ips-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 - aid: loops:loops-email-messages-api
   name: Loops Email messages API
   description: Manage email message content for campaigns
@@ -244,28 +112,6 @@ apis:
     url: openapi/loops-email-messages-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 - aid: loops:loops-events-api
   name: Loops Events API
   description: Trigger email sending with events
@@ -278,28 +124,6 @@ apis:
     url: openapi/loops-events-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 - aid: loops:loops-mailing-lists-api
   name: Loops Mailing lists API
   description: View mailing lists
@@ -312,28 +136,6 @@ apis:
     url: openapi/loops-mailing-lists-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 - aid: loops:loops-themes-api
   name: Loops Themes API
   description: View email themes
@@ -346,28 +148,6 @@ apis:
     url: openapi/loops-themes-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 - aid: loops:loops-transactional-emails-api
   name: Loops Transactional emails API
   description: Send and view transactional emails
@@ -380,28 +160,6 @@ apis:
     url: openapi/loops-transactional-emails-api-openapi.yml
   - type: Documentation
     url: https://loops.so/docs/api-reference/intro
-  - type: X-NaftikoCapability
-    url: capabilities/loops-api-key.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-campaigns.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-components.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contact-properties.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-contacts.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-dedicated-sending-ips.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-email-messages.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-events.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-mailing-lists.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-themes.yaml
-  - type: X-NaftikoCapability
-    url: capabilities/loops-transactional-emails.yaml
 common:
   - type: AgenticAccess
     url: agentic-access/loops-agentic-access.yml
