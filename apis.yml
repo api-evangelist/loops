@@ -2,189 +2,483 @@ aid: loops
 url: https://raw.githubusercontent.com/api-evangelist/loops/refs/heads/main/apis.yml
 name: Loops
 kind: company
-description: Loops is an email platform for SaaS companies, combining marketing campaigns, transactional emails, and contact
-  management with a developer-first API.
+description: Loops is an email platform built for software companies, combining marketing campaigns, product and
+  lifecycle automation, and transactional email on one contact model. Its REST API v1 exposes 64 operations across
+  contacts, contact properties, mailing lists, audience segments, events and event patterns, campaigns, transactional
+  emails, email messages authored in its own LMX markup, themes, components, uploads and workflow graphs, plus a
+  17-event signed webhook surface. Loops publishes its OpenAPI 3.1 document openly, ships first-party SDKs for JavaScript,
+  Go, PHP, Ruby and Nuxt, a Go CLI, four versioned Agent Skills, and a hosted OAuth-protected MCP server at mcp.loops.so.
+  Pricing is based on stored subscribed contacts rather than send volume, with a permanent free tier. The operating
+  company is Astrodon Corporation.
 accessModel:
-  pricing: unknown
+  pricing: freemium
   onboarding: self-serve
   trial: false
-  try_now: false
-  public: false
-  label: Self-serve signup
+  try_now: true
+  public: true
+  label: Free plan, self-serve signup
   confidence: high
   source:
-  - plans
-  - authentication
-  generated: '2026-07-22'
-  method: derived
+  - https://loops.so/pricing
+  - https://loops.so/docs/api-reference/intro
+  generated: '2026-08-13'
+  method: searched
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/loops.png
 tags:
-  - Email
-  - Marketing Automation
-  - Transactional Email
-  - SaaS
-  - Communications
+- Email
+- Email API
+- Marketing Automation
+- Transactional Email
+- Lifecycle Email
+- Webhooks
+- SaaS
+- Communications
+- Developer Tools
+- MCP
+- Agents
+- Campaigns
 created: '2026-05-08'
-modified: '2026-05-19'
+modified: '2026-08-13'
 specificationVersion: '0.19'
 apis:
 - aid: loops:loops-api-key-api
   name: Loops API key API
-  description: The API key API from Loops — 1 operation(s) for api key.
-  humanURL: https://loops.so/docs/api-reference/intro
+  description: Validate a Loops API key and discover which team it belongs to. 1 operation(s) in the Loops REST
+    API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/api-key
   baseURL: https://app.loops.so/api/v1
   tags:
   - API key
   properties:
   - type: OpenAPI
     url: openapi/loops-api-key-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-api-key-overlay.yaml
   - type: Documentation
+    url: https://loops.so/docs/api-reference/api-key
+  - type: APIReference
+    url: https://loops.so/docs/api-reference/intro
+- aid: loops:loops-audience-segments-api
+  name: Loops Audience segments API
+  description: Read and create saved audience segments used to target campaigns and workflows. 3 operation(s) in
+    the Loops REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/list-audience-segments
+  baseURL: https://app.loops.so/api/v1
+  tags:
+  - Audience segments
+  properties:
+  - type: OpenAPI
+    url: openapi/loops-audience-segments-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-audience-segments-overlay.yaml
+  - type: Documentation
+    url: https://loops.so/docs/api-reference/list-audience-segments
+  - type: APIReference
+    url: https://loops.so/docs/api-reference/intro
+- aid: loops:loops-campaign-groups-api
+  name: Loops Campaign groups API
+  description: Organize campaigns into groups. 4 operation(s) in the Loops REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/list-campaign-groups
+  baseURL: https://app.loops.so/api/v1
+  tags:
+  - Campaign groups
+  properties:
+  - type: OpenAPI
+    url: openapi/loops-campaign-groups-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-campaign-groups-overlay.yaml
+  - type: Documentation
+    url: https://loops.so/docs/api-reference/list-campaign-groups
+  - type: APIReference
     url: https://loops.so/docs/api-reference/intro
 - aid: loops:loops-campaigns-api
   name: Loops Campaigns API
-  description: Create and manage email campaigns
-  humanURL: https://loops.so/docs/api-reference/intro
+  description: Create, target, schedule and update email campaigns. 4 operation(s) in the Loops REST API v1 (OpenAPI
+    1.21.6).
+  humanURL: https://loops.so/docs/api-reference/list-campaigns
   baseURL: https://app.loops.so/api/v1
   tags:
   - Campaigns
   properties:
   - type: OpenAPI
     url: openapi/loops-campaigns-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-campaigns-overlay.yaml
   - type: Documentation
+    url: https://loops.so/docs/api-reference/list-campaigns
+  - type: APIReference
     url: https://loops.so/docs/api-reference/intro
 - aid: loops:loops-components-api
   name: Loops Components API
-  description: View email components
-  humanURL: https://loops.so/docs/api-reference/intro
+  description: Create, read and update reusable LMX email components. 4 operation(s) in the Loops REST API v1 (OpenAPI
+    1.21.6).
+  humanURL: https://loops.so/docs/api-reference/list-components
   baseURL: https://app.loops.so/api/v1
   tags:
   - Components
   properties:
   - type: OpenAPI
     url: openapi/loops-components-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-components-overlay.yaml
   - type: Documentation
+    url: https://loops.so/docs/api-reference/list-components
+  - type: APIReference
+    url: https://loops.so/docs/api-reference/intro
+- aid: loops:loops-configuration-api
+  name: Loops Configuration API
+  description: Read team configuration, including dedicated sending IP addresses. 1 operation(s) in the Loops REST
+    API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/dedicated-sending-ips
+  baseURL: https://app.loops.so/api/v1
+  tags:
+  - Configuration
+  properties:
+  - type: OpenAPI
+    url: openapi/loops-configuration-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-configuration-overlay.yaml
+  - type: Documentation
+    url: https://loops.so/docs/api-reference/dedicated-sending-ips
+  - type: APIReference
     url: https://loops.so/docs/api-reference/intro
 - aid: loops:loops-contact-properties-api
   name: Loops Contact properties API
-  description: Manage contact properties
-  humanURL: https://loops.so/docs/api-reference/intro
+  description: Create and list the custom properties available on contacts. 2 operation(s) in the Loops REST API
+    v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/list-contact-properties
   baseURL: https://app.loops.so/api/v1
   tags:
   - Contact properties
   properties:
   - type: OpenAPI
     url: openapi/loops-contact-properties-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-contact-properties-overlay.yaml
   - type: Documentation
+    url: https://loops.so/docs/api-reference/list-contact-properties
+  - type: APIReference
     url: https://loops.so/docs/api-reference/intro
 - aid: loops:loops-contacts-api
   name: Loops Contacts API
-  description: Manage contacts in your audience
-  humanURL: https://loops.so/docs/api-reference/intro
+  description: Create, update, find and delete contacts, and manage suppression status. 6 operation(s) in the Loops
+    REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/create-contact
   baseURL: https://app.loops.so/api/v1
   tags:
   - Contacts
   properties:
   - type: OpenAPI
     url: openapi/loops-contacts-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-contacts-overlay.yaml
   - type: Documentation
-    url: https://loops.so/docs/api-reference/intro
-- aid: loops:loops-dedicated-sending-ips-api
-  name: Loops Dedicated sending IPs API
-  description: View dedicated sending IP addresses
-  humanURL: https://loops.so/docs/api-reference/intro
-  baseURL: https://app.loops.so/api/v1
-  tags:
-  - Dedicated sending IPs
-  properties:
-  - type: OpenAPI
-    url: openapi/loops-dedicated-sending-ips-api-openapi.yml
-  - type: Documentation
+    url: https://loops.so/docs/api-reference/create-contact
+  - type: APIReference
     url: https://loops.so/docs/api-reference/intro
 - aid: loops:loops-email-messages-api
   name: Loops Email messages API
-  description: Manage email message content for campaigns
-  humanURL: https://loops.so/docs/api-reference/intro
+  description: Read, update, preview and Guardian-validate the LMX body of campaigns, workflow emails and transactional
+    templates. 4 operation(s) in the Loops REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/get-email-message
   baseURL: https://app.loops.so/api/v1
   tags:
   - Email messages
   properties:
   - type: OpenAPI
     url: openapi/loops-email-messages-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-email-messages-overlay.yaml
   - type: Documentation
+    url: https://loops.so/docs/api-reference/get-email-message
+  - type: APIReference
+    url: https://loops.so/docs/api-reference/intro
+- aid: loops:loops-event-patterns-api
+  name: Loops Event patterns API
+  description: Read the event patterns Loops has detected from incoming events, including their observed properties.
+    3 operation(s) in the Loops REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/list-event-patterns
+  baseURL: https://app.loops.so/api/v1
+  tags:
+  - Event patterns
+  properties:
+  - type: OpenAPI
+    url: openapi/loops-event-patterns-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-event-patterns-overlay.yaml
+  - type: Documentation
+    url: https://loops.so/docs/api-reference/list-event-patterns
+  - type: APIReference
     url: https://loops.so/docs/api-reference/intro
 - aid: loops:loops-events-api
   name: Loops Events API
-  description: Trigger email sending with events
-  humanURL: https://loops.so/docs/api-reference/intro
+  description: Send events that update contact activity and trigger published workflows. 1 operation(s) in the Loops
+    REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/send-event
   baseURL: https://app.loops.so/api/v1
   tags:
   - Events
   properties:
   - type: OpenAPI
     url: openapi/loops-events-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-events-overlay.yaml
   - type: Documentation
+    url: https://loops.so/docs/api-reference/send-event
+  - type: APIReference
     url: https://loops.so/docs/api-reference/intro
 - aid: loops:loops-mailing-lists-api
   name: Loops Mailing lists API
-  description: View mailing lists
-  humanURL: https://loops.so/docs/api-reference/intro
+  description: List the mailing lists in your account. 1 operation(s) in the Loops REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/list-mailing-lists
   baseURL: https://app.loops.so/api/v1
   tags:
   - Mailing lists
   properties:
   - type: OpenAPI
     url: openapi/loops-mailing-lists-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-mailing-lists-overlay.yaml
   - type: Documentation
+    url: https://loops.so/docs/api-reference/list-mailing-lists
+  - type: APIReference
     url: https://loops.so/docs/api-reference/intro
 - aid: loops:loops-themes-api
   name: Loops Themes API
-  description: View email themes
-  humanURL: https://loops.so/docs/api-reference/intro
+  description: Create, read and update reusable email themes. 4 operation(s) in the Loops REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/list-themes
   baseURL: https://app.loops.so/api/v1
   tags:
   - Themes
   properties:
   - type: OpenAPI
     url: openapi/loops-themes-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-themes-overlay.yaml
   - type: Documentation
+    url: https://loops.so/docs/api-reference/list-themes
+  - type: APIReference
     url: https://loops.so/docs/api-reference/intro
 - aid: loops:loops-transactional-emails-api
   name: Loops Transactional emails API
-  description: Send and view transactional emails
-  humanURL: https://loops.so/docs/api-reference/intro
+  description: Create, edit, publish, list and send transactional email templates with data variables. 8 operation(s)
+    in the Loops REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/send-transactional-email
   baseURL: https://app.loops.so/api/v1
   tags:
   - Transactional emails
   properties:
   - type: OpenAPI
     url: openapi/loops-transactional-emails-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-transactional-emails-overlay.yaml
   - type: Documentation
+    url: https://loops.so/docs/api-reference/send-transactional-email
+  - type: APIReference
     url: https://loops.so/docs/api-reference/intro
+- aid: loops:loops-transactional-groups-api
+  name: Loops Transactional groups API
+  description: Organize transactional emails into groups. 4 operation(s) in the Loops REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/list-transactional-groups
+  baseURL: https://app.loops.so/api/v1
+  tags:
+  - Transactional groups
+  properties:
+  - type: OpenAPI
+    url: openapi/loops-transactional-groups-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-transactional-groups-overlay.yaml
+  - type: Documentation
+    url: https://loops.so/docs/api-reference/list-transactional-groups
+  - type: APIReference
+    url: https://loops.so/docs/api-reference/intro
+- aid: loops:loops-uploads-api
+  name: Loops Uploads API
+  description: Upload image assets for use in emails via a presigned-URL flow. 2 operation(s) in the Loops REST
+    API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/create-upload
+  baseURL: https://app.loops.so/api/v1
+  tags:
+  - Uploads
+  properties:
+  - type: OpenAPI
+    url: openapi/loops-uploads-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-uploads-overlay.yaml
+  - type: Documentation
+    url: https://loops.so/docs/api-reference/create-upload
+  - type: APIReference
+    url: https://loops.so/docs/api-reference/intro
+- aid: loops:loops-workflow-nodes-api
+  name: Loops Workflow nodes API
+  description: Create, read, update, delete and reroute the nodes of a workflow graph. 7 operation(s) in the Loops
+    REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/get-workflow-node
+  baseURL: https://app.loops.so/api/v1
+  tags:
+  - Workflow nodes
+  properties:
+  - type: OpenAPI
+    url: openapi/loops-workflow-nodes-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-workflow-nodes-overlay.yaml
+  - type: Documentation
+    url: https://loops.so/docs/api-reference/get-workflow-node
+  - type: APIReference
+    url: https://loops.so/docs/api-reference/intro
+- aid: loops:loops-workflows-api
+  name: Loops Workflows API
+  description: List, create, inspect and update automation workflows and their mailing-list targeting. 5 operation(s)
+    in the Loops REST API v1 (OpenAPI 1.21.6).
+  humanURL: https://loops.so/docs/api-reference/list-workflows
+  baseURL: https://app.loops.so/api/v1
+  tags:
+  - Workflows
+  properties:
+  - type: OpenAPI
+    url: openapi/loops-workflows-api-openapi.yml
+  - type: Overlay
+    url: overlays/loops-workflows-overlay.yaml
+  - type: Documentation
+    url: https://loops.so/docs/api-reference/list-workflows
+  - type: APIReference
+    url: https://loops.so/docs/api-reference/intro
+- aid: loops:loops-mcp-server
+  name: Loops MCP Server
+  description: Remote Model Context Protocol server for Loops, reachable at https://mcp.loops.so over Streamable
+    HTTP with OAuth 2.0 (PKCE, scope "mcp"). Exposes four meta-tools — search, describe, execute and teams — that
+    let an agent discover and run any operation in the Loops REST API for any team the signed-in user can access.
+  humanURL: https://loops.so/docs/mcp-server
+  baseURL: https://mcp.loops.so
+  tags:
+  - MCP
+  - Agents
+  - Email
+  properties:
+  - type: MCPServer
+    url: mcp/loops-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/loops-tool-crosswalk.yml
+  - type: OAuthScopes
+    url: scopes/loops-scopes.yml
+  - type: Documentation
+    url: https://loops.so/docs/mcp-server
+- aid: loops:loops-webhooks
+  name: Loops Webhooks
+  description: Outbound event surface. Seventeen signed event types covering contact lifecycle, mailing-list membership,
+    and email delivery, engagement and complaint signals, delivered by HTTP POST to one subscriber-configured endpoint
+    per account and verified with an HMAC-SHA256 signature over {webhook-id}.{webhook-timestamp}.{raw-body}.
+  humanURL: https://loops.so/docs/webhooks
+  baseURL: https://app.loops.so/api/v1
+  tags:
+  - Webhooks
+  - Events
+  - Email
+  properties:
+  - type: AsyncAPI
+    url: asyncapi/loops-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/loops-webhooks-asyncapi.yml
+  - type: Documentation
+    url: https://loops.so/docs/webhooks
 common:
-  - type: AgenticAccess
-    url: agentic-access/loops-agentic-access.yml
-  - type: DomainSecurity
-    url: security/loops-domain-security.yml
-  - type: Authentication
-    url: authentication/loops-authentication.yml
-  - type: GitHubOrganization
-    url: https://github.com/Loops-so
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/sendwithloops
-  - type: Website
-    url: https://loops.so/
-  - type: Documentation
-    url: https://loops.so/docs/api-reference/intro
-  - type: Plans
-    url: plans/loops-plans-pricing.yml
-  - type: RateLimits
-    url: rate-limits/loops-rate-limits.yml
-  - type: FinOps
-    url: finops/loops-finops.yml
-  - type: LlmsText
-    url: https://loops.so/llms.txt
-  - url: https://loops.so/changelog
-    type: Blog
+- type: AgenticAccess
+  url: agentic-access/loops-agentic-access.yml
+- type: Authentication
+  url: authentication/loops-authentication.yml
+- type: OAuthScopes
+  url: scopes/loops-scopes.yml
+- type: Conventions
+  url: conventions/loops-conventions.yml
+- type: Idempotency
+  url: conventions/loops-conventions.yml
+- type: ErrorCatalog
+  url: errors/loops-problem-types.yml
+- type: RateLimits
+  url: rate-limits/loops-rate-limits.yml
+- type: Plans
+  url: plans/loops-plans-pricing.yml
+- type: FinOps
+  url: finops/loops-finops.yml
+- type: DataModel
+  url: data-model/loops-data-model.yml
+- type: Examples
+  url: examples/loops-examples.yml
+- type: Packages
+  url: packages/loops-packages.yml
+- type: SDKs
+  url: packages/loops-packages.yml
+- type: CLI
+  url: cli/loops-cli.yml
+- type: MCPServer
+  url: mcp/loops-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/loops-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AsyncAPI
+  url: asyncapi/loops-webhooks-asyncapi.yml
+- type: Webhooks
+  url: asyncapi/loops-webhooks-asyncapi.yml
+- type: WellKnown
+  url: well-known/loops-well-known.yml
+- type: Lifecycle
+  url: lifecycle/loops-lifecycle.yml
+- type: StatusPage
+  url: https://status.loops.so
+- type: ChangeLog
+  url: changelog/loops-changelog.yml
+- type: Conformance
+  url: conformance/loops-conformance.yml
+- type: Compliance
+  url: conformance/loops-conformance.yml
+- type: TrustCenter
+  url: security/loops-trust-center.yml
+- type: DomainSecurity
+  url: security/loops-domain-security.yml
+- type: LLMsTxt
+  url: llms/loops-llms.txt
+- type: Website
+  url: https://loops.so/
+- type: DeveloperPortal
+  url: https://loops.so/docs
+- type: Documentation
+  url: https://loops.so/docs
+- type: APIReference
+  url: https://loops.so/docs/api-reference/intro
+- type: GettingStarted
+  url: https://loops.so/docs/quickstart
+- type: Quickstart
+  url: https://loops.so/docs/quickstart-agents
+- type: Support
+  url: https://app.loops.so/settings?page=support
+- type: Blog
+  url: https://loops.so/engineering
+- type: GitHubOrganization
+  url: https://github.com/Loops-so
+- type: Pricing
+  url: https://loops.so/pricing
+- type: SignUp
+  url: https://app.loops.so/register
+- type: Login
+  url: https://app.loops.so/
+- type: TermsOfService
+  url: https://loops.so/terms
+- type: PrivacyPolicy
+  url: https://loops.so/privacy
+- type: DataProcessingAgreement
+  url: https://loops.so/dpa
+- type: LinkedIn
+  url: https://www.linkedin.com/company/sendwithloops
+- type: Integrations
+  url: https://loops.so/docs/integrations
+- type: Glossary
+  url: https://loops.so/glossary
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 49
+  pass: local-v1
