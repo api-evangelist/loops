@@ -1,0 +1,342 @@
+openapi: 3.1.0
+info:
+  title: Loops OpenAPI Spec Campaign groups API
+  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  version: 1.21.6
+servers:
+- url: https://app.loops.so/api/v1
+tags:
+- name: Campaign groups
+  description: Organize campaigns into groups
+paths:
+  /campaign-groups:
+    get:
+      operationId: listCampaignGroups
+      tags:
+      - Campaign groups
+      summary: List campaign groups
+      description: Retrieve a paginated list of campaign groups, most recently created first.
+      x-mint:
+        href: /api-reference/list-campaign-groups
+        metadata:
+          sidebarTitle: List groups
+      parameters:
+      - name: perPage
+        in: query
+        required: false
+        description: How many results to return in each request. Must be between 10 and 50. Default is 20.
+        schema:
+          type: string
+      - name: cursor
+        in: query
+        required: false
+        description: A cursor to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListGroupsResponse'
+        '400':
+          description: Invalid `perPage` value.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+    post:
+      operationId: createCampaignGroup
+      tags:
+      - Campaign groups
+      summary: Create a campaign group
+      description: Create a new campaign group.
+      x-mint:
+        href: /api-reference/create-campaign-group
+        metadata:
+          sidebarTitle: Create a group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupRequest'
+      responses:
+        '200':
+          description: Campaign group created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '400':
+          description: Invalid request body or reserved group name.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+  /campaign-groups/{campaignGroupId}:
+    parameters:
+    - name: campaignGroupId
+      in: path
+      required: true
+      description: The ID of the campaign group.
+      schema:
+        type: string
+        examples:
+        - clg7n5p3q1r9s7t5u3v1w9y7
+    get:
+      operationId: getCampaignGroup
+      tags:
+      - Campaign groups
+      summary: Get a campaign group
+      description: Retrieve a single campaign group by ID.
+      x-mint:
+        href: /api-reference/get-campaign-group
+        metadata:
+          sidebarTitle: Get a group
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '400':
+          description: Invalid `campaignGroupId`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Campaign group not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+    post:
+      operationId: updateCampaignGroup
+      tags:
+      - Campaign groups
+      summary: Update a campaign group
+      description: Update a campaign group's name or description. At least one field must be provided. The reserved "Unsorted" group cannot be edited.
+      x-mint:
+        href: /api-reference/update-campaign-group
+        content: <Info>At least one field must be provided. The reserved "Unsorted" group cannot be edited.</Info>
+        metadata:
+          description: Update a campaign group's name or description.
+          sidebarTitle: Update a group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGroupRequest'
+      responses:
+        '200':
+          description: Campaign group updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '400':
+          description: Invalid request body, reserved group name, or the Unsorted group cannot be edited.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Campaign group not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+components:
+  schemas:
+    CreateGroupRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The group name. Cannot be the reserved name "Unsorted".
+          examples:
+          - Newsletters
+        description:
+          type: string
+          description: An optional description for the group.
+          examples:
+          - Monthly newsletter campaigns
+      required:
+      - name
+      additionalProperties: false
+      examples:
+      - name: Newsletters
+        description: Monthly newsletter campaigns
+    GroupFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+          - Group not found.
+      required:
+      - message
+      examples:
+      - message: Group not found.
+    GroupResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the group.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+        name:
+          type: string
+          description: The name of the group.
+          examples:
+          - Onboarding
+        description:
+          type: string
+          description: The description of the group.
+          examples:
+          - Top of funnel campaigns
+        createdAt:
+          type: string
+          format: date-time
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+          description: ISO 8601 timestamp for when the group was created.
+        updatedAt:
+          type: string
+          format: date-time
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+          description: ISO 8601 timestamp for when the group was last updated.
+      required:
+      - id
+      - name
+      - description
+      - createdAt
+      - updatedAt
+      examples:
+      - id: clg7n5p3q1r9s7t5u3v1w9y7
+        name: Onboarding
+        description: Top of funnel campaigns
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+    ListGroupsResponse:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupResponse'
+      required:
+      - pagination
+      - data
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: clg7n5p3q1r9s7t5u3v1w9y7
+          name: Onboarding
+          description: Top of funnel campaigns
+          createdAt: 2025-06-29 07:47:39.370000+00:00
+          updatedAt: 2025-06-29 07:47:39.370000+00:00
+        - id: clg8m4n6p8q0r2s4t6u8v0w2
+          name: Retention
+          description: ''
+          createdAt: 2025-06-30 12:00:00+00:00
+          updatedAt: 2025-06-30 12:00:00+00:00
+    Pagination:
+      type: object
+      properties:
+        totalResults:
+          type: number
+          examples:
+          - 2
+        returnedResults:
+          type: number
+          examples:
+          - 2
+        perPage:
+          type: number
+          examples:
+          - 20
+        totalPages:
+          type: number
+          examples:
+          - 1
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+        nextPage:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+      required:
+      - totalResults
+      - returnedResults
+      - perPage
+      - totalPages
+      - nextCursor
+      - nextPage
+      examples:
+      - totalResults: 2
+        returnedResults: 2
+        perPage: 20
+        totalPages: 1
+        nextCursor: null
+        nextPage: null
+    UpdateGroupRequest:
+      type: object
+      description: At least one field must be provided.
+      properties:
+        name:
+          type: string
+          description: The group name. Cannot be the reserved name "Unsorted".
+        description:
+          type: string
+          description: A description for the group.
+      additionalProperties: false
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer

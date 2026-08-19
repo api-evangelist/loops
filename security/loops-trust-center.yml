@@ -1,0 +1,58 @@
+generated: '2026-08-13'
+method: searched
+source: https://trust.oneleet.com/loops
+probed: '2026-08-13'
+http_status: 200
+trust_center:
+  url: https://trust.oneleet.com/loops
+  vendor: Oneleet
+  hosted_by_provider: false
+  linked_from: >-
+    The loops.so site footer, on every page, under the literal label
+    "Trust (SOC2)".
+  machine_readable: false
+  note: >-
+    The trust centre is a client-rendered single-page application. The HTML
+    shell returns HTTP 200 with an empty <div id="root"> and every path under
+    it, including /api/trust/loops, returns that same shell, so the control
+    inventory, report list and subprocessor list could not be read
+    anonymously. Certification detail below is therefore what Loops asserts on
+    its own site, not what was read out of the trust centre.
+certifications:
+  - name: SOC 2
+    status: claimed
+    type: unspecified (Type I vs Type II not stated in any anonymously readable source)
+    evidence: 'loops.so footer link text: "Trust (SOC2)" -> https://trust.oneleet.com/loops'
+    report_access: gated behind the trust centre application
+  - name: EU-U.S. Data Privacy Framework
+    status: self-certified
+    evidence: https://loops.so/privacy
+    registry: https://www.dataprivacyframework.gov/list
+  - name: Swiss-U.S. Data Privacy Framework
+    status: self-certified
+    evidence: https://loops.so/privacy
+legal_documents:
+  - name: Data Processing Agreement
+    url: https://loops.so/dpa
+    http_status: 200
+  - name: Privacy Policy
+    url: https://loops.so/privacy
+    http_status: 200
+  - name: Terms of Service
+    url: https://loops.so/terms
+    http_status: 200
+legal_entity: Astrodon Corporation
+security_contact:
+  security_txt: false
+  dedicated_page: false
+  note: >-
+    No /.well-known/security.txt on any host, no /security page (404), and no
+    published vulnerability-disclosure policy or bug-bounty program was found on
+    HackerOne, Bugcrowd or Intigriti. The only published contact route is
+    general support: help@loops.so and https://app.loops.so/settings?page=support.
+    Because nothing verifiable was found, no vulnerability-disclosure artifact
+    and no `Security` pointer are emitted — an absence, recorded rather than
+    asserted.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

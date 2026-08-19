@@ -1,0 +1,248 @@
+openapi: 3.1.0
+info:
+  title: Loops OpenAPI Spec Event patterns API
+  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  version: 1.21.6
+servers:
+- url: https://app.loops.so/api/v1
+tags:
+- name: Event patterns
+  description: View workflow event patterns
+paths:
+  /event-patterns:
+    get:
+      tags:
+      - Event patterns
+      summary: List event patterns
+      operationId: listEventPatterns
+      description: Retrieve a paginated list of event patterns available to workflow event trigger nodes.
+      x-mint:
+        href: /api-reference/list-event-patterns
+      parameters:
+      - name: perPage
+        in: query
+        required: false
+        description: How many results to return in each request. Must be between 10 and 50. Default is 20.
+        schema:
+          type: string
+      - name: cursor
+        in: query
+        required: false
+        description: A cursor to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEventPatternsResponse'
+        '400':
+          description: Invalid `perPage` or `cursor` value.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventPatternFailureResponse'
+        '401':
+          description: Invalid API key.
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+  /event-patterns/by-name/{eventName}:
+    parameters:
+    - name: eventName
+      in: path
+      required: true
+      description: The exact event name. Event names are case-sensitive and should be URL-encoded if they contain special characters.
+      schema:
+        type: string
+    get:
+      tags:
+      - Event patterns
+      summary: Get an event pattern by name
+      operationId: getEventPatternByName
+      description: Retrieve event pattern details by event name for a workflow event trigger. Event names are case-sensitive, so `PaymentReceived` and `paymentReceived` are different events.
+      x-mint:
+        href: /api-reference/get-event-pattern-by-name
+        metadata:
+          sidebarTitle: Get by name
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventPattern'
+        '400':
+          description: Invalid `eventName`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventPatternFailureResponse'
+        '401':
+          description: Invalid API key.
+        '404':
+          description: Event pattern not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventPatternFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+  /event-patterns/{eventPatternId}:
+    parameters:
+    - name: eventPatternId
+      in: path
+      required: true
+      description: The ID of the event pattern.
+      schema:
+        type: string
+    get:
+      tags:
+      - Event patterns
+      summary: Get an event pattern by ID
+      operationId: getEventPattern
+      description: Retrieve event pattern details for a workflow event trigger.
+      x-mint:
+        href: /api-reference/get-event-pattern
+        metadata:
+          sidebarTitle: Get by ID
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventPattern'
+        '400':
+          description: Invalid `eventPatternId`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventPatternFailureResponse'
+        '401':
+          description: Invalid API key.
+        '404':
+          description: Event pattern not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventPatternFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+components:
+  schemas:
+    EventPattern:
+      type: object
+      properties:
+        id:
+          type: string
+        eventName:
+          type: string
+          description: The name of the event pattern. Use this when sending events with the API.
+        eventProperties:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowEventProperty'
+          description: The properties of the event pattern, which can be used in emails.
+        incomingWebhookPlatform:
+          type:
+          - string
+          - 'null'
+          description: The platform that sent this event pattern, if the event pattern is from an incoming webhook. Will be `null` for custom events.
+          enum:
+          - clerk
+          - polar
+          - stripe
+          - supabase
+          - 'null'
+      required:
+      - id
+      - eventName
+      - eventProperties
+      - incomingWebhookPlatform
+    EventPatternFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    EventPatternSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the event pattern.
+        eventName:
+          type: string
+          description: The name of the event pattern. Use this when sending events with the API.
+        incomingWebhookPlatform:
+          type:
+          - string
+          - 'null'
+          description: The platform that sent this event pattern, if the event pattern is from an incoming webhook. Will be `null` for custom events.
+          enum:
+          - clerk
+          - polar
+          - stripe
+          - supabase
+          - 'null'
+      required:
+      - id
+      - eventName
+      - incomingWebhookPlatform
+    ListEventPatternsResponse:
+      type: object
+      properties:
+        pagination:
+          type: object
+          properties:
+            totalResults:
+              type: number
+            returnedResults:
+              type: number
+            perPage:
+              type: number
+            totalPages:
+              type: number
+            nextCursor:
+              type:
+              - string
+              - 'null'
+            nextPage:
+              type:
+              - string
+              - 'null'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventPatternSummary'
+      required:
+      - pagination
+      - data
+    WorkflowEventProperty:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - string
+          - number
+          - boolean
+          - date
+      required:
+      - name
+      - type
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer

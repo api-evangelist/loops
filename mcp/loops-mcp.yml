@@ -1,0 +1,90 @@
+generated: '2026-08-13'
+method: searched
+status: published
+source: https://loops.so/docs/mcp-server
+docs:
+  - https://loops.so/docs/mcp-server
+  - https://loops.so/agents/mcp
+deployment:
+  mode: remote
+  endpoint: https://mcp.loops.so
+  auth: oauth
+  verified: probed
+  note: >-
+    POST https://mcp.loops.so with a tools/list JSON-RPC body returns HTTP 401
+    `no bearer token` plus a
+    `WWW-Authenticate: Bearer resource_metadata="https://mcp.loops.so/.well-known/oauth-protected-resource", scope="mcp"`
+    challenge — an RFC 9728 authorization handshake, which is how the endpoint
+    was confirmed live rather than merely documented. There is no stdio package;
+    Loops ships a hosted server only. The Loops CLI (cli/loops-cli.yml) is a
+    separate product and is not an MCP transport.
+server:
+  name: loops
+  transport: streamable-http
+  url: https://mcp.loops.so
+  protocol: Model Context Protocol
+  clients_documented:
+    - Claude Code (`claude mcp add loops https://mcp.loops.so --scope user --transport http`)
+    - Claude Desktop (Settings -> Connectors -> Browse connectors -> "Loops")
+    - Any client supporting remote Streamable HTTP MCP servers with OAuth
+authentication:
+  type: oauth2
+  flow: authorization_code
+  pkce: S256
+  scopes:
+    - mcp
+  authorization_server: https://app.loops.so
+  authorization_endpoint: https://app.loops.so/oauth/authorize
+  token_endpoint: https://app.loops.so/oauth/token
+  revocation_endpoint: https://app.loops.so/oauth/revoke
+  dynamic_client_registration: false
+  client_id_metadata_document_supported: true
+  token_endpoint_auth_methods_supported:
+    - none
+  protected_resource_metadata: https://mcp.loops.so/.well-known/oauth-protected-resource
+  authorization_server_metadata: https://app.loops.so/.well-known/oauth-authorization-server
+  note: >-
+    Loops does not implement RFC 7591 dynamic client registration. It uses
+    Client ID Metadata Documents instead, or pre-registration with Loops. An
+    API key is not used for MCP; the browser OAuth flow is the only path.
+tools_introspection:
+  attempted: '2026-08-13'
+  method: POST tools/list (JSON-RPC 2.0)
+  http_status: 401
+  result: auth-gated
+  note: >-
+    The live tool schemas require an authenticated session, so the inputSchema
+    for each tool could not be captured. The tool NAMES and behaviour below are
+    published verbatim by Loops on https://loops.so/agents/mcp and are recorded
+    as documentation, not as introspected schema.
+tools:
+  - name: search
+    description: Find the right Loops API operation for a task.
+    schema: unavailable-auth-gated
+  - name: describe
+    description: Inspect the request shape of a Loops API operation.
+    schema: unavailable-auth-gated
+  - name: execute
+    description: Run a Loops API operation for a chosen team.
+    schema: unavailable-auth-gated
+  - name: teams
+    description: List the Loops teams the authenticated user can access.
+    schema: unavailable-auth-gated
+design:
+  pattern: meta-tool / API-gateway
+  note: >-
+    Loops does not project one MCP tool per REST operation. It exposes four
+    meta-tools — search, describe, execute, teams — that let a client discover
+    and then invoke any of the 64 operations in the OpenAPI at runtime. This
+    keeps the tool list constant as the REST surface grows, at the cost of the
+    agent not seeing operation-level schemas up front. See
+    mcp/loops-tool-crosswalk.yml for how the meta-tools bind to REST.
+capabilities_documented:
+  - Contacts — find, create and update contacts and their properties
+  - Mailing lists — check membership, add and remove contacts
+  - Events — send events that update contact activity or start published workflows
+  - Transactional email — send a published template with data variables
+  - Teams — list accessible Loops teams and choose which team a call runs against
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

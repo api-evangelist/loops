@@ -1,12 +1,102 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/loops-openapi.yaml
+generated: '2026-08-13'
+method: searched
+source: https://loops.so/docs/api-reference/intro
+docs:
+  rest: https://loops.so/docs/api-reference/intro
+  cli: https://loops.so/docs/cli
+  mcp: https://loops.so/docs/mcp-server
+derived_from: openapi/_original/loops-openapi.yaml (1.21.6)
 summary:
   types:
-  - http
+    - http
+    - oauth2
+  note: >-
+    Two separate authentication systems that do not overlap. The REST API is
+    bearer API key, unscoped, one key per team. The MCP server is OAuth 2.0
+    authorization code with PKCE, one scope. An API key cannot be used against
+    the MCP server and an OAuth token cannot be used against the REST API.
 schemes:
-- name: apiKey
-  type: http
-  scheme: bearer
-  sources:
-  - openapi/loops-openapi.yaml
+  - name: apiKey
+    type: http
+    scheme: bearer
+    surface: REST API
+    header: Authorization
+    format: 'Bearer <api-key>'
+    applied_to: '64 of 64 operations (per-operation `security: [{apiKey: []}]`)'
+    scoped: false
+    expiring: false
+    rotatable: true
+    provisioning: >-
+      Settings -> API in the Loops app (https://app.loops.so/settings?page=api),
+      "Generate key". Keys can be named and revoked individually; Loops
+      recommends a separate key per purpose.
+    validation_endpoint:
+      operationId: testApiKey
+      path: GET /v1/api-key
+      returns: '{ "success": true, "teamName": "..." }'
+      note: >-
+        A dedicated, cheap, non-mutating endpoint for verifying a credential and
+        discovering which team it belongs to. Also exposed as `loops api-key` in
+        the CLI.
+    failure_status: 401
+    failure_body: '{ "success": false, "message": "Invalid API key" }'
+    constraints:
+      - Must never be used client side or exposed to end users.
+      - >-
+        CORS is not supported — the API rejects cross-origin browser requests by
+        design, so the key can only be used server side.
+      - >-
+        A key is bound to one team. Multi-team automation needs one key per
+        team; the CLI models this directly with named keyring entries and a
+        `--team` flag.
+    sources:
+      - openapi/_original/loops-openapi.yaml
+      - https://loops.so/docs/api-reference/intro
+  - name: oauth2
+    type: oauth2
+    surface: MCP server (https://mcp.loops.so)
+    flow: authorization_code
+    pkce: required (S256)
+    scopes:
+      - mcp
+    issuer: https://app.loops.so
+    authorization_endpoint: https://app.loops.so/oauth/authorize
+    token_endpoint: https://app.loops.so/oauth/token
+    revocation_endpoint: https://app.loops.so/oauth/revoke
+    refresh_tokens: true
+    client_authentication: none (public client)
+    client_registration: Client ID Metadata Documents, or pre-registration with Loops. No RFC 7591 DCR.
+    discovery:
+      authorization_server_metadata: https://app.loops.so/.well-known/oauth-authorization-server
+      protected_resource_metadata: https://mcp.loops.so/.well-known/oauth-protected-resource
+    challenge: >-
+      An unauthenticated call to the MCP endpoint returns 401 with
+      `WWW-Authenticate: Bearer resource_metadata="https://mcp.loops.so/.well-known/oauth-protected-resource", scope="mcp"`.
+    sources:
+      - https://app.loops.so/.well-known/oauth-authorization-server
+      - https://mcp.loops.so/.well-known/oauth-protected-resource
+      - https://loops.so/docs/mcp-server
+cli_credential_handling:
+  storage: OS keyring, multiple named team keys
+  env_var: LOOPS_API_KEY
+  precedence:
+    - LOOPS_API_KEY
+    - --team flag
+    - stored default (`loops auth use`)
+webhook_authentication:
+  direction: inbound to subscriber
+  mechanism: HMAC-SHA256 signature, Standard-Webhooks-style headers
+  headers:
+    - webhook-id
+    - webhook-timestamp
+    - webhook-signature
+  secret: issued per endpoint at https://app.loops.so/settings?page=webhooks, prefixed `whsec_`
+  see: asyncapi/loops-webhooks-asyncapi.yml
+gaps:
+  - No scoped or least-privilege REST credentials — every API key is full-access for its team.
+  - No key expiry or automatic rotation; rotation is manual.
+  - No OAuth path for third-party applications against the REST API; OAuth exists only for MCP.
+  - No mTLS, no request signing, no IP allowlisting documented.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

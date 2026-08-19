@@ -4,35 +4,149 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Loops
 providerId: loops
 created: '2026-05-08'
-modified: '2026-05-08'
+modified: '2026-08-13'
+generated: '2026-08-13'
+method: searched
+source: https://loops.so/docs/api-reference/intro
 reconciled: true
 tags:
-- Email Marketing
-- Transactional
-- Automation
-- SaaS
-- Campaigns
-- Rate Limiting
-- Quotas
-- Throttling
-description: Loops API rate limits per the official documentation. Baseline is 10 requests per second per team, with higher limits available on request to support.
-notes: Reconciled against https://loops.so/docs/api-reference/intro on 2026-05-08.
+  - Email Marketing
+  - Transactional
+  - Automation
+  - SaaS
+  - Campaigns
+  - Rate Limiting
+  - Quotas
+  - Throttling
+description: >-
+  Loops publishes two distinct API throttles plus separate email-sending and
+  webhook-delivery rates. The API baseline is 10 requests per second per team.
+  The content API — campaigns, campaign groups, components, email messages,
+  themes, transactional emails, transactional groups, uploads and workflows — is
+  throttled far more tightly at 60 requests per 60 seconds per team. Every
+  response carries x-ratelimit-limit and x-ratelimit-remaining, and exhaustion
+  returns 429 Too Many Requests. Separately, email sending is capped at 10
+  emails/second on free plans and 1,000 emails/second on paid plans, with excess
+  queued rather than rejected, and webhook events are delivered at a maximum of
+  10 per second.
+notes: >-
+  Reconciled against https://loops.so/docs/api-reference/intro and
+  https://loops.so/docs/account/billing on 2026-08-13. Note the divergence
+  between docs and contract: the OpenAPI (1.21.6) declares a 429 response on
+  only 2 of 64 operations — previewEmailMessage (daily preview cap) and
+  createUpload (upload cap) — so a client generated from the spec will not model
+  429 for the other 62 operations even though the global throttle applies to
+  them.
 sources:
-- https://loops.so/docs/api-reference/intro
+  - https://loops.so/docs/api-reference/intro
+  - https://loops.so/docs/account/billing
+  - https://loops.so/docs/webhooks
+  - https://loops.so/pricing
 responseCodes:
   throttled: 429
+headers:
+  - name: x-ratelimit-limit
+    description: The maximum number of requests permitted per second.
+    on: every API response
+  - name: x-ratelimit-remaining
+    description: Requests remaining in the current rate-limit window.
+    on: every API response
+  - name: Retry-After
+    present: false
+    description: >-
+      Not documented and not declared in the OpenAPI. A client cannot learn the
+      correct backoff from the response; Loops recommends exponential backoff
+      instead.
 limits:
-- name: Default Team Rate Limit
-  scope: team
-  metric: requests
-  limit: 10
-  timeFrame: second
-  notes: Baseline limit per team. Higher limits available on request to Loops support.
+  - name: Default API rate limit
+    scope: team
+    metric: requests
+    limit: 10
+    timeFrame: second
+    applies_to: all API endpoints
+    notes: Baseline per team. Higher limits available on request to Loops support.
+  - name: Content API rate limit
+    scope: team
+    metric: requests
+    limit: 60
+    timeFrame: 60 seconds
+    applies_to:
+      - /v1/campaigns/*
+      - /v1/campaign-groups/*
+      - /v1/components/*
+      - /v1/email-messages/*
+      - /v1/themes/*
+      - /v1/transactional-emails/*
+      - /v1/transactional-groups/*
+      - /v1/uploads/*
+      - /v1/workflows/*
+    notes: >-
+      Effectively 1 request/second sustained on the content surface — six times
+      tighter than the baseline. This is the limit that matters for any agent or
+      migration job editing campaigns, themes or workflows in bulk.
+  - name: Email sending rate — free plan
+    scope: team
+    metric: emails
+    limit: 10
+    timeFrame: second
+    notes: Excess is queued until it can be sent, not rejected.
+  - name: Email sending rate — paid plans
+    scope: team
+    metric: emails
+    limit: 1000
+    timeFrame: second
+    notes: Excess is queued until it can be sent, not rejected.
+  - name: Webhook delivery rate
+    scope: account
+    metric: events
+    limit: 10
+    timeFrame: second
+    direction: outbound
+    notes: Further events are queued.
+  - name: Free plan monthly send allowance
+    scope: team
+    metric: emails
+    limit: 4000
+    timeFrame: 30 days
+    notes: Marketing and transactional combined. Paid plans have no send cap.
+  - name: Email message preview limit
+    scope: team
+    metric: previews
+    limit: null
+    timeFrame: day
+    notes: >-
+      A daily preview cap exists and returns 429 on previewEmailMessage, but the
+      numeric value is not published. Recorded as an honest null rather than a
+      guess.
+  - name: Upload limit
+    scope: team
+    metric: uploads
+    limit: null
+    timeFrame: unspecified
+    notes: An upload cap exists and returns 429 on createUpload; the value is not published.
+payloadLimits:
+  - name: Transactional payload maximum
+    limit: 4MB
+    notes: Raised from 1MB on 2024-11-05 to allow more or larger attachments.
+  - name: LMX body maximum
+    limit: 100KB
+    responseCode: 413
+  - name: Body value maximum
+    limit: 500 characters per value, including the surrounding quotes
+    error: Some body key or value is longer than allowable
 policies:
-- name: Backoff Strategy
-  description: Clients should implement exponential backoff with jitter and honor any Retry-After header on 429 responses.
-- name: Higher Limits
-  description: Contact Loops support for an increased limit if your application requires throughput above 10 req/s.
+  - name: Backoff Strategy
+    description: >-
+      Loops recommends retries with exponential backoff on 429. No Retry-After
+      header is provided, so backoff must be client-chosen; add jitter.
+  - name: Higher Limits
+    description: >-
+      Contact Loops support (https://app.loops.so/settings?page=support) to
+      discuss an increased limit.
+  - name: Queue-not-reject on sending
+    description: >-
+      Send-rate limits queue rather than fail, so a burst of transactional sends
+      is delayed, not dropped. API rate limits do reject with 429.
 maintainers:
-- FN: Kin Lane
-  email: kin@apievangelist.com
+  - FN: Kin Lane
+    email: kin@apievangelist.com

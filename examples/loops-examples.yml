@@ -1,0 +1,350 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/_original/loops-openapi.yaml (1.21.6) `examples` values + two live anonymous probes on 2026-08-13
+summary: 'Request/response examples for the marquee Loops operations. The eleven success examples are assembled from the `examples`
+  values Loops declares on its own schemas in OpenAPI 1.21.6 (284 of them across the document) — they are the provider''s
+  illustrative values, not observed traffic, and the identifiers in them are Loops'' own placeholders. The final two examples
+  ARE observed: both were captured from live anonymous requests, and they record what the Loops REST API and MCP server actually
+  return to an unauthenticated caller. No values are invented.'
+note: Every authenticated example uses the placeholder `<LOOPS_API_KEY>`. Loops keys are opaque and unprefixed; no real key
+  appears in this repository.
+examples:
+- name: testApiKey
+  operation: openapi/loops-api-key-api-openapi.yml#testApiKey
+  summary: API key
+  request:
+    method: GET
+    url: https://app.loops.so/api/v1/api-key
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+      success: true
+      teamName: Company name
+- name: createContact
+  operation: openapi/loops-contacts-api-openapi.yml#createContact
+  summary: Create a contact
+  request:
+    method: POST
+    url: https://app.loops.so/api/v1/contacts/create
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+      Content-Type: application/json
+    body:
+      email: alex@company.com
+      firstName: Alex
+      lastName: Rivera
+      subscribed: true
+      userGroup: customers
+      userId: usr_7f8e9d0c1b2a
+      mailingLists:
+        clm2k8j4h6g0f8d6s4a2b0z8: true
+      favoriteColor: blue
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+      success: true
+      id: clh3k9m2p4q6r8s0t2v4x6z8
+- name: findContact
+  operation: openapi/loops-contacts-api-openapi.yml#findContact
+  summary: Find a contact
+  request:
+    method: GET
+    url: https://app.loops.so/api/v1/contacts/find
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+    query_parameters:
+    - email
+    - userId
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+    - id: clh3k9m2p4q6r8s0t2v4x6z8
+      email: alex@company.com
+      firstName: Alex
+      lastName: Rivera
+      source: API
+      subscribed: true
+      userGroup: customers
+      userId: usr_7f8e9d0c1b2a
+      mailingLists:
+        clm2k8j4h6g0f8d6s4a2b0z8: true
+      optInStatus: accepted
+- name: getContactSuppression
+  operation: openapi/loops-contacts-api-openapi.yml#getContactSuppression
+  summary: Get suppression status for a contact
+  request:
+    method: GET
+    url: https://app.loops.so/api/v1/contacts/suppression
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+    query_parameters:
+    - email
+    - userId
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+      contact:
+        id: clh3k9m2p4q6r8s0t2v4x6z8
+        email: alex@company.com
+        userId: usr_7f8e9d0c1b2a
+      isSuppressed: false
+      removalQuota:
+        limit: 5
+        remaining: 5
+- name: listContactProperties
+  operation: openapi/loops-contact-properties-api-openapi.yml#listContactProperties
+  summary: List contact properties
+  request:
+    method: GET
+    url: https://app.loops.so/api/v1/contacts/properties
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+    query_parameters:
+    - list
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+    - key: favoriteColor
+      label: Favorite color
+      type: string
+- name: sendEvent
+  operation: openapi/loops-events-api-openapi.yml#sendEvent
+  summary: Send an event
+  request:
+    method: POST
+    url: https://app.loops.so/api/v1/events/send
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+      Content-Type: application/json
+      Idempotency-Key: <uuid-v4>
+    body:
+      email: alex@company.com
+      userId: usr_7f8e9d0c1b2a
+      eventName: signup
+      eventProperties:
+        plan: pro
+      mailingLists:
+        clm2k8j4h6g0f8d6s4a2b0z8: true
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+      success: true
+- name: sendTransactionalEmail
+  operation: openapi/loops-transactional-emails-api-openapi.yml#sendTransactionalEmail
+  summary: Send a transactional email
+  request:
+    method: POST
+    url: https://app.loops.so/api/v1/transactional
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+      Content-Type: application/json
+      Idempotency-Key: <uuid-v4>
+    body:
+      email: alex@company.com
+      transactionalId: cll42l54f20i1la0lfooe3z12
+      addToAudience: true
+      dataVariables:
+        name: Alex
+        passwordResetLink: https://app.company.com/reset/abc123
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+      success: true
+- name: listTransactionalEmails
+  operation: openapi/loops-transactional-emails-api-openapi.yml#listTransactionalEmails
+  summary: List transactional emails
+  request:
+    method: GET
+    url: https://app.loops.so/api/v1/transactional-emails
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+    query_parameters:
+    - perPage
+    - cursor
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+      pagination:
+        totalResults: 2
+        returnedResults: 2
+        perPage: 20
+        totalPages: 1
+        nextCursor: null
+        nextPage: null
+      data:
+      - id: cll42l54f20i1la0lfooe3z12
+        name: Sign up confirmation
+        draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
+        createdAt: '2025-06-29T07:47:39.370Z'
+        updatedAt: '2025-06-29T07:47:39.370Z'
+        dataVariables:
+        - confirmationUrl
+- name: listMailingLists
+  operation: openapi/loops-mailing-lists-api-openapi.yml#listMailingLists
+  summary: List mailing lists
+  request:
+    method: GET
+    url: https://app.loops.so/api/v1/lists
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+    - id: clm2k8j4h6g0f8d6s4a2b0z8
+      name: Product updates
+      description: Monthly product news and release notes
+      isPublic: true
+- name: listAudienceSegments
+  operation: openapi/loops-audience-segments-api-openapi.yml#listAudienceSegments
+  summary: List audience segments
+  request:
+    method: GET
+    url: https://app.loops.so/api/v1/audience-segments
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+    query_parameters:
+    - perPage
+    - cursor
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+      pagination:
+        totalResults: 2
+        returnedResults: 2
+        perPage: 20
+        totalPages: 1
+        nextCursor: null
+        nextPage: null
+      data:
+      - id: cls6e8g0i2k4m6o8q0s2u4w6
+        name: Power users
+        description: Contacts on the pro plan
+        createdAt: '2025-06-29T07:47:39.370Z'
+        updatedAt: '2025-06-29T07:47:39.370Z'
+        filter:
+          match: all
+          conditions:
+          - type: property
+            key: plan
+            operator: equals
+            value: pro
+- name: listWorkflows
+  operation: openapi/loops-workflows-api-openapi.yml#listWorkflows
+  summary: List workflows
+  request:
+    method: GET
+    url: https://app.loops.so/api/v1/workflows
+    headers:
+      Authorization: Bearer <LOOPS_API_KEY>
+    query_parameters:
+    - perPage
+    - cursor
+  response:
+    status: 200
+    headers:
+      content-type: application/json
+      x-ratelimit-limit: '10'
+      x-ratelimit-remaining: '9'
+    body:
+      pagination:
+        totalResults: 45
+        returnedResults: 20
+        perPage: 20
+        totalPages: 3
+        nextCursor: clp9k2m4n6p8q0r2s4t6u8v0
+        nextPage: https://app.loops.so/api/v1/campaign-groups?cursor=clp9k2m4n6p8q0r2s4t6u8v0&perPage=20
+      data:
+      - id: clw1a3b5c7d9e1f3g5h7i9j1
+        name: Welcome series
+        createdAt: '2025-06-29T07:47:39.370Z'
+        updatedAt: '2025-06-29T07:47:39.370Z'
+- name: unauthenticated-api-key-check
+  operation: openapi/loops-api-key-api-openapi.yml#testApiKey
+  summary: Observed 401 from a live anonymous request — the real Loops error envelope on the wire.
+  method: probed
+  request:
+    method: GET
+    url: https://app.loops.so/api/v1/api-key
+    headers: {}
+  response:
+    status: 401
+    headers:
+      content-type: application/json
+      strict-transport-security: max-age=31536000; includeSubDomains
+      x-content-type-options: nosniff
+      referrer-policy: strict-origin-when-cross-origin
+      server: cloudflare
+    body:
+      success: false
+      message: Invalid API key
+      error: Invalid API key
+    note: Confirms the deprecated `error` key is still served alongside `message`, eleven months after its 2025-09-11 deprecation.
+      No `path` key was present on this response.
+- name: mcp-unauthenticated-tools-list
+  operation: mcp/loops-mcp.yml#tools/list
+  summary: Observed OAuth challenge from the Loops MCP server — how an agent discovers it must authorize.
+  method: probed
+  request:
+    method: POST
+    url: https://mcp.loops.so
+    headers:
+      Content-Type: application/json
+      Accept: application/json, text/event-stream
+    body:
+      jsonrpc: '2.0'
+      id: 1
+      method: tools/list
+  response:
+    status: 401
+    headers:
+      content-type: text/plain; charset=utf-8
+      www-authenticate: Bearer resource_metadata="https://mcp.loops.so/.well-known/oauth-protected-resource", scope="mcp"
+      access-control-expose-headers: Mcp-Session-Id, Mcp-Protocol-Version, WWW-Authenticate
+    body: no bearer token
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

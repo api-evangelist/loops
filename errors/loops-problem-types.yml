@@ -1,0 +1,167 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/_original/loops-openapi.yaml (1.21.6) — 4xx/5xx responses across 64 operations
+enriched_from: https://loops.so/docs/api-reference/intro
+format: proprietary-json
+rfc9457: false
+content_type: application/json
+envelope:
+  fields:
+    - name: success
+      type: boolean
+      always: true
+      value_on_error: false
+    - name: message
+      type: string
+      always: true
+      description: Human-readable explanation of what went wrong. The field to read.
+    - name: error
+      type: string
+      deprecated: true
+      deprecated_on: '2025-09-11'
+      description: Legacy error string. Superseded by `message`; still served for backward compatibility.
+    - name: path
+      type: string
+      deprecated: true
+      deprecated_on: '2025-09-11'
+      description: Legacy request-path echo. No replacement.
+  example:
+    success: false
+    message: Invalid API key
+  note: >-
+    There is no machine-readable error code. Every failure is distinguished by
+    HTTP status plus free-text `message`, so a client that needs to branch on a
+    specific cause has to string-match. This is the single largest gap in the
+    Loops error surface: 59 of 64 operations can return 400, and the spec
+    enumerates more than forty distinct 400 conditions with no code to tell them
+    apart.
+problem_types:
+  - status: 400
+    title: Bad request
+    occurrences: 59
+    meaning: >-
+      The request body, path parameter or query parameter failed validation.
+      Loops folds a very wide range of causes into 400 — missing or mutually
+      exclusive identifiers (`email` and `userId` both provided, or neither),
+      malformed email addresses, invalid resource IDs of every kind
+      (campaignId, campaignGroupId, componentId, themeId, transactionalId,
+      transactionalGroupId, audienceSegmentId, emailMessageId, eventPatternId,
+      workflowId, nodeId), invalid `perPage`/`cursor`, reserved group names,
+      unsupported `contentType`, segment filters with too many conditions,
+      illegal workflow state transitions, workflow node caps, invalid branch or
+      reroute targets, a contact that is not suppressed, an unpublished
+      transactional email, and no verified sending domain.
+    action: >-
+      Read `message` — the docs state details will be there. Do not retry
+      unchanged; 400 is deterministic.
+    retryable: false
+  - status: 401
+    title: Invalid API key
+    occurrences: 51
+    meaning: >-
+      Missing, malformed or revoked bearer token. Also returned when a key is
+      valid but the content API is not enabled for the team, which is an
+      entitlement failure surfaced as authentication.
+    action: >-
+      Confirm the key from Settings -> API and that it is sent as
+      `Authorization: Bearer <key>`. If the key works elsewhere but this
+      endpoint 401s, the team likely lacks content-API access.
+    retryable: false
+  - status: 404
+    title: Not found
+    occurrences: 38
+    meaning: >-
+      The addressed resource does not exist for this team — contact, campaign,
+      campaign group, component, theme, email message, event pattern,
+      transactional email, transactional group, upload, workflow, workflow node,
+      mailing list or audience segment. Also returned when a segment filter
+      references a campaign, workflow or workflow email that no longer exists.
+    action: Verify the ID and the team the key belongs to.
+    retryable: false
+  - status: 405
+    title: Wrong HTTP request method
+    occurrences: 63
+    meaning: >-
+      The path exists but not for this verb. Declared on 63 of 64 operations,
+      which makes it the most broadly declared error in the spec.
+    action: Check the verb against the reference; several Loops paths accept GET and POST with different meanings.
+    retryable: false
+  - status: 409
+    title: Conflict
+    occurrences: 16
+    meaning: >-
+      The request is well-formed but conflicts with current state. Distinct
+      causes: an idempotency key reused within 24 hours with a different body;
+      a contact whose email or `userId` already exists; a campaign that has
+      already been sent and is being edited beyond `name`/`campaignGroupId`; a
+      campaign not in draft status; a stale `contentRevisionId` or
+      `expectedRevisionId` (optimistic concurrency); content that cannot be
+      parsed; an email message in MJML format, which the content API refuses to
+      edit; and publishing a transactional email that has no draft.
+    action: >-
+      Re-fetch the resource to get the current revision id and retry, or choose
+      a new idempotency key. Never blind-retry — a 409 on an idempotency key
+      means the first request already landed.
+    retryable: conditional
+  - status: 413
+    title: Payload too large
+    occurrences: 4
+    meaning: >-
+      LMX email body over the 100KB limit, or an upload over the maximum
+      allowed size. Note the transactional send path allows up to 4MB including
+      attachments (raised from 1MB on 2024-11-05).
+    action: Reduce the payload. Split large LMX bodies or compress assets.
+    retryable: false
+  - status: 422
+    title: Unprocessable content
+    occurrences: 4
+    meaning: >-
+      Content-semantic failure rather than schema failure — invalid LMX, LMX
+      that fails to compile, a draft that fails validation, an unverified
+      sending domain, content flagged as unsafe, or a component body change that
+      would break emails already using that component.
+    action: >-
+      Run the Guardian endpoint (`getEmailMessageGuardian`) before publish to
+      surface these as warnings instead of a failed send.
+    retryable: false
+  - status: 429
+    title: Too many requests
+    occurrences: 2
+    meaning: >-
+      Declared in the spec on only two operations — preview-email-message (a
+      daily preview cap) and create-upload (an upload cap). The global
+      10-requests-per-second-per-team throttle and the 60-per-60-seconds content
+      API throttle also return 429 but are documented in prose only and are not
+      declared on any operation in the OpenAPI.
+    action: >-
+      Back off exponentially with jitter and read `x-ratelimit-limit` /
+      `x-ratelimit-remaining`. No Retry-After header is documented.
+    retryable: true
+  - status: 500
+    title: Internal error
+    occurrences: 1
+    meaning: >-
+      Declared only on createWorkflow, where it carries a specific meaning:
+      "Workflow creation is unavailable for this team." This is an entitlement
+      condition reported as a server error.
+    action: Do not retry blindly; contact support if the team should have workflow creation.
+    retryable: false
+  - status: 501
+    title: Not implemented
+    occurrences: 1
+    meaning: Declared on updateWorkflowNode — "This node update is not implemented." Some node types are not yet editable via the API.
+    action: Edit the node in the Loops app, or check the changelog for coverage.
+    retryable: false
+gaps:
+  - No machine-readable error code or type URI; branching requires string-matching `message`.
+  - Not RFC 9457 (application/problem+json); the envelope is proprietary.
+  - >-
+    The global rate limit is documented in prose but declared on only 2 of 64
+    operations, so a generated client will not model 429 for the other 62.
+  - No Retry-After header is documented on 429.
+  - >-
+    Two envelope fields (`error`, `path`) have been deprecated since 2025-09-11
+    with no removal date.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

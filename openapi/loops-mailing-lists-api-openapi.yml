@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Loops OpenAPI Spec API key Mailing lists API
+  title: Loops OpenAPI Spec Mailing lists API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
-  version: 1.8.0
+  version: 1.21.6
 servers:
 - url: https://app.loops.so/api/v1
 tags:
@@ -11,10 +11,13 @@ tags:
 paths:
   /lists:
     get:
+      operationId: listMailingLists
       tags:
       - Mailing lists
-      summary: Get a list of mailing lists
+      summary: List mailing lists
       description: Retrieve a list of your account's mailing lists.
+      x-mint:
+        href: /api-reference/list-mailing-lists
       responses:
         '200':
           description: Successful.
@@ -35,16 +38,34 @@ components:
       properties:
         id:
           type: string
+          description: The ID of the mailing list.
+          examples:
+          - clm2k8j4h6g0f8d6s4a2b0z8
         name:
           type: string
+          description: The name of the mailing list.
+          examples:
+          - Product updates
         description:
-          type: string
+          type:
+          - string
+          - 'null'
+          description: The description of the mailing list. `null` if no description is set.
+          examples:
+          - Monthly product news and release notes
         isPublic:
           type: boolean
+          description: Whether the mailing list is public (`true`) or private (`false`).
+          examples:
+          - true
       examples:
-      - id: list_123
-        name: Main mailing list
-        description: Mailing list description
+      - id: clm2k8j4h6g0f8d6s4a2b0z8
+        name: Product updates
+        description: Monthly product news and release notes
+        isPublic: true
+      - id: clm2k8j4h6g0f8d6s4a2b0z8
+        name: Product updates
+        description: null
         isPublic: true
       required:
       - id

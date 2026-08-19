@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Loops OpenAPI Spec API key Contact properties API
+  title: Loops OpenAPI Spec Contact properties API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
-  version: 1.8.0
+  version: 1.21.6
 servers:
 - url: https://app.loops.so/api/v1
 tags:
@@ -11,12 +11,16 @@ tags:
 paths:
   /contacts/properties:
     post:
+      operationId: createContactProperty
       tags:
       - Contact properties
       summary: Create a contact property
-      description: Add a contact property to your team.
+      description: Create a custom contact property.
+      x-mint:
+        href: /api-reference/create-contact-property
+        metadata:
+          sidebarTitle: Create property
       requestBody:
-        description: The name value must be in camelCase, like `planName`.
         content:
           application/json:
             schema:
@@ -40,15 +44,21 @@ paths:
       security:
       - apiKey: []
     get:
+      operationId: listContactProperties
       tags:
       - Contact properties
-      summary: Get a list of contact properties
+      summary: List contact properties
       description: Retrieve a list of your account's contact properties.<br>Use the `list` parameter to query "all" or "custom" properties.
+      x-mint:
+        href: /api-reference/list-contact-properties
+        metadata:
+          sidebarTitle: List properties
+          description: Retrieve a list of your account's contact properties.
       parameters:
       - name: list
         in: query
         required: false
-        description: \"all\" (default) or \"custom\"
+        description: '`all` (default) or `custom` (only custom contact properties)'
         schema:
           type: string
       responses:
@@ -66,25 +76,23 @@ paths:
       - apiKey: []
 components:
   schemas:
-    ContactPropertyCreateRequest:
-      type: object
-      required:
-      - name
-      - type
-      properties:
-        name:
-          type: string
-        type:
-          type: string
     ContactProperty:
       type: object
       properties:
         key:
           type: string
+          description: The key of the contact property.
         label:
           type: string
+          description: The human-friendly label for this property.
         type:
           type: string
+          description: The type of property.
+          enum:
+          - string
+          - number
+          - boolean
+          - date
       examples:
       - key: favoriteColor
         label: Favorite color
@@ -93,15 +101,31 @@ components:
       - key
       - label
       - type
-    ContactPropertySuccessResponse:
+    ContactPropertyCreateRequest:
       type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
       required:
-      - success
+      - name
+      - type
+      description: There are a few [reserved names](https://loops.so/docs/contacts/properties#reserved-names) that you cannot use for contact properties.
+      properties:
+        name:
+          type: string
+          examples:
+          - favoriteColor
+          description: The name of the property. This should be in camelCase, like `planName` or `importDate`.
+        type:
+          type: string
+          examples:
+          - string
+          description: The type of property.
+          enum:
+          - string
+          - number
+          - boolean
+          - date
+      examples:
+      - name: favoriteColor
+        type: string
     ContactPropertyFailureResponse:
       type: object
       properties:
@@ -111,9 +135,23 @@ components:
           - false
         message:
           type: string
+          examples:
+          - Property already exists.
       required:
       - success
       - message
+      examples:
+      - success: false
+        message: Property already exists.
+    ContactPropertySuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+      required:
+      - success
   securitySchemes:
     apiKey:
       type: http

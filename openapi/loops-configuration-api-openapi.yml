@@ -1,0 +1,56 @@
+openapi: 3.1.0
+info:
+  title: Loops OpenAPI Spec Configuration API
+  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  version: 1.21.6
+servers:
+- url: https://app.loops.so/api/v1
+tags:
+- name: Configuration
+  description: View configuration settings
+paths:
+  /dedicated-sending-ips:
+    get:
+      operationId: listDedicatedSendingIps
+      tags:
+      - Configuration
+      summary: List dedicated sending IP addresses
+      description: 'Retrieve a list of Loops'' dedicated sending IP addresses.
+
+
+        This endpoint is provided for the rare instances where you may need to whitelist our sending IPs. Please note that this list is subject to change and will not include shared IPs used for sending mail.
+
+
+        Unless you are sure you need this and are comfortable watching for changes, we strongly recommend you _do not_ whitelist these IPs.'
+      x-mint:
+        href: /api-reference/dedicated-sending-ips
+        metadata:
+          description: Retrieve a list of Loops' dedicated sending IP addresses.
+          sidebarTitle: List sending IPs
+        content: <Warning>This endpoint is provided for the rare instances where you may need to whitelist our sending IPs. Please note that this list is subject to change and will not include shared IPs used for sending mail. Unless you are sure you need this and are comfortable watching for changes, we strongly recommend you _do not_ whitelist these IPs.</Warning>
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Returns an array of IP address strings.
+                items:
+                  type: string
+                  description: IP address
+                  examples:
+                  - 52.21.45.123
+                example:
+                - 52.21.45.123
+                - 52.21.45.124
+                - 52.21.45.125
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer

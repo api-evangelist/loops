@@ -1,0 +1,77 @@
+generated: '2026-08-13'
+method: probed
+source: https://app.loops.so/.well-known/oauth-authorization-server
+docs: https://loops.so/docs/mcp-server
+summary: >-
+  Loops runs exactly one OAuth 2.0 authorization server and it exists to
+  authorize the MCP server, not the REST API. The REST API has no OAuth surface
+  at all — it is API-key only, and a Loops API key is unscoped. So the entire
+  scope vocabulary for this provider is a single opaque scope, `mcp`, which
+  grants an MCP client the same reach the signed-in user has.
+authorization_server:
+  issuer: https://app.loops.so
+  metadata: https://app.loops.so/.well-known/oauth-authorization-server
+  metadata_spec: RFC 8414
+  http_status: 200
+  authorization_endpoint: https://app.loops.so/oauth/authorize
+  token_endpoint: https://app.loops.so/oauth/token
+  revocation_endpoint: https://app.loops.so/oauth/revoke
+  grant_types_supported:
+    - authorization_code
+    - refresh_token
+  response_types_supported:
+    - code
+  response_modes_supported:
+    - query
+  code_challenge_methods_supported:
+    - S256
+  token_endpoint_auth_methods_supported:
+    - none
+  client_id_metadata_document_supported: true
+  dynamic_client_registration: false
+protected_resource:
+  resource: https://mcp.loops.so/
+  metadata: https://mcp.loops.so/.well-known/oauth-protected-resource
+  metadata_spec: RFC 9728
+  http_status: 200
+  authorization_servers:
+    - https://app.loops.so
+  bearer_methods_supported:
+    - header
+scopes:
+  - name: mcp
+    description: >-
+      Grants an MCP client access to the Loops MCP server at
+      https://mcp.loops.so. Advertised in both the authorization-server and
+      protected-resource metadata and returned in the WWW-Authenticate challenge
+      on an unauthenticated request.
+    resource: https://mcp.loops.so/
+    granularity: coarse
+    read_write: both
+    documented_effect: >-
+      The MCP server exposes search, describe, execute and teams. `execute` can
+      run any operation in the Loops REST API for any team the signed-in user
+      can reach, which includes writes — creating and updating contacts,
+      sending events, and sending transactional email. Loops' own FAQ asks "Can
+      the MCP server change data or send email?" on its MCP page.
+scope_count: 1
+granularity: single-scope
+observations:
+  - >-
+    There is no read-only scope. Consenting to `mcp` is consenting to the full
+    write surface of every team the user belongs to; an agent cannot be granted
+    a narrower grant.
+  - >-
+    Public-client posture is correct for an MCP server —
+    `token_endpoint_auth_methods_supported: ["none"]` with PKCE S256 required —
+    but client identity comes from Client ID Metadata Documents or
+    pre-registration rather than RFC 7591 dynamic registration, so an arbitrary
+    new client cannot self-register.
+  - Refresh tokens and a revocation endpoint are both supported.
+  - >-
+    The REST API declares one securityScheme (`apiKey`, http bearer) applied to
+    all 64 operations, with no scopes. See
+    authentication/loops-authentication.yml.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

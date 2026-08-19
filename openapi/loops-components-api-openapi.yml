@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Loops OpenAPI Spec API key Components API
+  title: Loops OpenAPI Spec Components API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
-  version: 1.8.0
+  version: 1.21.6
 servers:
 - url: https://app.loops.so/api/v1
 tags:
@@ -17,11 +17,16 @@ paths:
       description: The ID of the component.
       schema:
         type: string
+        examples:
+        - clp2o4i6u8y0t5r3e1w7q9s1
     get:
+      operationId: getComponent
       tags:
       - Components
       summary: Get a component
       description: Retrieve a single component by ID.
+      x-mint:
+        href: /api-reference/get-component
       responses:
         '200':
           description: Successful.
@@ -47,12 +52,69 @@ paths:
           description: Wrong HTTP request method.
       security:
       - apiKey: []
+    post:
+      operationId: updateComponent
+      tags:
+      - Components
+      summary: Update a component
+      description: Update a component's name and/or body. When the `lmx` body changes, the update cascades to every email using this component, and `affectedEmailCount` reports how many were affected. A change that would introduce a dynamic variable an email using the component cannot use is rejected.
+      x-mint:
+        href: /api-reference/update-component
+        content: When the `lmx` body changes, the update cascades to every email using this component, and `affectedEmailCount` reports how many were affected. A change that would introduce a dynamic variable an email using the component cannot use is rejected.
+        metadata:
+          description: Update a component's name and/or LMX body. Body changes cascade to every email using the component.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateComponentBody'
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateComponentResponse'
+        '400':
+          description: Invalid `componentId` or request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Component not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+        '413':
+          description: LMX body exceeds the size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentFailureResponse'
+        '422':
+          description: Invalid LMX, or a body change that would break emails using the component.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentValidationFailureResponse'
+      security:
+      - apiKey: []
   /components:
     get:
+      operationId: listComponents
       tags:
       - Components
       summary: List components
       description: Retrieve a paginated list of email components.
+      x-mint:
+        href: /api-reference/list-components
       parameters:
       - name: perPage
         in: query
@@ -85,87 +147,230 @@ paths:
           description: Wrong HTTP request method.
       security:
       - apiKey: []
+    post:
+      operationId: createComponent
+      tags:
+      - Components
+      summary: Create a component
+      description: Create a new email component from an LMX body.
+      x-mint:
+        href: /api-reference/create-component
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateComponentBody'
+      responses:
+        '201':
+          description: Component created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentResponse'
+        '400':
+          description: Invalid request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '405':
+          description: Wrong HTTP request method.
+        '413':
+          description: LMX body exceeds the size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentFailureResponse'
+        '422':
+          description: Invalid LMX.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentFailureResponse'
+      security:
+      - apiKey: []
 components:
   schemas:
-    ComponentFailureResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-      required:
-      - success
-      - message
-    ComponentResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-        componentId:
-          type: string
-        name:
-          type: string
-        lmx:
-          type: string
-          description: The component body serialized as LMX.
-      required:
-      - success
-      - componentId
-      - name
-      - lmx
     Component:
       type: object
       properties:
-        componentId:
+        id:
           type: string
+          examples:
+          - clp2o4i6u8y0t5r3e1w7q9s1
         name:
           type: string
+          examples:
+          - Header
+        lmx:
+          type: string
+          description: The component body serialized as LMX.
+          examples:
+          - <Paragraph>Welcome to Acme</Paragraph>
+      required:
+      - id
+      - name
+      - lmx
+      examples:
+      - id: clp2o4i6u8y0t5r3e1w7q9s1
+        name: Header
+        lmx: <Paragraph>Welcome to Acme</Paragraph>
+    ComponentFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Component not found.
+    ComponentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the component.
+        name:
+          type: string
+          description: The name of the component.
         lmx:
           type: string
           description: The component body serialized as LMX.
       required:
-      - componentId
+      - id
       - name
       - lmx
+      examples:
+      - id: clp2o4i6u8y0t5r3e1w7q9s1
+        name: Header
+        lmx: <Paragraph>Welcome to Acme</Paragraph>
+    ComponentValidationFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        invalidTags:
+          type: array
+          description: The dynamic variables that the change would push into an email that cannot use them. Present only when the update was rejected for that reason.
+          items:
+            type: string
+      required:
+      - message
+      examples:
+      - message: Component uses unsupported contact properties.
+        invalidTags:
+        - companyName
+    CreateComponentBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The component name.
+        lmx:
+          type: string
+          description: The component body as an LMX string.
+      required:
+      - name
+      - lmx
+      examples:
+      - name: Header
+        lmx: <Paragraph>Welcome to Acme</Paragraph>
     ListComponentsResponse:
       type: object
       properties:
-        success:
-          type: boolean
-          examples:
-          - true
         pagination:
-          type: object
-          properties:
-            totalResults:
-              type: number
-            returnedResults:
-              type: number
-            perPage:
-              type: number
-            totalPages:
-              type: number
-            nextCursor:
-              type:
-              - string
-              - 'null'
-            nextPage:
-              type:
-              - string
-              - 'null'
+          $ref: '#/components/schemas/Pagination'
         data:
           type: array
           items:
             $ref: '#/components/schemas/Component'
       required:
-      - success
       - pagination
       - data
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: clp2o4i6u8y0t5r3e1w7q9s1
+          name: Header
+          lmx: <Paragraph>Welcome to Acme</Paragraph>
+    Pagination:
+      type: object
+      properties:
+        totalResults:
+          type: number
+          examples:
+          - 2
+        returnedResults:
+          type: number
+          examples:
+          - 2
+        perPage:
+          type: number
+          examples:
+          - 20
+        totalPages:
+          type: number
+          examples:
+          - 1
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+        nextPage:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+      required:
+      - totalResults
+      - returnedResults
+      - perPage
+      - totalPages
+      - nextCursor
+      - nextPage
+      examples:
+      - totalResults: 2
+        returnedResults: 2
+        perPage: 20
+        totalPages: 1
+        nextCursor: null
+        nextPage: null
+    UpdateComponentBody:
+      type: object
+      description: At least one of `name` or `lmx` must be provided.
+      properties:
+        name:
+          type: string
+        lmx:
+          type: string
+          description: The component body as an LMX string.
+    UpdateComponentResponse:
+      allOf:
+      - $ref: '#/components/schemas/ComponentResponse'
+      - type: object
+        properties:
+          affectedEmailCount:
+            type: number
+            description: The number of emails using this component that were updated by the body change. `0` when only the name changed.
+        required:
+        - affectedEmailCount
+      examples:
+      - id: clp2o4i6u8y0t5r3e1w7q9s1
+        name: Header
+        lmx: <Paragraph>Welcome to Acme</Paragraph>
+        affectedEmailCount: 3
   securitySchemes:
     apiKey:
       type: http

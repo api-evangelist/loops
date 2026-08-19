@@ -1,0 +1,132 @@
+generated: '2026-08-13'
+method: searched
+source: https://loops.so/docs/cli
+docs: https://loops.so/docs/cli
+repo: https://github.com/loops-so/cli
+official: true
+name: loops
+description: >-
+  The official Loops command-line interface, written in Go. It covers the same
+  REST surface as the API — contacts, contact properties, mailing lists, events,
+  event patterns, transactional email and groups, campaigns and campaign groups,
+  audience segments, email messages, themes, components, uploads and workflows —
+  and adds an agent-oriented surface: `loops agent-context` prints a JSON
+  description of every command, subcommand and flag so a coding agent can
+  discover the CLI without scraping `--help`, and `loops skill install`
+  installs the Loops Agent Skills.
+version: v0.10.1
+released: '2026-08-13'
+install:
+  - method: script
+    command: curl -fsSL https://install.loops.so/cli | sh
+    note: >-
+      Default install path ~/.local/bin. Append `-s -- <version> <path>` after
+      `sh` to pin a version or change the path.
+  - method: homebrew
+    command: brew install loops-so/tap/loops
+    tap: https://github.com/loops-so/homebrew-tap
+  - method: powershell
+    command: irm https://raw.githubusercontent.com/loops-so/cli/main/install.ps1 | iex
+    platform: windows
+  - method: go
+    command: go install github.com/loops-so/cli/cmd/loops@latest
+  - method: wizard
+    command: curl -fsSL https://install.loops.so/wizard | sh
+    note: Installs the CLI and every Loops agent skill together.
+authentication:
+  methods:
+    - name: keyring
+      command: loops auth login <name>
+      note: Stores an API key in the OS keyring; multiple teams supported.
+    - name: environment
+      variable: LOOPS_API_KEY
+      note: For CI or where keyring storage is unavailable.
+  precedence:
+    - LOOPS_API_KEY environment variable
+    - --team flag
+    - the stored default set with `loops auth use`
+global_flags:
+  - flag: --debug
+    description: Print API request details before sending.
+  - flag: --output
+    short: -o
+    description: 'Output format: text (default) or json.'
+  - flag: --team
+    short: -t
+    description: Team key name to use.
+  - flag: --help
+    short: -h
+    description: Show help for any command.
+commands:
+  - name: auth
+    docs: https://loops.so/docs/cli/auth
+    description: Log in, switch teams, and manage stored API keys.
+    subcommands: [login, use, list, get]
+  - name: audience-segments
+    docs: https://loops.so/docs/cli/audience-segments
+    description: Read and create audience segments.
+  - name: campaigns
+    docs: https://loops.so/docs/cli/campaigns
+    description: Create, target, schedule, and update draft campaigns.
+  - name: campaign-groups
+    docs: https://loops.so/docs/cli/campaign-groups
+    description: Create, list, and update campaign groups.
+  - name: completion
+    docs: https://loops.so/docs/cli/completion
+    description: Set up shell autocompletion.
+  - name: components
+    docs: https://loops.so/docs/cli/components
+    description: View, create, and update email components.
+  - name: contact-properties
+    docs: https://loops.so/docs/cli/contact-properties
+    description: Create and list contact properties.
+  - name: contacts
+    docs: https://loops.so/docs/cli/contacts
+    description: Create, update, find, and delete contacts, and manage suppression.
+  - name: email-messages
+    docs: https://loops.so/docs/cli/email-messages
+    description: Get, preview, and update draft email messages.
+  - name: event-patterns
+    docs: https://loops.so/docs/cli/event-patterns
+    description: Read event patterns detected in your account.
+  - name: events
+    docs: https://loops.so/docs/cli/events
+    description: Send events to trigger automations.
+  - name: lists
+    docs: https://loops.so/docs/cli/lists
+    description: View your mailing lists.
+  - name: themes
+    docs: https://loops.so/docs/cli/themes
+    description: View, create, and update email themes.
+  - name: transactional
+    docs: https://loops.so/docs/cli/transactional
+    description: Send and manage transactional emails.
+  - name: transactional-groups
+    docs: https://loops.so/docs/cli/transactional-groups
+    description: Create, list, and update transactional groups.
+  - name: uploads
+    docs: https://loops.so/docs/cli/uploads
+    description: Upload files as email assets.
+  - name: workflows
+    docs: https://loops.so/docs/cli/workflows
+    description: List, inspect, create, and update workflows and their nodes.
+utility_commands:
+  - command: loops api-key
+    description: Validate the current API key.
+  - command: loops dedicated-sending-ips
+    description: List the dedicated sending IP addresses assigned to your team.
+  - command: loops skill install
+    description: >-
+      Install the Loops agent skills so coding agents can discover the CLI.
+      `--all` installs every skill, `--global` installs globally, `-y` skips
+      prompts.
+  - command: loops agent-context
+    description: >-
+      Print a JSON description of every command, subcommand and flag. Designed
+      for AI coding agents that need to discover the CLI surface without
+      scraping --help output.
+  - command: loops --version
+    description: Print the CLI version.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

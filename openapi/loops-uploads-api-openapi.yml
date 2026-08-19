@@ -1,0 +1,209 @@
+openapi: 3.1.0
+info:
+  title: Loops OpenAPI Spec Uploads API
+  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  version: 1.21.6
+servers:
+- url: https://app.loops.so/api/v1
+tags:
+- name: Uploads
+  description: Upload image assets
+paths:
+  /uploads:
+    post:
+      operationId: createUpload
+      tags:
+      - Uploads
+      summary: Create an upload
+      description: Request a pre-signed URL to upload an image asset. Upload the file with an HTTP `PUT` to the returned `presignedUrl` (sending the same `Content-Type` and `Content-Length`), then call `/uploads/{emailAssetId}/complete` to finalize the asset.
+      x-mint:
+        href: /api-reference/create-upload
+        content: Request a pre-signed URL to upload an image asset. Upload the file with an HTTP `PUT` to the returned `presignedUrl` (sending the same `Content-Type` and `Content-Length`), then call [Complete an upload](/api-reference/complete-upload) to finalize the asset.
+        metadata:
+          description: Request a pre-signed URL to upload an image asset.
+          sidebarTitle: Create an upload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUploadRequest'
+      responses:
+        '200':
+          description: Pre-signed upload URL created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUploadResponse'
+        '400':
+          description: Invalid request body or unsupported `contentType`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '405':
+          description: Wrong HTTP request method.
+        '413':
+          description: Upload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadFailureResponse'
+      security:
+      - apiKey: []
+  /uploads/{emailAssetId}/complete:
+    parameters:
+    - name: emailAssetId
+      in: path
+      required: true
+      description: The `emailAssetId` returned when the upload was created via `POST /v1/uploads`.
+      schema:
+        type: string
+        examples:
+        - cla3s5s7e9t1i3d5f7g9h1j3
+    post:
+      operationId: completeUpload
+      tags:
+      - Uploads
+      summary: Complete an upload
+      description: Finalize an image upload after the file has been uploaded to the pre-signed URL. Returns the public URL of the uploaded image asset.
+      x-mint:
+        href: /api-reference/complete-upload
+        metadata:
+          description: Finalize an image upload after the file has been uploaded to the pre-signed URL.
+      responses:
+        '200':
+          description: Upload completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteUploadResponse'
+        '400':
+          description: Upload id is missing or the uploaded file has an unsupported content type.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Upload not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+        '429':
+          description: Upload limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadLimitExceededFailureResponse'
+      security:
+      - apiKey: []
+components:
+  schemas:
+    CompleteUploadResponse:
+      type: object
+      properties:
+        emailAssetId:
+          type: string
+          examples:
+          - cla3s5s7e9t1i3d5f7g9h1j3
+          description: The ID of the created asset.
+        finalUrl:
+          type: string
+          description: The public URL of the uploaded asset.
+          examples:
+          - https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
+      required:
+      - emailAssetId
+      - finalUrl
+      examples:
+      - emailAssetId: cla3s5s7e9t1i3d5f7g9h1j3
+        finalUrl: https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
+    CreateUploadRequest:
+      type: object
+      properties:
+        contentType:
+          type: string
+          description: The MIME type of the file to upload. Supported types are `image/jpeg`, `image/png`, `image/gif` and `image/webp`.
+          examples:
+          - image/png
+        contentLength:
+          type: integer
+          description: The size of the file in bytes. Must be a positive integer no greater than 4,000,000 bytes.
+          examples:
+          - 102400
+      required:
+      - contentType
+      - contentLength
+      additionalProperties: false
+    CreateUploadResponse:
+      type: object
+      properties:
+        emailAssetId:
+          type: string
+          examples:
+          - cla3s5s7e9t1i3d5f7g9h1j3
+          description: The ID of the created asset. Pass this as `emailAssetId` to `POST /v1/uploads/{emailAssetId}/complete` once the file has been uploaded.
+        presignedUrl:
+          type: string
+          description: The pre-signed URL to upload the file to with an HTTP `PUT` request. Send the same `Content-Type` and `Content-Length` used in the create request.
+          examples:
+          - https://loops-assets.s3.amazonaws.com/uploads/cla3s5s7e9t1i3d5f7g9h1j3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...
+      required:
+      - emailAssetId
+      - presignedUrl
+      examples:
+      - emailAssetId: cla3s5s7e9t1i3d5f7g9h1j3
+        presignedUrl: https://loops-assets.s3.amazonaws.com/uploads/cla3s5s7e9t1i3d5f7g9h1j3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...
+    UploadFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+          - Unsupported content type.
+        supportedContentTypes:
+          type: array
+          description: Present when the request was rejected for an unsupported `contentType`. Lists the accepted MIME types.
+          items:
+            type: string
+        maxBytes:
+          type: integer
+          description: Present when the upload exceeds the size limit. The maximum allowed size in bytes.
+      required:
+      - message
+      examples:
+      - message: Unsupported content type.
+        supportedContentTypes:
+        - image/jpeg
+        - image/png
+        - image/gif
+        - image/webp
+        maxBytes: 4000000
+    UploadLimitExceededFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+          - 'Upload limit exceeded: max 50 uploads per 24 hours. Please contact support if you need to increase your upload limit.'
+        maxUploads:
+          type: integer
+          description: The maximum number of uploads allowed per window.
+          examples:
+          - 50
+        windowHours:
+          type: integer
+          description: The number of hours in the upload limit window.
+          examples:
+          - 24
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer

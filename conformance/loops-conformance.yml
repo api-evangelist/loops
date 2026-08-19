@@ -1,0 +1,175 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://loops.so/docs/api-reference/intro, https://loops.so/privacy,
+  https://trust.oneleet.com/loops, https://app.loops.so/.well-known/oauth-authorization-server,
+  openapi/_original/loops-openapi.yaml (1.21.6)
+summary: >-
+  Loops conforms to the specification layer an email API is expected to reach —
+  OpenAPI 3.1, OAuth 2.0 with PKCE plus RFC 8414/9728 discovery for its MCP
+  server, MCP Streamable HTTP, llms.txt, and Standard-Webhooks-shaped signature
+  headers. It does not implement the HTTP-semantics standards that would make
+  failures and deprecations machine-readable: no RFC 9457 problem+json, no RFC
+  8594 Sunset/Deprecation headers, no RFC 9116 security.txt, and no
+  RateLimit-* headers from the IETF draft (it ships its own x-ratelimit-*).
+standards:
+  - id: openapi-3.1
+    name: OpenAPI 3.1
+    conforms: true
+    evidence: >-
+      Provider-published document at https://app.loops.so/openapi.json and
+      /openapi.yaml (HTTP 200, anonymous), `openapi: 3.1.0`, info.version
+      1.21.6, 43 paths / 64 operations, all with operationIds, summaries,
+      descriptions and tags, plus a 17-entry `webhooks` block.
+  - id: json-schema-2020-12
+    name: JSON Schema 2020-12
+    conforms: true
+    evidence: >-
+      Implied by OpenAPI 3.1. The spec uses 2020-12 idioms directly —
+      `examples` arrays on schemas (284 occurrences) and union types such as
+      `type: ["string", "null"]` on Pagination.nextCursor.
+  - id: oauth2
+    name: OAuth 2.0 (RFC 6749) authorization code + PKCE (RFC 7636)
+    conforms: true
+    scope: MCP server only
+    evidence: >-
+      https://app.loops.so/.well-known/oauth-authorization-server advertises
+      grant_types_supported [authorization_code, refresh_token],
+      code_challenge_methods_supported ["S256"], and a revocation endpoint
+      (RFC 7009).
+  - id: rfc8414
+    name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+    conforms: true
+    evidence: 'https://app.loops.so/.well-known/oauth-authorization-server — HTTP 200, valid JSON metadata document.'
+  - id: rfc9728
+    name: OAuth 2.0 Protected Resource Metadata (RFC 9728)
+    conforms: true
+    evidence: >-
+      https://mcp.loops.so/.well-known/oauth-protected-resource — HTTP 200; and
+      the endpoint returns a conformant
+      `WWW-Authenticate: Bearer resource_metadata="...", scope="mcp"` challenge.
+  - id: rfc7591
+    name: OAuth 2.0 Dynamic Client Registration
+    conforms: false
+    evidence: >-
+      No registration_endpoint in the authorization-server metadata. Loops uses
+      Client ID Metadata Documents or pre-registration instead.
+  - id: oidc
+    name: OpenID Connect
+    conforms: false
+    evidence: '/.well-known/openid-configuration returns 404 on every host. Loops is not an identity provider.'
+  - id: mcp
+    name: Model Context Protocol (Streamable HTTP)
+    conforms: true
+    evidence: >-
+      Hosted server at https://mcp.loops.so, documented as a remote Streamable
+      HTTP MCP server; probed 2026-08-13 and returned a protocol-correct 401
+      with an OAuth resource-metadata challenge and
+      Mcp-Session-Id / Mcp-Protocol-Version in access-control-expose-headers.
+  - id: llmstxt
+    name: llms.txt
+    conforms: true
+    evidence: >-
+      https://loops.so/llms.txt (HTTP 200, 32KB) and https://loops.so/docs/llms.txt
+      (HTTP 200, 35KB). Every documentation page is additionally served as
+      markdown at `<page>.md`.
+  - id: agent-skills
+    name: Agent Skills
+    conforms: true
+    evidence: >-
+      Four provider-published SKILL.md files with frontmatter and semantic
+      versions at https://github.com/loops-so/skills, plus plugin manifests for
+      Claude Code, Codex and Cursor.
+  - id: standard-webhooks
+    name: Standard Webhooks
+    conforms: partial
+    evidence: >-
+      Uses the Standard Webhooks header triple (webhook-id, webhook-timestamp,
+      webhook-signature), the `{id}.{timestamp}.{body}` signed payload, the
+      versioned space-separated signature list and the `whsec_` secret prefix.
+      Loops does not cite the specification by name and publishes no
+      conformance claim, so this is an observed shape match rather than a
+      declared conformance.
+  - id: rfc9457
+    name: 'RFC 9457 Problem Details (application/problem+json)'
+    conforms: false
+    evidence: >-
+      Errors return application/json with a proprietary
+      {success, message, error, path} envelope and no machine-readable code.
+      See errors/loops-problem-types.yml.
+  - id: rfc8594
+    name: 'RFC 8594 Sunset header / Deprecation header'
+    conforms: false
+    evidence: >-
+      No Sunset or Deprecation headers are declared in the spec or documented.
+      Deprecations appear only as dated changelog entries with no removal date.
+  - id: rfc9116
+    name: 'RFC 9116 security.txt'
+    conforms: false
+    evidence: '/.well-known/security.txt returns 404 on loops.so, app.loops.so and mcp.loops.so.'
+  - id: ietf-ratelimit-headers
+    name: 'IETF RateLimit header fields (draft)'
+    conforms: false
+    evidence: >-
+      Loops returns x-ratelimit-limit and x-ratelimit-remaining, not the
+      RateLimit / RateLimit-Policy fields, and no Retry-After on 429.
+  - id: idempotency-key
+    name: 'Idempotency-Key header (IETF draft)'
+    conforms: partial
+    evidence: >-
+      Implements the header with a 24-hour retention window on sendEvent and
+      sendTransactionalEmail. Diverges from the draft's intent by returning 409
+      on replay rather than replaying the original response, and covers only 2
+      of 64 operations.
+  - id: rfc8615
+    name: 'RFC 8615 well-known URIs'
+    conforms: partial
+    evidence: Serves oauth-authorization-server and oauth-protected-resource; no other well-known documents.
+  - id: a2a
+    name: A2A Agent Card
+    conforms: false
+    evidence: '/.well-known/agent-card.json and /.well-known/agent.json miss on every host (404, or 401 on mcp.loops.so).'
+  - id: graphql
+    name: GraphQL
+    conforms: false
+    evidence: No GraphQL surface. REST + MCP only.
+compliance:
+  certifications:
+    - name: SOC 2
+      status: claimed
+      evidence: >-
+        The loops.so footer links its trust centre with the literal label
+        "Trust (SOC2)", pointing at https://trust.oneleet.com/loops (HTTP 200).
+        The trust centre itself renders client-side, so the report inventory
+        could not be read anonymously; the claim is the provider's own, made on
+        its own site.
+      source: https://trust.oneleet.com/loops
+    - name: EU-U.S. Data Privacy Framework
+      status: self-certified
+      evidence: >-
+        Astrodon Corporation (the entity behind Loops) states participation in
+        the EU-U.S. DPF and the Swiss-U.S. DPF in its privacy policy and links
+        the DPF list at dataprivacyframework.gov.
+      source: https://loops.so/privacy
+    - name: Swiss-U.S. Data Privacy Framework
+      status: self-certified
+      source: https://loops.so/privacy
+  regulations_addressed:
+    - GDPR
+    - CCPA
+  documents:
+    - name: Data Processing Agreement
+      url: https://loops.so/dpa
+    - name: Privacy Policy
+      url: https://loops.so/privacy
+    - name: Terms of Service
+      url: https://loops.so/terms
+  sector_regimes:
+    hipaa: not claimed
+    pci_dss: not applicable — Loops does not process cardholder data (billing is handled by Stripe)
+    fedramp: not claimed
+    iso_27001: not claimed
+legal_entity: Astrodon Corporation
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

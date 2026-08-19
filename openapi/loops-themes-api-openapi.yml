@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Loops OpenAPI Spec API key Themes API
+  title: Loops OpenAPI Spec Themes API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
-  version: 1.8.0
+  version: 1.21.6
 servers:
 - url: https://app.loops.so/api/v1
 tags:
@@ -17,11 +17,16 @@ paths:
       description: The ID of the theme.
       schema:
         type: string
+        examples:
+        - clt3u5v7w9x1y3z5a7b9c1d3
     get:
+      operationId: getTheme
       tags:
       - Themes
       summary: Get a theme
       description: Retrieve a single theme by ID.
+      x-mint:
+        href: /api-reference/get-theme
       responses:
         '200':
           description: Successful.
@@ -47,12 +52,60 @@ paths:
           description: Wrong HTTP request method.
       security:
       - apiKey: []
+    post:
+      operationId: updateTheme
+      tags:
+      - Themes
+      summary: Update a theme
+      description: 'Update a theme''s name and/or styles. When `styles` change, the update cascades to every email using this theme, and `affectedEmailCount` in the response reports how many emails were affected. Manual style edits made on individual emails are preserved: the cascade only changes properties an email has not overridden. A per-email override is removed only when it becomes identical to the theme''s new value, after which that email follows the theme for that property.'
+      x-mint:
+        href: /api-reference/update-theme
+        content: 'When `styles` change, the update cascades to every email using this theme, and `affectedEmailCount` in the response reports how many emails were affected.
+
+
+          Manual style edits made on individual emails are preserved: the cascade only changes properties an email has not overridden. A per-email override is removed only when it becomes identical to the theme''s new value, after which that email follows the theme for that property.'
+        metadata:
+          description: Update a theme's name and/or styles. Style changes cascade to every email using the theme.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateThemeBody'
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateThemeResponse'
+        '400':
+          description: Invalid `themeId` or request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThemeFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Theme not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThemeFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
   /themes:
     get:
+      operationId: listThemes
       tags:
       - Themes
       summary: List themes
       description: Retrieve a paginated list of email themes, most recently created first.
+      x-mint:
+        href: /api-reference/list-themes
       parameters:
       - name: perPage
         in: query
@@ -85,112 +138,348 @@ paths:
           description: Wrong HTTP request method.
       security:
       - apiKey: []
+    post:
+      operationId: createTheme
+      tags:
+      - Themes
+      summary: Create a theme
+      description: Create a new email theme for use across Loops emails.
+      x-mint:
+        href: /api-reference/create-theme
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateThemeBody'
+      responses:
+        '201':
+          description: Theme created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThemeResponse'
+        '400':
+          description: Invalid request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThemeFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
 components:
   schemas:
-    ThemeResponse:
+    CreateThemeBody:
       type: object
       properties:
-        success:
-          type: boolean
-          examples:
-          - true
-        themeId:
-          type: string
         name:
           type: string
+          description: The theme name.
+          examples:
+          - Dark mode
         styles:
+          description: Style attributes for the theme. Attributes use the same names as the LMX [`<Style />`](/creating-emails/lmx#document-styles) tag attributes.
           $ref: '#/components/schemas/ThemeStyles'
-        isDefault:
-          type: boolean
-          description: Whether this theme is the team's default.
-        createdAt:
-          type: string
-          description: ISO 8601 timestamp.
-        updatedAt:
-          type: string
-          description: ISO 8601 timestamp.
       required:
-      - success
-      - themeId
       - name
-      - styles
-      - isDefault
-      - createdAt
-      - updatedAt
+      examples:
+      - name: Dark mode
+        styles:
+          backgroundColor: '#111827'
+          bodyColor: '#1f2937'
     ListThemesResponse:
       type: object
       properties:
-        success:
-          type: boolean
-          examples:
-          - true
         pagination:
-          type: object
-          properties:
-            totalResults:
-              type: number
-            returnedResults:
-              type: number
-            perPage:
-              type: number
-            totalPages:
-              type: number
-            nextCursor:
-              type:
-              - string
-              - 'null'
-            nextPage:
-              type:
-              - string
-              - 'null'
+          $ref: '#/components/schemas/Pagination'
         data:
           type: array
           items:
             $ref: '#/components/schemas/Theme'
       required:
-      - success
       - pagination
       - data
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: clt3u5v7w9x1y3z5a7b9c1d3
+          name: Default
+          styles:
+            backgroundColor: '#f5f5f5'
+            backgroundXPadding: 24
+            backgroundYPadding: 24
+            bodyColor: '#ffffff'
+            bodyXPadding: 24
+            bodyYPadding: 24
+            bodyFontFamily: Helvetica
+            bodyFontCategory: sans-serif
+            borderColor: '#e5e5e5'
+            borderWidth: 1
+            borderRadius: 8
+            buttonBodyColor: '#111827'
+            buttonBodyXPadding: 16
+            buttonBodyYPadding: 12
+            buttonBorderColor: '#111827'
+            buttonBorderWidth: 0
+            buttonBorderRadius: 6
+            buttonTextColor: '#ffffff'
+            buttonTextFormat: 0
+            buttonTextFontSize: 16
+            dividerColor: '#e5e5e5'
+            dividerBorderWidth: 1
+            textBaseColor: '#374151'
+            textBaseFontSize: 16
+            textBaseLineHeight: 24
+            textBaseLetterSpacing: 0
+            textLinkColor: '#2563eb'
+            heading1Color: '#111827'
+            heading1FontSize: 28
+            heading1LineHeight: 36
+            heading1LetterSpacing: -0.5
+            heading2Color: '#111827'
+            heading2FontSize: 22
+            heading2LineHeight: 30
+            heading2LetterSpacing: -0.25
+            heading3Color: '#111827'
+            heading3FontSize: 18
+            heading3LineHeight: 26
+            heading3LetterSpacing: 0
+          isDefault: true
+          createdAt: 2025-06-29 07:47:39.370000+00:00
+          updatedAt: 2025-06-29 07:47:39.370000+00:00
+    Pagination:
+      type: object
+      properties:
+        totalResults:
+          type: number
+          examples:
+          - 2
+        returnedResults:
+          type: number
+          examples:
+          - 2
+        perPage:
+          type: number
+          examples:
+          - 20
+        totalPages:
+          type: number
+          examples:
+          - 1
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+        nextPage:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+      required:
+      - totalResults
+      - returnedResults
+      - perPage
+      - totalPages
+      - nextCursor
+      - nextPage
+      examples:
+      - totalResults: 2
+        returnedResults: 2
+        perPage: 20
+        totalPages: 1
+        nextCursor: null
+        nextPage: null
     Theme:
       type: object
       properties:
-        themeId:
+        id:
           type: string
+          description: The ID of the theme.
+          examples:
+          - clt3u5v7w9x1y3z5a7b9c1d3
         name:
           type: string
+          description: The name of the theme.
+          examples:
+          - Default
         styles:
           $ref: '#/components/schemas/ThemeStyles'
         isDefault:
           type: boolean
           description: Whether this theme is the team's default.
+          examples:
+          - true
         createdAt:
           type: string
-          description: ISO 8601 timestamp.
+          description: ISO 8601 timestamp for when the theme was created.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
         updatedAt:
           type: string
-          description: ISO 8601 timestamp.
+          description: ISO 8601 timestamp for when the theme was last updated.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
       required:
-      - themeId
+      - id
       - name
       - styles
       - isDefault
       - createdAt
       - updatedAt
+      examples:
+      - id: clt3u5v7w9x1y3z5a7b9c1d3
+        name: Default
+        styles:
+          backgroundColor: '#f5f5f5'
+          backgroundXPadding: 24
+          backgroundYPadding: 24
+          bodyColor: '#ffffff'
+          bodyXPadding: 24
+          bodyYPadding: 24
+          bodyFontFamily: Helvetica
+          bodyFontCategory: sans-serif
+          borderColor: '#e5e5e5'
+          borderWidth: 1
+          borderRadius: 8
+          buttonBodyColor: '#111827'
+          buttonBodyXPadding: 16
+          buttonBodyYPadding: 12
+          buttonBorderColor: '#111827'
+          buttonBorderWidth: 0
+          buttonBorderRadius: 6
+          buttonTextColor: '#ffffff'
+          buttonTextFormat: 0
+          buttonTextFontSize: 16
+          dividerColor: '#e5e5e5'
+          dividerBorderWidth: 1
+          textBaseColor: '#374151'
+          textBaseFontSize: 16
+          textBaseLineHeight: 24
+          textBaseLetterSpacing: 0
+          textLinkColor: '#2563eb'
+          heading1Color: '#111827'
+          heading1FontSize: 28
+          heading1LineHeight: 36
+          heading1LetterSpacing: -0.5
+          heading2Color: '#111827'
+          heading2FontSize: 22
+          heading2LineHeight: 30
+          heading2LetterSpacing: -0.25
+          heading3Color: '#111827'
+          heading3FontSize: 18
+          heading3LineHeight: 26
+          heading3LetterSpacing: 0
+        isDefault: true
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
     ThemeFailureResponse:
       type: object
       properties:
-        success:
-          type: boolean
-          examples:
-          - false
         message:
           type: string
       required:
-      - success
       - message
+      examples:
+      - message: Theme not found.
+    ThemeResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          examples:
+          - clt3u5v7w9x1y3z5a7b9c1d3
+          description: The ID of the theme.
+        name:
+          type: string
+          examples:
+          - Default
+          description: The name of the theme.
+        styles:
+          $ref: '#/components/schemas/ThemeStyles'
+        isDefault:
+          type: boolean
+          description: Whether this theme is the team's default.
+          examples:
+          - true
+        createdAt:
+          type: string
+          description: ISO 8601 timestamp for when the theme was created.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        updatedAt:
+          type: string
+          description: ISO 8601 timestamp for when the theme was last updated.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+      required:
+      - id
+      - name
+      - styles
+      - isDefault
+      - createdAt
+      - updatedAt
+      examples:
+      - id: clt3u5v7w9x1y3z5a7b9c1d3
+        name: Default
+        styles:
+          backgroundColor: '#f5f5f5'
+          backgroundXPadding: 24
+          backgroundYPadding: 24
+          bodyColor: '#ffffff'
+          bodyXPadding: 24
+          bodyYPadding: 24
+          bodyFontFamily: Helvetica
+          bodyFontCategory: sans-serif
+          borderColor: '#e5e5e5'
+          borderWidth: 1
+          borderRadius: 8
+          buttonBodyColor: '#111827'
+          buttonBodyXPadding: 16
+          buttonBodyYPadding: 12
+          buttonBorderColor: '#111827'
+          buttonBorderWidth: 0
+          buttonBorderRadius: 6
+          buttonTextColor: '#ffffff'
+          buttonTextFormat: 0
+          buttonTextFontSize: 16
+          dividerColor: '#e5e5e5'
+          dividerBorderWidth: 1
+          textBaseColor: '#374151'
+          textBaseFontSize: 16
+          textBaseLineHeight: 24
+          textBaseLetterSpacing: 0
+          textLinkColor: '#2563eb'
+          heading1Color: '#111827'
+          heading1FontSize: 28
+          heading1LineHeight: 36
+          heading1LetterSpacing: -0.5
+          heading2Color: '#111827'
+          heading2FontSize: 22
+          heading2LineHeight: 30
+          heading2LetterSpacing: -0.25
+          heading3Color: '#111827'
+          heading3FontSize: 18
+          heading3LineHeight: 26
+          heading3LetterSpacing: 0
+        isDefault: true
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
     ThemeStyles:
       type: object
-      description: Flat map of style attributes, matching the attribute names accepted by the LMX `<Style />` tag. All attributes are returned with the values stored on the theme.
+      description: Flat map of style attributes, matching the attribute names accepted by the LMX `<Style />` tag.
       properties:
         backgroundColor:
           type: string
@@ -270,6 +559,71 @@ components:
           type: number
         heading3LetterSpacing:
           type: number
+    UpdateThemeBody:
+      type: object
+      description: At least one of `name` or `styles` must be provided.
+      properties:
+        name:
+          type: string
+        styles:
+          $ref: '#/components/schemas/ThemeStyles'
+    UpdateThemeResponse:
+      allOf:
+      - $ref: '#/components/schemas/ThemeResponse'
+      - type: object
+        properties:
+          affectedEmailCount:
+            type: number
+            description: The number of emails using this theme that are affected by the style change. `0` when only the name changed.
+        required:
+        - affectedEmailCount
+      examples:
+      - id: clt3u5v7w9x1y3z5a7b9c1d3
+        name: Default
+        styles:
+          backgroundColor: '#f5f5f5'
+          backgroundXPadding: 24
+          backgroundYPadding: 24
+          bodyColor: '#ffffff'
+          bodyXPadding: 24
+          bodyYPadding: 24
+          bodyFontFamily: Helvetica
+          bodyFontCategory: sans-serif
+          borderColor: '#e5e5e5'
+          borderWidth: 1
+          borderRadius: 8
+          buttonBodyColor: '#111827'
+          buttonBodyXPadding: 16
+          buttonBodyYPadding: 12
+          buttonBorderColor: '#111827'
+          buttonBorderWidth: 0
+          buttonBorderRadius: 6
+          buttonTextColor: '#ffffff'
+          buttonTextFormat: 0
+          buttonTextFontSize: 16
+          dividerColor: '#e5e5e5'
+          dividerBorderWidth: 1
+          textBaseColor: '#374151'
+          textBaseFontSize: 16
+          textBaseLineHeight: 24
+          textBaseLetterSpacing: 0
+          textLinkColor: '#2563eb'
+          heading1Color: '#111827'
+          heading1FontSize: 28
+          heading1LineHeight: 36
+          heading1LetterSpacing: -0.5
+          heading2Color: '#111827'
+          heading2FontSize: 22
+          heading2LineHeight: 30
+          heading2LetterSpacing: -0.25
+          heading3Color: '#111827'
+          heading3FontSize: 18
+          heading3LineHeight: 26
+          heading3LetterSpacing: 0
+        isDefault: true
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        affectedEmailCount: 12
   securitySchemes:
     apiKey:
       type: http

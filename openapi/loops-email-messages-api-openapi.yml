@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Loops OpenAPI Spec API key Email messages API
+  title: Loops OpenAPI Spec Email messages API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
-  version: 1.8.0
+  version: 1.21.6
 servers:
 - url: https://app.loops.so/api/v1
 tags:
@@ -17,11 +17,18 @@ paths:
       description: The ID of the email message.
       schema:
         type: string
+        examples:
+        - cle5f7g9h1i3j5k7l9m1n3p5
     get:
+      operationId: getEmailMessage
       tags:
       - Email messages
       summary: Get an email message
       description: Retrieve an email message, including its compiled LMX content.
+      x-mint:
+        href: /api-reference/get-email-message
+        metadata:
+          sidebarTitle: Get an email
       responses:
         '200':
           description: Successful.
@@ -45,13 +52,29 @@ paths:
                 $ref: '#/components/schemas/EmailMessageFailureResponse'
         '405':
           description: Wrong HTTP request method.
+        '409':
+          description: Email message uses MJML format or content cannot be parsed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailMessageFailureResponse'
       security:
       - apiKey: []
     post:
+      operationId: updateEmailMessage
       tags:
       - Email messages
       summary: Update an email message
       description: Update fields on an email message (subject, preview text, sender, LMX content). The campaign must be in draft status. Supply `expectedRevisionId` matching the current `contentRevisionId` — the server rejects mismatched revisions with 409.
+      x-mint:
+        href: /api-reference/update-email-message
+        metadata:
+          description: Update an email message's subject, preview text, sender, or LMX content.
+          sidebarTitle: Update an email
+        content: 'Supply `expectedRevisionId` matching the current `contentRevisionId`.
+
+
+          <Info>The campaign or transactional email that owns this email message must be in `Draft` status.</Info>'
       requestBody:
         required: true
         content:
@@ -82,7 +105,13 @@ paths:
         '405':
           description: Wrong HTTP request method.
         '409':
-          description: Campaign is not in draft status, `contentRevisionId` is stale, or content cannot be parsed.
+          description: Campaign is not in draft status, `contentRevisionId` is stale, content cannot be parsed, or email message uses MJML format.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailMessageFailureResponse'
+        '413':
+          description: LMX payload exceeds the 100KB limit.
           content:
             application/json:
               schema:
@@ -95,88 +124,496 @@ paths:
                 $ref: '#/components/schemas/EmailMessageFailureResponse'
       security:
       - apiKey: []
+  /email-messages/{emailMessageId}/preview:
+    parameters:
+    - name: emailMessageId
+      in: path
+      required: true
+      description: The ID of the email message.
+      schema:
+        type: string
+        examples:
+        - cle5f7g9h1i3j5k7l9m1n3p5
+    post:
+      operationId: previewEmailMessage
+      tags:
+      - Email messages
+      summary: Send a preview of an email message
+      description: Send a test preview of an email message to one or more addresses. The accepted variable fields depend on the parent's type - campaign previews accept `contactProperties`, workflow previews accept `contactProperties` and `eventProperties`, and transactional previews accept `dataVariables`. Supplying a field the parent cannot reference is rejected with 400.
+      x-mint:
+        href: /api-reference/preview-email-message
+        content: 'Send a test email message to one or more addresses. Accepted variable fields depend on the parent''s type:
+
+
+          - **Campaign** accepts `contactProperties`.
+
+          - **Workflow** accepts `contactProperties` and `eventProperties`.
+
+          - **Transactional** accepts `dataVariables`.
+
+
+          Supplying a field the parent cannot reference results in a `400 Bad Request` error.
+
+
+          Each team can send up to 100 preview emails per day.'
+        metadata:
+          description: Send a test preview of an email message to one or more addresses.
+          sidebarTitle: Preview email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailMessagePreviewRequest'
+      responses:
+        '200':
+          description: Preview scheduled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailMessagePreviewResponse'
+        '400':
+          description: Invalid request body, or a variable field the parent cannot reference.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailMessageFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Email message not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailMessageFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+        '429':
+          description: The daily preview limit was reached.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailMessageFailureResponse'
+      security:
+      - apiKey: []
+  /email-messages/{emailMessageId}/guardian:
+    parameters:
+    - name: emailMessageId
+      in: path
+      required: true
+      description: The ID of the email message.
+      schema:
+        type: string
+        examples:
+        - cle5f7g9h1i3j5k7l9m1n3p5
+    get:
+      operationId: getEmailMessageGuardian
+      tags:
+      - Email messages
+      summary: Run Guardian checks on an email message
+      description: Validate an email message's content against Guardian rules and return any errors and warnings. Errors must be resolved before the email can be published, warnings are advisory.
+      x-mint:
+        href: /api-reference/run-guardian-checks
+        content: 'Run the same [Guardian](/creating-emails/guardian) checks that run in the Loops editor on a saved email message. Use this to validate campaign, workflow, and transactional email content before publishing or sending.
+
+
+          Checks depend on the email message''s parent type:
+
+
+          - **Campaign** validates contact properties and rendered links and buttons.
+
+          - **Workflow** validates contact properties, event properties from the workflow''s event trigger, and rendered links and buttons.
+
+          - **Transactional** validates data variables and rendered links and buttons.
+
+          - **System transactional** validates required data variables and rendered links and buttons.
+
+
+          <Info>This will not work on MJML email messages, as they are not supported in the API.</Info>'
+        metadata:
+          description: Run Guardian content validation on an email message and return errors and warnings before you publish or send.
+          sidebarTitle: Guardian checks
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailMessageGuardianResponse'
+        '400':
+          description: Invalid `emailMessageId`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailMessageFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Email message not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailMessageFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+        '409':
+          description: Email message uses MJML format.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailMessageFailureResponse'
+      security:
+      - apiKey: []
 components:
   schemas:
-    UpdateEmailMessageRequest:
+    EmailMessageFailureResponse:
       type: object
       properties:
-        expectedRevisionId:
+        message:
           type: string
-          description: The `contentRevisionId` you last fetched. Used for optimistic concurrency — the request is rejected with 409 if the server's revision has advanced.
-        subject:
-          type: string
-        previewText:
-          type: string
-        fromName:
-          type: string
-        fromEmail:
-          type: string
-          description: The sender username (without `@` or domain). The team's sending domain is appended automatically.
-        replyToEmail:
-          type: string
-          description: Reply-to email. Must be empty or a valid email address.
-        lmx:
-          type: string
-          description: The email body serialized as LMX. Styles must be embedded in the LMX `<Style />` tag.
+      required:
+      - message
+      examples:
+      - message: Email message not found.
+    EmailMessageGuardianResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          description: Validation errors. These must be resolved before the email can be published.
+          items:
+            $ref: '#/components/schemas/GuardianRule'
+        warnings:
+          type: array
+          description: Validation warnings. These are advisory and do not block publishing.
+          items:
+            $ref: '#/components/schemas/GuardianRule'
+      required:
+      - errors
+      - warnings
+      example:
+        errors:
+        - rule: missingButtonHrefs
+          title: Missing button link
+          description: Buttons won't work without href value
+          items:
+          - label: Click here
+        - rule: missingLinkHrefs
+          title: Missing text link
+          description: Links won't work without href value
+          items:
+          - label: See more
+        warnings: []
+    EmailMessagePreviewRequest:
+      type: object
+      properties:
+        emails:
+          type: array
+          minItems: 1
+          items:
+            type: string
+          description: One or more addresses to send the preview to.
+        contactProperties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Contact property values to render. Accepted for campaign and workflow previews.
+          example:
+            firstName: Alex
+        eventProperties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Event property values to render. Accepted for workflow previews only.
+          example:
+            planName: Pro
+        dataVariables:
+          type: object
+          additionalProperties:
+            type: string
+          description: Transactional data variables to render. Accepted for transactional previews only.
+          example:
+            loginUrl: https://app.company.com/login
+      required:
+      - emails
       additionalProperties: false
+      examples:
+      - emails:
+        - alex@company.com
+        contactProperties:
+          firstName: Alex
+        eventProperties:
+          planName: Pro
+        dataVariables:
+          loginUrl: https://app.company.com/login
+    EmailMessagePreviewResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the email message the preview was sent for.
+          examples:
+          - cle5f7g9h1i3j5k7l9m1n3p5
+      required:
+      - id
+      examples:
+      - id: cle5f7g9h1i3j5k7l9m1n3p5
     EmailMessageResponse:
       type: object
       properties:
-        success:
-          type: boolean
-          examples:
-          - true
-        emailMessageId:
+        id:
           type: string
+          examples:
+          - cle5f7g9h1i3j5k7l9m1n3p5
+          description: The ID of the email message.
         campaignId:
-          type:
-          - string
-          - 'null'
+          type: string
+          description: The campaign this email message belongs to. Present only when the message belongs to a campaign (mutually exclusive with `transactionalId`).
+          examples:
+          - clc4m6n8p0q2r4s6t8u0v2x4
+        transactionalId:
+          type: string
+          description: The transactional email this email message belongs to. Present only when the message belongs to a transactional email (mutually exclusive with `campaignId`).
         subject:
           type: string
+          description: The email subject.
+          examples:
+          - Spring product updates
         previewText:
           type: string
+          description: The email preview text.
+          examples:
+          - See what's new this season
         fromName:
           type: string
+          description: The email sender name.
+          examples:
+          - Acme Team
         fromEmail:
           type: string
+          description: The email sender email address, without the team's sending domain.
+          examples:
+          - hello
         replyToEmail:
           type: string
+          description: The email reply-to address.
+          examples:
+          - support@company.com
+        ccEmail:
+          type: string
+          description: The email CC address. Only present when set.
+        bccEmail:
+          type: string
+          description: The email BCC address. Only present when set.
+        languageCode:
+          type: string
+          description: ISO 639-1 language code for the email, e.g. `en` or `fr`. Only present when set.
+        emailFormat:
+          type: string
+          enum:
+          - styled
+          - plain
+          description: The rendering format of the email.
+          examples:
+          - styled
         lmx:
           type: string
           description: The email body serialized as LMX.
+          examples:
+          - <Paragraph>Hello, {firstName}!</Paragraph>
         contentRevisionId:
           type:
           - string
           - 'null'
           description: The current content revision. Pass this as `expectedRevisionId` on your next update.
+          examples:
+          - clrev1s10n2i3d4e5f6g7h8
         updatedAt:
           type: string
           format: date-time
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        contactPropertiesFallbacks:
+          type: object
+          description: Fallback values for contact properties. Only present when set.
+          additionalProperties:
+            type: string
+        eventPropertiesFallbacks:
+          type: object
+          description: Fallback values for event properties. Only present when set.
+          additionalProperties:
+            type: string
+        dataVariablesFallbacks:
+          type: object
+          description: Fallback values for data variables. Only present when set.
+          additionalProperties:
+            type: string
+        warnings:
+          type: array
+          description: Non-fatal issues raised while compiling the submitted LMX. Only present on update responses when warnings were produced.
+          items:
+            type: object
+            properties:
+              rule:
+                type: string
+              severity:
+                type: string
+                enum:
+                - warning
+              message:
+                type: string
+              path:
+                type: string
+            required:
+            - rule
+            - severity
+            - message
       required:
-      - success
-      - emailMessageId
-      - campaignId
+      - id
       - subject
       - previewText
       - fromName
       - fromEmail
       - replyToEmail
+      - emailFormat
       - lmx
       - contentRevisionId
       - updatedAt
-    EmailMessageFailureResponse:
+      examples:
+      - id: cle5f7g9h1i3j5k7l9m1n3p5
+        campaignId: clc4m6n8p0q2r4s6t8u0v2x4
+        subject: Spring product updates
+        previewText: See what's new this season
+        fromName: Acme Team
+        fromEmail: hello
+        replyToEmail: support@company.com
+        emailFormat: styled
+        lmx: <Paragraph>Hello, {firstName}!</Paragraph>
+        contentRevisionId: clrev1s10n2i3d4e5f6g7h8
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+    GuardianRule:
       type: object
       properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
+        rule:
           type: string
+          description: The identifier of the Guardian rule that fired.
+          enum:
+          - unsupportedContactProperties
+          - missingFallbackContactProperties
+          - unsupportedEventProperties
+          - missingFallbackEventProperties
+          - unsupportedDataVariables
+          - invalidCustomDataVariables
+          - missingRequiredDataVariables
+          - missingButtonHrefs
+          - invalidButtonHrefs
+          - shortenedYouTubeButtonHrefs
+          - missingLinkHrefs
+          - invalidLinkHrefs
+          - shortenedYouTubeLinkHrefs
+          - shortenedYouTubeImageHrefs
+          - emailWithoutMailtoButtonHrefs
+          - emailWithoutMailtoLinkHrefs
+          - emailWithoutMailtoImageHrefs
+          - bareArrayNodes
+          - missingSocialIconHrefs
+        title:
+          type: string
+          description: A short summary of the rule.
+        description:
+          type: string
+          description: A longer explanation of why the issue matters.
+        items:
+          type: array
+          description: The specific elements that triggered the rule.
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+                description: A human-readable label for the item (for example, link text or a property name).
+              codeName:
+                type: string
+                description: Machine-readable identifier when the rule refers to a property or variable, when applicable.
+                example: firstName
+            required:
+            - label
       required:
-      - success
-      - message
+      - rule
+      - title
+      - description
+      - items
+    UpdateEmailMessageRequest:
+      type: object
+      properties:
+        expectedRevisionId:
+          type: string
+          description: The `contentRevisionId` you last fetched, or the `emailMessageContentRevisionId` you received when creating the campaign.
+        subject:
+          type: string
+        previewText:
+          type: string
+        fromName:
+          type: string
+        fromEmail:
+          type: string
+          description: The email sender email address, without the team's sending domain.
+          examples:
+          - hello
+        replyToEmail:
+          type: string
+          description: Reply-to email. Must be empty or a valid email address.
+        ccEmail:
+          type: string
+          description: CC email address. Requires the team to have CC/BCC enabled.
+        bccEmail:
+          type: string
+          description: BCC email address. Requires the team to have CC/BCC enabled.
+        languageCode:
+          type: string
+          description: ISO 639-1 language code for the email, e.g. `en` or `fr`.
+        emailFormat:
+          type: string
+          enum:
+          - styled
+          - plain
+          description: The rendering format of the email.
+        lmx:
+          type: string
+          description: The email body serialized as LMX. Styles must be embedded in the LMX `<Style />` tag.
+        contactPropertiesFallbacks:
+          type: object
+          description: 'Fallback values for contact properties, keyed by property name. Per-key merge: a string value sets the fallback, a null value deletes it, and keys omitted from the map are left unchanged.'
+          additionalProperties:
+            type:
+            - string
+            - 'null'
+        eventPropertiesFallbacks:
+          type: object
+          description: 'Fallback values for event properties, keyed by property name. Per-key merge: a string value sets the fallback, a null value deletes it, and keys omitted from the map are left unchanged.'
+          additionalProperties:
+            type:
+            - string
+            - 'null'
+        dataVariablesFallbacks:
+          type: object
+          description: 'Fallback values for data variables, keyed by variable name. Per-key merge: a string value sets the fallback, a null value deletes it, and keys omitted from the map are left unchanged.'
+          additionalProperties:
+            type:
+            - string
+            - 'null'
+      additionalProperties: false
+      examples:
+      - expectedRevisionId: clrev1s10n2i3d4e5f6g7h8
+        subject: Spring product updates
+        previewText: See what's new this season
+        fromName: Acme Team
+        fromEmail: hello
+        replyToEmail: support@company.com
+        emailFormat: styled
+        lmx: <Paragraph>Hello, {firstName}!</Paragraph>
+        contactPropertiesFallbacks:
+          firstName: there
   securitySchemes:
     apiKey:
       type: http

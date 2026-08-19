@@ -1,0 +1,477 @@
+openapi: 3.1.0
+info:
+  title: Loops OpenAPI Spec Audience segments API
+  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  version: 1.21.6
+servers:
+- url: https://app.loops.so/api/v1
+tags:
+- name: Audience segments
+  description: View audience segments
+paths:
+  /audience-segments/{audienceSegmentId}:
+    parameters:
+    - name: audienceSegmentId
+      in: path
+      required: true
+      description: The ID of the audience segment.
+      schema:
+        type: string
+        examples:
+        - cls6e8g0i2k4m6o8q0s2u4w6
+    get:
+      operationId: getAudienceSegment
+      tags:
+      - Audience segments
+      summary: Get an audience segment
+      description: Retrieve a single audience segment by ID.
+      x-mint:
+        href: /api-reference/get-audience-segment
+        metadata:
+          sidebarTitle: Get a segment
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceSegmentResponse'
+        '400':
+          description: Invalid `audienceSegmentId`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceSegmentFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Audience segment not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceSegmentFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+  /audience-segments:
+    get:
+      operationId: listAudienceSegments
+      tags:
+      - Audience segments
+      summary: List audience segments
+      description: Retrieve a paginated list of audience segments, most recently created first.
+      x-mint:
+        href: /api-reference/list-audience-segments
+        metadata:
+          sidebarTitle: List segments
+      parameters:
+      - name: perPage
+        in: query
+        required: false
+        description: How many results to return in each request. Must be between 10 and 50. Default is 20.
+        schema:
+          type: string
+      - name: cursor
+        in: query
+        required: false
+        description: A cursor to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAudienceSegmentsResponse'
+        '400':
+          description: Invalid `perPage` value.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceSegmentFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+    post:
+      operationId: createAudienceSegment
+      tags:
+      - Audience segments
+      summary: Create an audience segment
+      description: Create a new audience segment.
+      x-mint:
+        href: /api-reference/create-audience-segment
+        metadata:
+          sidebarTitle: Create a segment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAudienceSegmentRequest'
+      responses:
+        '200':
+          description: Audience segment created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceSegmentResponse'
+        '400':
+          description: Invalid request body, a name already used by another segment, or a filter with too many conditions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceSegmentFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: The filter references a campaign, workflow or workflow email that does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceSegmentFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+components:
+  schemas:
+    ActivityCondition:
+      type: object
+      description: Matches contacts by their activity on a campaign or workflow.
+      properties:
+        type:
+          type: string
+          enum:
+          - activity
+        action:
+          type: string
+          enum:
+          - sent
+          - opened
+          - clicked
+        negate:
+          type: boolean
+        target:
+          type: string
+          enum:
+          - campaign
+          - workflow
+          - workflowEmail
+        id:
+          type: string
+          description: The ID of the campaign, workflow, or workflow email.
+      required:
+      - type
+      - action
+      - negate
+      - target
+      - id
+      examples:
+      - type: activity
+        action: opened
+        negate: false
+        target: campaign
+        id: clc4m6n8p0q2r4s6t8u0v2x4
+    AudienceFilter:
+      type:
+      - object
+      - 'null'
+      description: A tree of audience conditions combined with `match`.
+      properties:
+        match:
+          type: string
+          enum:
+          - all
+          - any
+        conditions:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AudienceFilterCondition'
+      required:
+      - match
+      - conditions
+      additionalProperties: false
+    AudienceFilterCondition:
+      oneOf:
+      - $ref: '#/components/schemas/PropertyCondition'
+      - $ref: '#/components/schemas/OptInCondition'
+      - $ref: '#/components/schemas/ActivityCondition'
+      discriminator:
+        propertyName: type
+    AudienceSegment:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the audience segment.
+          examples:
+          - cls6e8g0i2k4m6o8q0s2u4w6
+        name:
+          type: string
+          description: The name of the audience segment.
+          examples:
+          - Power users
+        description:
+          type:
+          - string
+          - 'null'
+          description: An optional description of the audience segment.
+          examples:
+          - Contacts on the pro plan
+        createdAt:
+          type: string
+          description: ISO 8601 timestamp for when the audience segment was created.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        updatedAt:
+          type: string
+          description: ISO 8601 timestamp for when the audience segment was last updated.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        filter:
+          $ref: '#/components/schemas/AudienceFilter'
+      required:
+      - id
+      - name
+      - description
+      - createdAt
+      - updatedAt
+      - filter
+      examples:
+      - id: cls6e8g0i2k4m6o8q0s2u4w6
+        name: Power users
+        description: Contacts on the pro plan
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        filter:
+          match: all
+          conditions:
+          - type: property
+            key: plan
+            operator: equals
+            value: pro
+    AudienceSegmentFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Audience segment not found.
+    AudienceSegmentResponse:
+      $ref: '#/components/schemas/AudienceSegment'
+      examples:
+      - id: cls6e8g0i2k4m6o8q0s2u4w6
+        name: Power users
+        description: Contacts on the pro plan
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        filter:
+          match: all
+          conditions:
+          - type: property
+            key: plan
+            operator: equals
+            value: pro
+    CreateAudienceSegmentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          description: The name of the audience segment. Must be unique within the team.
+          examples:
+          - Active users
+        description:
+          type: string
+          maxLength: 1000
+          description: An optional description of the audience segment.
+        filter:
+          type: object
+          description: A tree of audience conditions combined with `match`.
+          properties:
+            match:
+              type: string
+              enum:
+              - all
+              - any
+            conditions:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/AudienceFilterCondition'
+          required:
+          - match
+          - conditions
+          additionalProperties: false
+      required:
+      - name
+      - filter
+      additionalProperties: false
+    ListAudienceSegmentsResponse:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AudienceSegment'
+      required:
+      - pagination
+      - data
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: cls6e8g0i2k4m6o8q0s2u4w6
+          name: Power users
+          description: Contacts on the pro plan
+          createdAt: 2025-06-29 07:47:39.370000+00:00
+          updatedAt: 2025-06-29 07:47:39.370000+00:00
+          filter:
+            match: all
+            conditions:
+            - type: property
+              key: plan
+              operator: equals
+              value: pro
+    OptInCondition:
+      type: object
+      description: Matches contacts by mailing-list opt-in status.
+      properties:
+        type:
+          type: string
+          enum:
+          - optIn
+        status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - accepted
+          - pending
+          - rejected
+          - null
+      required:
+      - type
+      - status
+      examples:
+      - type: optIn
+        status: accepted
+    Pagination:
+      type: object
+      properties:
+        totalResults:
+          type: number
+          examples:
+          - 2
+        returnedResults:
+          type: number
+          examples:
+          - 2
+        perPage:
+          type: number
+          examples:
+          - 20
+        totalPages:
+          type: number
+          examples:
+          - 1
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+        nextPage:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+      required:
+      - totalResults
+      - returnedResults
+      - perPage
+      - totalPages
+      - nextCursor
+      - nextPage
+      examples:
+      - totalResults: 2
+        returnedResults: 2
+        perPage: 20
+        totalPages: 1
+        nextCursor: null
+        nextPage: null
+    PropertyCondition:
+      type: object
+      description: Matches contacts by a property value.
+      properties:
+        type:
+          type: string
+          enum:
+          - property
+        key:
+          type: string
+          description: The contact property name.
+        operator:
+          type: string
+          enum:
+          - any
+          - contains
+          - notContains
+          - equals
+          - notEquals
+          - greaterThan
+          - lessThan
+          - isTrue
+          - isFalse
+          - empty
+          - notEmpty
+          - dateEmpty
+          - dateNotEmpty
+          - after
+          - before
+          - between
+        value:
+          description: The comparison value. Omitted for value-less operators (e.g. `isTrue`, `empty`). A `{ from, to }` object for `between`.
+          oneOf:
+          - type: string
+          - type: number
+          - type: object
+            properties:
+              from:
+                type: string
+                format: date-time
+              to:
+                type: string
+                format: date-time
+            required:
+            - from
+            - to
+      required:
+      - type
+      - key
+      - operator
+      examples:
+      - type: property
+        key: plan
+        operator: equals
+        value: pro
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer

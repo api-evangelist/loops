@@ -1,0 +1,166 @@
+generated: '2026-08-13'
+method: searched
+source: https://loops.so/docs/api-reference/intro + openapi/_original/loops-openapi.yaml (1.21.6)
+docs: https://loops.so/docs/api-reference/intro
+summary: >-
+  Cross-cutting runtime semantics for the Loops REST API, read from the
+  published documentation and from the provider's own OpenAPI 1.21.6. Loops is
+  a bearer-token API with real, documented idempotency on both send paths,
+  cursor pagination with a full pagination envelope, published rate-limit
+  response headers, and a consistent success/message error envelope. It has no
+  request-id tracing header and no sparse-fieldset or field-expansion mechanism.
+authentication:
+  style: bearer-token
+  header: 'Authorization: Bearer <api-key>'
+  scheme: http/bearer (OpenAPI securityScheme `apiKey`)
+  applied: '64 of 64 operations declare `security: [{apiKey: []}]`'
+  scoped: false
+  key_management: 'https://app.loops.so/settings?page=api'
+  client_side_use: >-
+    Explicitly forbidden. The docs warn the key must never be used client side,
+    and the API does not support CORS — cross-origin browser requests are
+    rejected by design, so calls must originate server side.
+  oauth:
+    present: true
+    surface: MCP only
+    note: >-
+      OAuth 2.0 with PKCE exists at https://app.loops.so/oauth/* but serves only
+      the MCP server (single scope `mcp`). The REST API is API-key only. See
+      authentication/loops-authentication.yml and scopes/loops-scopes.yml.
+idempotency:
+  supported: true
+  header: Idempotency-Key
+  max_length: 100
+  recommended_value: V4 UUID or equivalent high-entropy string
+  retention: 24 hours
+  conflict_status: 409
+  conflict_body: '{ "success": false, "message": "Idempotency key already used with a different request body." }'
+  scope:
+    - operationId: sendEvent
+      path: POST /v1/events/send
+      added: '2025-04-29'
+    - operationId: sendTransactionalEmail
+      path: POST /v1/transactional
+      added: '2025-03-28'
+  semantics: >-
+    Replay-protection rather than replay-response. A repeated key inside the
+    24-hour window returns 409 Conflict; it does NOT return the original
+    response body. A client retrying after a network timeout therefore learns
+    that the first request landed, but cannot recover its result, and must fetch
+    state another way.
+  coverage_note: >-
+    Only the two send operations accept the header. The 62 other operations —
+    including every create (createCampaign, createContact, createTheme,
+    createWorkflow, createUpload, createTransactionalEmail…) — have no
+    idempotency mechanism, so a retried create can duplicate a resource.
+    createContact does return 409 on a duplicate email or userId, which is a
+    natural-key guard rather than idempotency.
+pagination:
+  style: cursor
+  request_params:
+    - name: perPage
+      in: query
+      default: 20
+      min: 10
+      max: 50
+      type: string
+    - name: cursor
+      in: query
+      type: string
+      source: '`pagination.nextCursor` from the previous response'
+  response_envelope: pagination
+  response_fields:
+    - totalResults
+    - returnedResults
+    - perPage
+    - totalPages
+    - nextCursor
+    - nextPage
+  terminator: '`nextCursor` is null on the last page.'
+  operations_paginated: 10
+  note: >-
+    Unusually complete for a cursor scheme — Loops returns totalResults and
+    totalPages alongside the cursor, so a client can size a job before walking
+    it. Invalid `perPage` returns 400.
+sorting:
+  documented: partial
+  note: >-
+    Listing endpoints document a fixed order ("most recently created first").
+    There is no sort or order query parameter.
+filtering:
+  supported: limited
+  note: >-
+    Filtering is per-endpoint and identity-shaped, not general. findContact
+    takes `email` or `userId`; listMailingLists takes no filter; workflow and
+    campaign audience targeting is expressed in the request body, not in query
+    parameters. There is no generic filter/query language.
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  supported: partial
+  note: >-
+    Contacts carry arbitrary custom contact properties as top-level keys of the
+    contact object (string, number, boolean or date), which must be created in
+    Loops before use. Events carry `eventProperties`. There is no generic
+    `metadata` bag on other resources.
+request_tracing:
+  request_id_header: false
+  note: >-
+    No request-id or trace header is documented or declared in the spec. When
+    contacting support there is no correlation identifier to quote, and an
+    agent cannot tie a log line to an API call.
+versioning:
+  style: path-prefix
+  current: /v1
+  negotiation: none
+  see: lifecycle/loops-lifecycle.yml
+errors:
+  envelope:
+    success: boolean
+    message: string
+    error: 'string (DEPRECATED 2025-09-11, still served)'
+    path: 'string (DEPRECATED 2025-09-11, still served)'
+  format: proprietary-json
+  rfc9457: false
+  content_type: application/json
+  see: errors/loops-problem-types.yml
+rate_limits:
+  headers:
+    - x-ratelimit-limit
+    - x-ratelimit-remaining
+  exhausted_status: 429
+  retry_after: not documented
+  see: rate-limits/loops-rate-limits.yml
+payload_limits:
+  transactional_max_body: 4MB
+  lmx_body_max: 100KB
+  string_value_max: 500 characters per body value (including surrounding quotes)
+  note: >-
+    Exceeding the string limit returns "Some body key or value is longer than
+    allowable". Oversized LMX returns 413.
+content_negotiation:
+  request: application/json
+  response: application/json
+  cors: not supported (server-side use only)
+webhooks:
+  signing: Standard-Webhooks-style HMAC-SHA256
+  headers:
+    - webhook-id
+    - webhook-timestamp
+    - webhook-signature
+  signed_content: '{webhook-id}.{webhook-timestamp}.{raw-body}'
+  secret_encoding: base64, transported as `whsec_<base64>`; split on `_` and base64-decode before HMAC
+  endpoints_per_account: 1
+  delivery_rate: 10 events/second, excess queued
+  see: asyncapi/loops-webhooks-asyncapi.yml
+cross_links:
+  authentication: authentication/loops-authentication.yml
+  errors: errors/loops-problem-types.yml
+  lifecycle: lifecycle/loops-lifecycle.yml
+  rate_limits: rate-limits/loops-rate-limits.yml
+  scopes: scopes/loops-scopes.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

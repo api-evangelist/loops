@@ -1,20 +1,39 @@
 openapi: 3.1.0
 info:
-  title: Loops OpenAPI Spec API key Transactional emails API
+  title: Loops OpenAPI Spec Transactional emails API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
-  version: 1.8.0
+  version: 1.21.6
 servers:
 - url: https://app.loops.so/api/v1
 tags:
 - name: Transactional emails
-  description: Send and view transactional emails
+  description: Create, manage, and send transactional emails
 paths:
   /transactional:
     post:
+      operationId: sendTransactionalEmail
       tags:
       - Transactional emails
       summary: Send a transactional email
-      description: Send a transactional email to a contact.<br>Please [email us](mailto:help@loops.so) to enable attachments on your account before using them with the API.
+      description: 'Send a transactional email to a contact.<br>Please [email us](mailto:help@loops.so) to enable attachments on your account before using them with the API.
+
+
+        To set dynamic Subject, From, Reply to, CC, BCC email header fields, add data variables to those fields in the editor, then include data for each variable in the API request. Read our transactional email guide for more details.'
+      x-mint:
+        metadata:
+          description: Send a transactional email.
+          sidebarTitle: Send transactional
+        href: /api-reference/send-transactional-email
+        content: 'Send a transactional email, including optional data variables, to a single recipient.
+
+
+          To set dynamic Subject, From, Reply to, CC, BCC email header fields, add data variables to those fields in the editor, then include data for each variable in the API request. Read our [transactional email guide](/transactional) for more details.
+
+
+          To send a test preview of a transactional email, use the [Preview email message](/api-reference/preview-email-message) endpoint.
+
+
+          <Note>Please [email us](mailto:help@loops.so) to enable attachments on your account before using them with the API.</Note>'
       requestBody:
         content:
           application/json:
@@ -24,7 +43,13 @@ paths:
       parameters:
       - in: header
         name: Idempotency-Key
-        description: Include a unique ID for this request (maximum 100 characters) to avoid duplicate emails. [More info](https://loops.so/docs/api-reference/send-transactional-email#param-idempotency-key)
+        description: 'Include a unique ID for this request (maximum 100 characters) to avoid duplicate emails.
+
+
+          The value should be a string of up to 100 characters and should be unique for each request. We recommend using V4 UUIDs or some other method with enough guaranteed entropy to avoid collisions during a 24 hour window.
+
+
+          This endpoint will return a `409 Conflict` response if the idempotency key has been used in the previous 24 hours.'
         schema:
           type: string
           maxLength: 100
@@ -41,7 +66,7 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - $ref: '#/components/schemas/TransactionalFailureResponse'
+                - $ref: '#/components/schemas/TransactionalSendFailureResponse'
                 - $ref: '#/components/schemas/TransactionalFailure2Response'
                 - $ref: '#/components/schemas/TransactionalFailure3Response'
                 - $ref: '#/components/schemas/TransactionalFailure4Response'
@@ -63,10 +88,15 @@ paths:
       security:
       - apiKey: []
     get:
+      operationId: listPublishedTransactionalEmails
+      deprecated: true
       tags:
       - Transactional emails
       summary: List transactional emails
       description: Get a list of published transactional emails.
+      x-mint:
+        href: /api-reference/list-transactional-emails-v1
+        content: <Warning>This endpoint is deprecated. Use [List transactional emails](/api-reference/list-transactional-emails) instead.</Warning>
       parameters:
       - name: perPage
         in: query
@@ -91,9 +121,308 @@ paths:
           description: Wrong HTTP request method.
       security:
       - apiKey: []
+  /transactional-emails:
+    get:
+      operationId: listTransactionalEmails
+      tags:
+      - Transactional emails
+      summary: List transactional emails
+      description: Retrieve a paginated list of transactional emails, most recently created first.
+      x-mint:
+        href: /api-reference/list-transactional-emails
+        metadata:
+          sidebarTitle: List transactionals
+      parameters:
+      - name: perPage
+        in: query
+        required: false
+        description: How many results to return in each request. Must be between 10 and 50. Default is 20.
+        schema:
+          type: string
+      - name: cursor
+        in: query
+        required: false
+        description: A cursor to return a specific page of results. Cursors can be found from the `pagination.nextCursor` value in each response.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTransactionalsResourceResponse'
+        '400':
+          description: Invalid `perPage` value.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+    post:
+      operationId: createTransactionalEmail
+      tags:
+      - Transactional emails
+      summary: Create a transactional email
+      description: Create a new transactional email. An empty draft email message is created automatically and its `draftEmailMessageId` is returned. Use the `POST /v1/email-messages/{emailMessageId}` endpoint along with the returned `draftEmailMessageContentRevisionId` to set subject, sender, preview text, and LMX content, then call `POST /v1/transactional-emails/{transactionalId}/publish` to publish the draft.
+      x-mint:
+        href: /api-reference/create-transactional-email
+        content: 'This endpoint creates a transactional email and an empty draft email message in one step.
+
+
+          Use the returned `draftEmailMessageId` and `draftEmailMessageContentRevisionId` when calling the [Update email message](/api-reference/update-email-message) endpoint to set subject, sender, preview text, and LMX content.
+
+
+          Call [Publish transactional email draft](/api-reference/publish-transactional-email) to publish.'
+        metadata:
+          sidebarTitle: Create transactional
+          description: Create a new transactional email and its draft email message, ready for editing, previewing, and publishing through the Loops API.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionalRequest'
+      responses:
+        '201':
+          description: Transactional email created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalDraftResponse'
+        '400':
+          description: Invalid request body or no sending domain configured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+  /transactional-emails/{transactionalId}:
+    parameters:
+    - name: transactionalId
+      in: path
+      required: true
+      description: The ID of the transactional email.
+      schema:
+        type: string
+        examples:
+        - cll42l54f20i1la0lfooe3z12
+    get:
+      operationId: getTransactionalEmail
+      tags:
+      - Transactional emails
+      summary: Get a transactional email
+      description: Retrieve a single transactional email by ID.
+      x-mint:
+        href: /api-reference/get-transactional-email
+        metadata:
+          sidebarTitle: Get transactional
+      responses:
+        '200':
+          description: Successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalResource'
+        '400':
+          description: Invalid `transactionalId`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Transactional email not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+    post:
+      operationId: updateTransactionalEmail
+      tags:
+      - Transactional emails
+      summary: Update a transactional email
+      description: Update a transactional email by ID.
+      x-mint:
+        href: /api-reference/update-transactional-email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTransactionalRequest'
+      responses:
+        '200':
+          description: Transactional email updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalResource'
+        '400':
+          description: Invalid request body or `transactionalId`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Transactional email not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+  /transactional-emails/{transactionalId}/draft:
+    parameters:
+    - name: transactionalId
+      in: path
+      required: true
+      description: The ID of the transactional email.
+      schema:
+        type: string
+        examples:
+        - cll42l54f20i1la0lfooe3z12
+    post:
+      operationId: ensureTransactionalDraft
+      tags:
+      - Transactional emails
+      summary: Ensure a draft email message
+      description: Ensure the transactional email has a draft email message. If a draft already exists it is returned unchanged; otherwise a new empty draft is created (seeded from the most recent published version when present). Use `POST /v1/email-messages/{emailMessageId}` to edit the draft's content.
+      x-mint:
+        href: /api-reference/ensure-transactional-draft
+        content: 'If a draft email message already exists, it is returned unchanged. Otherwise a new empty draft is created (seeded from the most recent published version when present).
+
+
+          Use the returned `draftEmailMessageId` and `draftEmailMessageContentRevisionId` when calling [Update an email message](/api-reference/update-email-message) to edit the draft''s content.'
+        metadata:
+          title: Ensure a transactional email has a draft
+          sidebarTitle: Ensure draft
+          description: Ensure a transactional email has a draft email message ready for editing, creating one from the published version if no draft currently exists.
+      responses:
+        '200':
+          description: Draft ready.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalDraftResponse'
+        '400':
+          description: Invalid `transactionalId` or no sending domain configured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Transactional email not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+      security:
+      - apiKey: []
+  /transactional-emails/{transactionalId}/publish:
+    parameters:
+    - name: transactionalId
+      in: path
+      required: true
+      description: The ID of the transactional email.
+      schema:
+        type: string
+        examples:
+        - cll42l54f20i1la0lfooe3z12
+    post:
+      operationId: publishTransactionalEmail
+      tags:
+      - Transactional emails
+      summary: Publish a transactional email draft
+      description: Publish the transactional email's current draft email message. The draft becomes the published version and the draft is cleared.
+      x-mint:
+        href: /api-reference/publish-transactional-email
+        content: 'The transactional email''s current draft email message is published. The draft becomes the published version and the draft is cleared.
+
+
+          After publishing, use the returned `id` as `transactionalId` with [Send a transactional email](/api-reference/send-transactional-email) to send the email.'
+        metadata:
+          title: Publish a transactional email
+          sidebarTitle: Publish transactional
+      responses:
+        '200':
+          description: Transactional email published.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalResource'
+        '400':
+          description: Invalid `transactionalId`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '401':
+          description: Invalid API key or content API not enabled for this team.
+        '404':
+          description: Transactional email not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '405':
+          description: Wrong HTTP request method.
+        '409':
+          description: No draft to publish.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+        '422':
+          description: Draft failed validation, sending domain is not verified, or content was flagged as unsafe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionalFailureResponse'
+      security:
+      - apiKey: []
 components:
   schemas:
-    TransactionalFailureResponse:
+    CreateTransactionalRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the transactional email.
+          examples:
+          - Welcome email
+        transactionalGroupId:
+          type: string
+          description: The ID of the group to add this transactional email to. Defaults to the team's default group when omitted.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+      required:
+      - name
+      additionalProperties: false
+    IdempotencyKeyFailureResponse:
       type: object
       properties:
         success:
@@ -105,56 +434,186 @@ components:
       required:
       - success
       - message
-    TransactionalRequest:
+      examples:
+      - success: false
+        message: Idempotency key already used with a different request body.
+    ListTransactionalsResourceResponse:
       type: object
-      required:
-      - email
-      - transactionalId
       properties:
-        email:
-          type: string
-        transactionalId:
-          type: string
-          description: The ID of the transactional email to send.
-        addToAudience:
-          type: boolean
-          description: If `true`, a contact will be created in your audience using the `email` value (if a matching contact doesn't already exist).
-        dataVariables:
-          type: object
-          description: An object containing contact data as defined by the data variables added to the transactional email template.
-          examples:
-          - name: Chris
-            passwordResetLink: https://example.com/reset-password
-        attachments:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
           type: array
-          description: A list containing file objects to be sent along with an email message.
           items:
-            type: object
-            required:
-            - filename
-            - contentType
-            - data
-            properties:
-              filename:
-                type: string
-                description: The name of the file, shown in email clients.
-              contentType:
-                type: string
-                description: The MIME type of the file.
-              data:
-                type: string
-                description: The base64-encoded content of the file.
+            $ref: '#/components/schemas/TransactionalResource'
+      required:
+      - pagination
+      - data
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: cll42l54f20i1la0lfooe3z12
+          name: Sign up confirmation
+          draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+          publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+          transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
+          createdAt: 2025-06-29 07:47:39.370000+00:00
+          updatedAt: 2025-06-29 07:47:39.370000+00:00
+          dataVariables:
+          - confirmationUrl
+    ListTransactionalsResponse:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionalEmail'
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: cll42l54f20i1la0lfooe3z12
+          name: Sign up confirmation
+          lastUpdated: 2025-06-29 07:47:39.370000+00:00
+          dataVariables:
+          - confirmationUrl
+    Pagination:
+      type: object
+      properties:
+        totalResults:
+          type: number
+          examples:
+          - 2
+        returnedResults:
+          type: number
+          examples:
+          - 2
+        perPage:
+          type: number
+          examples:
+          - 20
+        totalPages:
+          type: number
+          examples:
+          - 1
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+        nextPage:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+      required:
+      - totalResults
+      - returnedResults
+      - perPage
+      - totalPages
+      - nextCursor
+      - nextPage
+      examples:
+      - totalResults: 2
+        returnedResults: 2
+        perPage: 20
+        totalPages: 1
+        nextCursor: null
+        nextPage: null
+    TransactionalDraftResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the transactional email.
+        name:
+          type: string
+          description: The name of the transactional email.
+        draftEmailMessageId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the draft email message.
+        draftEmailMessageContentRevisionId:
+          type:
+          - string
+          - 'null'
+          description: The `contentRevisionId` of the draft email message. Pass this as `expectedRevisionId` on your first update via `POST /v1/email-messages/{emailMessageId}`.
+          examples:
+          - clrev1s10n2i3d4e5f6g7h8
+        publishedEmailMessageId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the published email message. `null` if there is no published version.
+        transactionalGroupId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the group this transactional email belongs to. Returned when creating a transactional email.
+        createdAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp for when the transactional email was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp for when the transactional email was last updated.
+        dataVariables:
+          type: array
+          description: Data variable names used by the published email. Empty for unpublished transactional emails.
+          items:
+            type: string
+      required:
+      - id
+      - name
+      - draftEmailMessageId
+      - draftEmailMessageContentRevisionId
+      - publishedEmailMessageId
+      - createdAt
+      - updatedAt
+      - dataVariables
+      examples:
+      - id: cll42l54f20i1la0lfooe3z12
+        name: Sign up confirmation
+        draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        dataVariables:
+        - confirmationUrl
+        draftEmailMessageContentRevisionId: clrev1s10n2i3d4e5f6g7h8
     TransactionalEmail:
       type: object
       properties:
         id:
           type: string
+          description: The ID of the transactional email.
         name:
           type: string
+          description: The name of the transactional email.
         lastUpdated:
           type: string
+          description: The date and time the transactional email was last updated in ISO 8601 format.
         dataVariables:
           type: array
+          description: The data variables used by the transactional email.
       examples:
       - id: cll42l54f20i1la0lfooe3z12
         name: Sign up confirmation
@@ -166,7 +625,7 @@ components:
       - name
       - lastUpdated
       - dataVariables
-    TransactionalFailure5Response:
+    TransactionalFailure2Response:
       type: object
       properties:
         success:
@@ -175,20 +634,12 @@ components:
           - false
         message:
           type: string
-        error:
-          type: object
-          properties:
-            path:
-              type: string
-            message:
-              type: string
-        transactionalId:
+        path:
           type: string
       required:
       - success
       - message
-      - error
-      - transactionalId
+      - path
     TransactionalFailure3Response:
       type: object
       properties:
@@ -209,21 +660,6 @@ components:
       - success
       - message
       - error
-    TransactionalFailure2Response:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-        path:
-          type: string
-      required:
-      - success
-      - message
-      - path
     TransactionalFailure4Response:
       type: object
       properties:
@@ -244,7 +680,7 @@ components:
       - success
       - message
       - error
-    IdempotencyKeyFailureResponse:
+    TransactionalFailure5Response:
       type: object
       properties:
         success:
@@ -253,35 +689,186 @@ components:
           - false
         message:
           type: string
+        error:
+          type: object
+          properties:
+            path:
+              type: string
+            message:
+              type: string
+        transactionalId:
+          type: string
+          examples:
+          - cll42l54f20i1la0lfooe3z12
       required:
       - success
       - message
-    ListTransactionalsResponse:
+      - error
+      - transactionalId
+      examples:
+      - success: false
+        message: 'Missing required data variable(s): confirmationUrl'
+        error:
+          path: dataVariables
+          message: 'Missing required data variable(s): confirmationUrl'
+        transactionalId: cll42l54f20i1la0lfooe3z12
+    TransactionalFailureResponse:
       type: object
       properties:
-        pagination:
+        message:
+          type: string
+          examples:
+          - Transactional email not found.
+      required:
+      - message
+      examples:
+      - message: Transactional email not found.
+    TransactionalRequest:
+      type: object
+      required:
+      - email
+      - transactionalId
+      properties:
+        email:
+          type: string
+          examples:
+          - alex@company.com
+          description: The recipient's email address.
+        transactionalId:
+          type: string
+          description: The ID of the transactional email to send.
+          examples:
+          - cll42l54f20i1la0lfooe3z12
+        addToAudience:
+          type: boolean
+          description: If `true`, a contact will be created in your audience using the `email` value (if a matching contact doesn't already exist).
+          examples:
+          - true
+        dataVariables:
           type: object
-          properties:
-            totalResults:
-              type: number
-            returnedResults:
-              type: number
-            perPage:
-              type: number
-            totalPages:
-              type: number
-            nextCursor:
-              type:
-              - string
-              - 'null'
-            nextPage:
-              type:
-              - string
-              - 'null'
-        data:
+          description: 'An object containing data as defined by the data variables added to the transactional email template. Values can be of type string or number.
+
+
+            If you have added optional data variables to your email, you can exclude them from the dataVariables object or set the value to "".
+
+
+            If you have added an array data variable to your email, make sure to include an array matching the data variables you added to your array block.'
+          examples:
+          - name: Chris
+            passwordResetLink: https://example.com/reset-password
+        attachments:
           type: array
+          description: A list containing file objects to be sent along with an email message. Attachments must be enabled by Loops support before they can be used with the API.
           items:
-            $ref: '#/components/schemas/TransactionalEmail'
+            type: object
+            required:
+            - filename
+            - contentType
+            - data
+            properties:
+              filename:
+                type: string
+                description: The name of the file, shown in email clients.
+              contentType:
+                type: string
+                description: The MIME type of the file.
+              data:
+                type: string
+                description: The base64-encoded content of the file.
+      examples:
+      - email: alex@company.com
+        transactionalId: cll42l54f20i1la0lfooe3z12
+        addToAudience: true
+        dataVariables:
+          name: Alex
+          passwordResetLink: https://app.company.com/reset/abc123
+    TransactionalResource:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the transactional email.
+          examples:
+          - cll42l54f20i1la0lfooe3z12
+        name:
+          type: string
+          description: The name of the transactional email.
+          examples:
+          - Sign up confirmation
+        draftEmailMessageId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the draft email message. `null` if there is no draft version.
+          examples:
+          - cle5f7g9h1i3j5k7l9m1n3p5
+        publishedEmailMessageId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the published email message. `null` if there is no published version.
+          examples:
+          - cle5f7g9h1i3j5k7l9m1n3p5
+        transactionalGroupId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the group this transactional email belongs to.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+        createdAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp for when the transactional email was created.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        updatedAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp for when the transactional email was last updated.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        dataVariables:
+          type: array
+          description: Data variable names used by the published email. Empty for unpublished transactional emails.
+          items:
+            type: string
+      required:
+      - id
+      - name
+      - draftEmailMessageId
+      - publishedEmailMessageId
+      - transactionalGroupId
+      - createdAt
+      - updatedAt
+      - dataVariables
+      examples:
+      - id: cll42l54f20i1la0lfooe3z12
+        name: Sign up confirmation
+        draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        dataVariables:
+        - confirmationUrl
+    TransactionalSendFailureResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+          examples:
+          - 'Missing required data variable(s): confirmationUrl'
+      required:
+      - success
+      - message
+      examples:
+      - success: false
+        message: 'Missing required data variable(s): confirmationUrl'
     TransactionalSuccessResponse:
       type: object
       properties:
@@ -291,6 +878,21 @@ components:
           - true
       required:
       - success
+    UpdateTransactionalRequest:
+      type: object
+      minProperties: 1
+      description: At least one field must be provided.
+      properties:
+        name:
+          type: string
+          examples:
+          - Password reset email
+        transactionalGroupId:
+          type: string
+          description: The ID of the group to move this transactional email to.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+      additionalProperties: false
   securitySchemes:
     apiKey:
       type: http

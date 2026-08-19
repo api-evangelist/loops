@@ -1,0 +1,162 @@
+generated: '2026-08-13'
+method: derived
+source: mcp/loops-mcp.yml + openapi/_original/loops-openapi.yaml (1.21.6)
+note: >-
+  Loops does not publish one MCP tool per REST operation, so this crosswalk does
+  not look like the usual one-to-one table. The server exposes four META-tools —
+  search, describe, execute, teams — that dispatch to the REST surface at
+  runtime. The binding below is therefore `dynamic-dispatch`: `execute` is the
+  single tool that reaches all 64 OpenAPI operations, and `search`/`describe`
+  operate over the specification itself rather than over any one operation.
+  Live tool schemas are OAuth-gated (tools/list returns 401), so every row is
+  mapped from the provider's published description of each tool, and confidence
+  is set accordingly. No GraphQL surface exists.
+surfaces:
+  openapi:
+    file: openapi/_original/loops-openapi.yaml
+    version: 1.21.6
+    servers:
+      - https://app.loops.so/api
+    operations: 64
+    gated: false
+    note: The spec itself is public at https://app.loops.so/openapi.json (HTTP 200, anonymous).
+  graphql:
+    present: false
+  mcp:
+    endpoint: https://mcp.loops.so
+    transport: streamable-http
+    gated: true
+    note: tools/list returns HTTP 401 with an RFC 9728 Bearer challenge, scope "mcp".
+crosswalk:
+  - tool: execute
+    category: dispatch
+    binding: dynamic-dispatch
+    confidence: high
+    rest:
+      - addWorkflowBranch
+      - changeWorkflowMailingList
+      - completeUpload
+      - createAudienceSegment
+      - createCampaign
+      - createCampaignGroup
+      - createComponent
+      - createContact
+      - createContactProperty
+      - createTheme
+      - createTransactionalEmail
+      - createTransactionalGroup
+      - createUpload
+      - createWorkflow
+      - createWorkflowNode
+      - deleteContact
+      - deleteWorkflowNode
+      - deleteWorkflowNodeRecursively
+      - ensureTransactionalDraft
+      - findContact
+      - getAudienceSegment
+      - getCampaign
+      - getCampaignGroup
+      - getComponent
+      - getContactSuppression
+      - getEmailMessage
+      - getEmailMessageGuardian
+      - getEventPattern
+      - getEventPatternByName
+      - getTheme
+      - getTransactionalEmail
+      - getTransactionalGroup
+      - getWorkflow
+      - getWorkflowNode
+      - listAudienceSegments
+      - listCampaignGroups
+      - listCampaigns
+      - listComponents
+      - listContactProperties
+      - listDedicatedSendingIps
+      - listEventPatterns
+      - listMailingLists
+      - listPublishedTransactionalEmails
+      - listThemes
+      - listTransactionalEmails
+      - listTransactionalGroups
+      - listWorkflows
+      - previewEmailMessage
+      - publishTransactionalEmail
+      - removeContactSuppression
+      - rerouteNodeConnection
+      - sendEvent
+      - sendTransactionalEmail
+      - testApiKey
+      - updateCampaign
+      - updateCampaignGroup
+      - updateComponent
+      - updateContact
+      - updateEmailMessage
+      - updateTheme
+      - updateTransactionalEmail
+      - updateTransactionalGroup
+      - updateWorkflowNode
+      - updateWorkflowProperties
+    note: >-
+      Runs a chosen Loops API operation for a chosen team. Because the operation
+      is selected at call time rather than baked into the tool, `execute`
+      inherits the parameters and requestBody of whichever OpenAPI operation the
+      agent names — the full set is listed above. Loops' own summary of the
+      server names contacts, mailing lists, events, transactional email and
+      teams explicitly, and then "the other operations exposed by the Loops
+      API", which is why all 64 are listed rather than a curated subset.
+  - tool: describe
+    category: discovery
+    binding: spec-introspection
+    confidence: high
+    rest: []
+    note: >-
+      Inspects the request shape of an operation. It reads the same contract as
+      openapi/_original/loops-openapi.yaml but is not itself a REST operation,
+      so it binds to no operationId.
+  - tool: search
+    category: discovery
+    binding: spec-introspection
+    confidence: high
+    rest: []
+    note: >-
+      Finds the right Loops API operation for a task. Searches the contract, not
+      the account data; binds to no operationId.
+  - tool: teams
+    category: account
+    binding: semantic
+    confidence: medium
+    rest:
+      - testApiKey
+    note: >-
+      Lists the Loops teams the authenticated user can access and lets the
+      client choose which team a call runs against. `GET /v1/api-key`
+      (testApiKey) is the only REST operation that returns team context
+      (`teamName`), but it returns exactly one team for one key rather than a
+      list, so this is a semantic match, not an equivalence. Multi-team
+      selection has no REST equivalent.
+mcp_only:
+  - tool: search
+    reason: Contract discovery over the OpenAPI document; no REST operation performs it.
+  - tool: describe
+    reason: Contract introspection; the equivalent for a REST client is reading the spec.
+  - tool: teams
+    reason: >-
+      Enumerating every team an identity can reach is an OAuth-session concept.
+      REST keys are scoped to a single team, so there is no list-teams operation.
+rest_only: []
+coverage:
+  mcp_tools: 4
+  rest_operations: 64
+  rest_operations_reachable_via_mcp: 64
+  rest_operations_with_a_dedicated_tool: 0
+  mcp_only_tools: 3
+  rest_only_operations: 0
+  note: >-
+    Reachability is total but granularity is zero: an agent inspecting this
+    server sees four tools, not 64 typed operations, and must call `search` and
+    `describe` before it can call anything safely. That is the tradeoff the
+    meta-tool pattern makes.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

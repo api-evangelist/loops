@@ -1,0 +1,157 @@
+{
+  "item": [
+    {
+      "id": "dd264d6d-c403-4a6c-b471-746a1ddb1964",
+      "name": "Mailing lists",
+      "description": {
+        "content": "View mailing lists",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "869f52da-31fd-475b-b8b1-851ff7d4e8ca",
+          "name": "Get a list of mailing lists",
+          "request": {
+            "name": "Get a list of mailing lists",
+            "description": {
+              "content": "Retrieve a list of your account's mailing lists.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "lists"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1b8e0d50-7798-4803-812f-a65904f7e7ad",
+              "name": "Successful.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "lists"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"isPublic\": false\n  },\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"isPublic\": false\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3112c1b9-05bb-4ecd-83e6-d69396a16d02",
+              "name": "Wrong HTTP request method.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "lists"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.loops.so/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "bb115b3d-c814-4ea7-8e79-2d50b5bdff58",
+    "name": "Loops OpenAPI Spec API key Mailing lists API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).",
+      "type": "text/plain"
+    }
+  }
+}

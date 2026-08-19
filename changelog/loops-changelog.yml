@@ -1,0 +1,111 @@
+generated: '2026-08-13'
+method: searched
+source: https://loops.so/docs/api-reference/changelog
+docs:
+  api: https://loops.so/docs/api-reference/changelog
+  product: https://loops.so/changelog
+scheme: dated-entries
+versioning: >-
+  The changelog is dated, not versioned. The OpenAPI document carries its own
+  semantic version in info.version (1.21.6 as of 2026-08-13) and the changelog
+  header describes itself as covering "new endpoints, fields, breaking changes,
+  and deprecations across OpenAPI versions", but individual entries are not
+  stamped with the OpenAPI version they landed in, so a consumer cannot map a
+  dated entry to a spec version without diffing.
+current_spec_version: 1.21.6
+window: 2026-02-13 to 2026-07-23 (recent entries; the published log runs back to 2023-10-12)
+entries:
+  - date: '2026-07-23'
+    breaking: false
+    additions:
+      - Create audience segment endpoint.
+      - Endpoints for creating and editing workflows and workflow nodes.
+      - Endpoints for reading event patterns.
+    changes:
+      - Removed `queuedContactLimitReached` from workflow node delete and mailing list change responses.
+  - date: '2026-07-16'
+    breaking: false
+    changes:
+      - '`rootNodeId` is now always a non-null string in workflow responses.'
+  - date: '2026-07-08'
+    breaking: false
+    additions:
+      - Endpoints for creating and updating themes and components.
+  - date: '2026-07-02'
+    breaking: false
+    additions:
+      - Guardian endpoint for validating email message content via the API.
+  - date: '2026-07-01'
+    breaking: false
+    additions:
+      - '`transactionalName` field in the transactional.email.sent webhook event.'
+  - date: '2026-06-22'
+    breaking: false
+    additions:
+      - Endpoints for viewing workflows and workflow nodes (open alpha).
+  - date: '2026-06-19'
+    breaking: false
+    additions:
+      - Endpoints for campaign groups, transactional groups, audience segments and email message previews.
+    changes:
+      - Campaign endpoints support audience targeting (mailing list, segment or filter), groups and scheduling.
+      - Email message endpoints support CC/BCC, language, email format and property fallbacks.
+      - Transactional email endpoints support groups.
+  - date: '2026-06-05'
+    breaking: false
+    additions:
+      - Endpoints for creating and editing transactional emails (open alpha).
+  - date: '2026-05-20'
+    breaking: false
+    additions:
+      - Upload endpoints for uploading images to use in emails.
+  - date: '2026-04-24'
+    breaking: false
+    additions:
+      - Endpoints for creating and editing campaigns (open alpha).
+  - date: '2026-03-25'
+    breaking: false
+    additions:
+      - Endpoints to check and remove suppression for contacts.
+  - date: '2026-02-13'
+    breaking: false
+    additions:
+      - '`campaignName` field in the campaign.email.sent webhook event.'
+notable_older:
+  - date: '2025-09-29'
+    highlight: Webhooks became generally available to all users.
+  - date: '2025-09-11'
+    breaking: false
+    deprecation: true
+    highlight: >-
+      All endpoints now return `success` and `message` in error response bodies.
+      The top-level `error` and `path` keys were deprecated the same day, "but
+      will continue to be supported for some time for backward compatibility" —
+      no removal date was given. Both fields are still marked
+      `deprecated: true` in OpenAPI 1.21.6, roughly eleven months later.
+  - date: '2025-04-29'
+    highlight: '`Idempotency-Key` header added to the Send event endpoint.'
+  - date: '2025-03-28'
+    highlight: '`Idempotency-Key` header added to the Send transactional email endpoint.'
+  - date: '2025-01-14'
+    deprecation: true
+    highlight: >-
+      List custom fields endpoint deprecated in favour of List contact
+      properties. The deprecated endpoint is no longer present in OpenAPI
+      1.21.6, so it has since been removed.
+observations:
+  - >-
+    Cadence is high and the log is genuinely maintained — twelve dated entries
+    in the six months to 2026-07-23, and the OpenAPI moved from 1.8.0 to 1.21.6
+    over the same period.
+  - >-
+    Deprecations are announced with a rationale but never with a sunset date,
+    and Loops publishes no Deprecation/Sunset response headers (RFC 8594). A
+    client cannot detect a deprecation at runtime; it has to read this page.
+  - >-
+    Several endpoint families shipped as "open alpha" (campaigns 2026-04-24,
+    transactional emails 2026-06-05, workflows 2026-06-22) with no published
+    stability policy for what alpha means or when it ends.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

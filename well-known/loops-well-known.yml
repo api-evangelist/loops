@@ -1,0 +1,84 @@
+generated: '2026-08-13'
+method: probed
+source: live GET of /.well-known/* on every apis.yml and OpenAPI servers[] host
+note: >-
+  Two real documents were served. app.loops.so publishes RFC 8414 OAuth 2.0
+  Authorization Server Metadata and mcp.loops.so publishes RFC 9728 OAuth 2.0
+  Protected Resource Metadata — the pair that lets an MCP client discover and
+  authorize against the Loops MCP server with no out-of-band configuration.
+  Every other probed path missed. On loops.so a miss is a clean 404 ("Not
+  found"); on app.loops.so and mcp.loops.so the app answers every unknown
+  /.well-known/* path with a Next.js HTML shell (404) or a plain-text 401
+  respectively, so those are recorded as misses even though the body is not
+  empty. No security.txt is served anywhere, so no SecurityTxt pointer is
+  emitted.
+hosts:
+  - host: https://app.loops.so
+    role: API host + OAuth authorization server
+    documents:
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        content_type: application/json
+        file: loops-oauth-authorization-server.json
+        spec: RFC 8414
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://mcp.loops.so
+    role: MCP server (Streamable HTTP)
+    documents:
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        content_type: application/json
+        file: loops-oauth-protected-resource.json
+        spec: RFC 9728
+      - path: /.well-known/oauth-authorization-server
+        status: 401
+        note: Server answers unknown paths with `no bearer token`; not a document.
+      - path: /.well-known/agent-card.json
+        status: 401
+      - path: /.well-known/agent.json
+        status: 401
+      - path: /.well-known/security.txt
+        status: 401
+  - host: https://loops.so
+    role: marketing + docs host
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+summary:
+  documents_found: 2
+  security_txt: false
+  openid_configuration: false
+  oauth_authorization_server: true
+  oauth_protected_resource: true
+  api_catalog: false
+  agent_card: false
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

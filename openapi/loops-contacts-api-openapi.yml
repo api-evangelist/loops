@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Loops OpenAPI Spec API key Contacts API
+  title: Loops OpenAPI Spec Contacts API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
-  version: 1.8.0
+  version: 1.21.6
 servers:
 - url: https://app.loops.so/api/v1
 tags:
@@ -11,12 +11,16 @@ tags:
 paths:
   /contacts/create:
     post:
+      operationId: createContact
       tags:
       - Contacts
       summary: Create a contact
       description: Add a contact to your audience.
+      x-mint:
+        href: /api-reference/create-contact
+        content: <Tip>If you want to "update or create" contacts, consider using the [Update a contact](https://loops.so/docs/api-reference/update-contact) endpoint instead.</Tip>
       requestBody:
-        description: You can add custom contact properties as keys in this request (of type `string`, `number`, `boolean` or `date` ([see available date formats](https://loops.so/docs/contacts/properties#dates))).<br>Make sure to create the properties in Loops before using them in API calls.
+        description: You can add custom contact properties as keys in this request (of type `string`, `number`, `boolean` or `date`. [See available date formats](https://loops.so/docs/contacts/properties#dates)). Make sure to create the properties in Loops before using them in API calls.
         content:
           application/json:
             schema:
@@ -47,12 +51,37 @@ paths:
       - apiKey: []
   /contacts/update:
     put:
+      operationId: updateContact
       tags:
       - Contacts
       summary: Update a contact
-      description: Update a contact by `email` or `userId`. You must provide one of these parameters.<br>If you want to update a contact’s email address, the contact will first need a `userId` value. You can then make a request containing the userId field along with an updated email address.
+      description: 'Update a contact by `email` or `userId`. You must provide one of these parameters.
+
+
+        If you want to update a contact''s email address, the contact will first need a `userId` value. You can then make a request containing the `userId` field along with an updated email address.
+
+
+        This endpoint will create a contact if a matching contact does not already exist in your audience.
+
+
+        Provide either `email` or `userId` to identify the contact you want to update. If both are provided, the system will look for a contact with either a matching `email` or `userId` value. If a contact is found for one of the values (e.g. `email`), the other value (e.g. `userId`) will be updated. If a contact is not found, a new contact will be created using both `email` and `userId` values.'
+      x-mint:
+        href: /api-reference/update-contact
+        content: 'Update a contact by `email` or `userId`. You must provide one of these parameters.
+
+
+          If you want to update a contact''s email address, the contact will first need a `userId` value. You can then make a request containing the `userId` field along with an updated email address.
+
+
+          This endpoint will create a contact if a matching contact does not already exist in your audience.
+
+
+          <Note>Provide either `email` or `userId` to identify the contact you want to update. If both are provided, the system will look for a contact with either a matching `email` or `userId` value. If a contact is found for one of the values (e.g. `email`), the other value (e.g. `userId`) will be updated. If a contact is not found, a new contact will be created using both `email` and `userId` values.</Note>'
+        metadata:
+          sidebarTitle: Update a contact
+          description: Update or create a contact.
       requestBody:
-        description: You can add custom contact properties as keys in this request (of type `string`, `number`, `boolean` or `date` ([see available date formats](https://loops.so/docs/contacts/properties#dates))).<br>Make sure to create the properties in Loops before using them in API calls.
+        description: You can add custom contact properties as keys in this request (of type `string`, `number`, `boolean` or `date`. [See available date formats](https://loops.so/docs/contacts/properties#dates)). Make sure to create the properties in Loops before using them in API calls.
         content:
           application/json:
             schema:
@@ -77,10 +106,16 @@ paths:
       - apiKey: []
   /contacts/find:
     get:
+      operationId: findContact
       tags:
       - Contacts
       summary: Find a contact
       description: Search for a contact by `email` or `userId`. Only one parameter is allowed.
+      x-mint:
+        href: /api-reference/find-contact
+        content: Search for a contact by `email` or `userId`. Only one parameter is allowed.
+        metadata:
+          description: Find a contact by email address or user ID.
       parameters:
       - name: email
         in: query
@@ -114,10 +149,17 @@ paths:
       - apiKey: []
   /contacts/delete:
     post:
+      operationId: deleteContact
       tags:
       - Contacts
       summary: Delete a contact
       description: Delete a contact by `email` or `userId`.
+      x-mint:
+        href: /api-reference/delete-contact
+        content: Delete a contact by `email` or `userId`.
+        metadata:
+          sidebarTitle: Delete a contact
+          description: Delete a contact by email address or user ID.
       requestBody:
         description: Include only one of `email` or `userId`.
         content:
@@ -150,10 +192,17 @@ paths:
       - apiKey: []
   /contacts/suppression:
     get:
+      operationId: getContactSuppression
       tags:
       - Contacts
       summary: Get suppression status for a contact
       description: Retrieve suppression status and removal quota for a contact by `email` or `userId`. Include only one query parameter.
+      x-mint:
+        href: /api-reference/check-contact-suppression
+        metadata:
+          title: Check contact suppression status
+          sidebarTitle: Check suppression
+          description: Check if a contact is suppressed by email address or user ID.
       parameters:
       - name: email
         in: query
@@ -190,10 +239,17 @@ paths:
       security:
       - apiKey: []
     delete:
+      operationId: removeContactSuppression
       tags:
       - Contacts
       summary: Remove a contact from suppression list
       description: Remove a suppressed contact from the suppression list by `email` or `userId`. Include only one query parameter.
+      x-mint:
+        href: /api-reference/remove-contact-suppression
+        metadata:
+          title: Remove contact from suppression
+          sidebarTitle: Remove suppression
+          description: Remove suppression for a contact by email address or user ID.
       parameters:
       - name: email
         in: query
@@ -231,105 +287,101 @@ paths:
       - apiKey: []
 components:
   schemas:
-    ContactUpdateRequest:
-      type: object
-      properties:
-        email:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        subscribed:
-          type: boolean
-        userGroup:
-          type: string
-        userId:
-          type: string
-        mailingLists:
-          type: object
-          description: An object of mailing list IDs and boolean subscription statuses.
-          examples:
-          - list_123: true
-      additionalProperties:
-        oneOf:
-        - type: string
-        - type: number
-        - type: boolean
-    ContactFailureResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-      required:
-      - success
-      - message
-    ContactSuppressionRemovalQuota:
-      type: object
-      properties:
-        limit:
-          type: number
-        remaining:
-          type: number
-      required:
-      - limit
-      - remaining
-    ContactSuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-        id:
-          type: string
-      required:
-      - success
-      - id
     Contact:
       type: object
       properties:
         id:
           type: string
+          description: The contact's Loops ID.
+          examples:
+          - clh3k9m2p4q6r8s0t2v4x6z8
         email:
           type: string
+          description: The contact's email address.
+          examples:
+          - alex@company.com
         firstName:
           type:
           - string
           - 'null'
+          description: The contact's first name.
+          examples:
+          - Alex
         lastName:
           type:
           - string
           - 'null'
+          description: The contact's last name.
+          examples:
+          - Rivera
         source:
           type: string
+          description: The source the contact was created from.
+          examples:
+          - API
         subscribed:
           type: boolean
+          description: Whether the contact will receive campaign and workflow emails.
+          examples:
+          - true
         userGroup:
           type: string
+          description: The contact's user group.
+          examples:
+          - customers
         userId:
           type:
           - string
           - 'null'
+          description: The contact's unique user ID.
+          examples:
+          - usr_7f8e9d0c1b2a
         mailingLists:
           type: object
-          description: An object of mailing list IDs and boolean subscription statuses.
+          description: Mailing lists the contact is subscribed to, represented by key-value pairs of mailing list IDs and `true`.
           examples:
-          - list_123: true
+          - cm06f5v0e45nf0ml5754o9cix: true
         optInStatus:
           type:
           - string
           - 'null'
-          description: Double opt-in status.
+          description: Double opt-in status. This will be `null` for contacts unless they are created via a form while double opt-in is enabled.
           enum:
           - accepted
           - pending
           - rejected
           - null
+          examples:
+          - accepted
+      examples:
+      - id: clh3k9m2p4q6r8s0t2v4x6z8
+        email: alex@company.com
+        firstName: Alex
+        lastName: Rivera
+        source: API
+        subscribed: true
+        userGroup: customers
+        userId: usr_7f8e9d0c1b2a
+        mailingLists:
+          clm2k8j4h6g0f8d6s4a2b0z8: true
+        optInStatus: accepted
+    ContactDeleteRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          examples:
+          - alex@company.com
+        userId:
+          type: string
+          examples:
+          - usr_7f8e9d0c1b2a
+      required:
+      - email
+      - userId
+      examples:
+      - email: alex@company.com
+        userId: usr_7f8e9d0c1b2a
     ContactDeleteResponse:
       type: object
       properties:
@@ -344,11 +396,121 @@ components:
       required:
       - success
       - message
+    ContactFailureResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+          examples:
+          - Invalid email address.
+      required:
+      - success
+      - message
+      examples:
+      - success: false
+        message: Invalid email address.
+    ContactFields:
+      type: object
+      properties:
+        email:
+          type: string
+          examples:
+          - alex@company.com
+          description: The contact's email address.
+        firstName:
+          type: string
+          description: The contact's first name.
+          examples:
+          - Alex
+        lastName:
+          type: string
+          description: The contact's last name.
+          examples:
+          - Rivera
+        source:
+          type: string
+          description: A custom source value to replace the default “API”.
+          examples:
+          - API
+        subscribed:
+          type: boolean
+          description: Whether the contact will receive campaign and workflow emails. All new contacts are subscribed by default.
+        userGroup:
+          type: string
+          description: The contact's user group.
+          examples:
+          - customers
+        userId:
+          type: string
+          description: A unique user ID (for example, from an external application).
+          examples:
+          - usr_7f8e9d0c1b2a
+        mailingLists:
+          $ref: '#/components/schemas/MailingListSubscriptions'
+      additionalProperties:
+        oneOf:
+        - type: string
+        - type: number
+        - type: boolean
+      examples:
+      - email: alex@company.com
+        firstName: Alex
+        lastName: Rivera
+        subscribed: true
+        userGroup: customers
+        userId: usr_7f8e9d0c1b2a
+        mailingLists:
+          clm2k8j4h6g0f8d6s4a2b0z8: true
+        favoriteColor: blue
+    ContactRequest:
+      allOf:
+      - $ref: '#/components/schemas/ContactFields'
+      - type: object
+        required:
+        - email
+    ContactSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+        id:
+          type: string
+          examples:
+          - clh3k9m2p4q6r8s0t2v4x6z8
+      required:
+      - success
+      - id
+      examples:
+      - success: true
+        id: clh3k9m2p4q6r8s0t2v4x6z8
+    ContactSuppressionRemovalQuota:
+      type: object
+      properties:
+        limit:
+          type: number
+          description: The number of suppression removals allowed in a rolling 30 day period.
+          examples:
+          - 100
+        remaining:
+          type: number
+          description: The remaining number of suppression removals left in the current 30 day period.
+          examples:
+          - 10
+      required:
+      - limit
+      - remaining
     ContactSuppressionRemoveResponse:
       type: object
       properties:
         success:
           type: boolean
+          description: Whether the suppression removal was successful.
           examples:
           - true
         message:
@@ -361,43 +523,6 @@ components:
       - success
       - message
       - removalQuota
-    ContactDeleteRequest:
-      type: object
-      properties:
-        email:
-          type: string
-        userId:
-          type: string
-      required:
-      - email
-      - userId
-    ContactRequest:
-      type: object
-      required:
-      - email
-      properties:
-        email:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        subscribed:
-          type: boolean
-        userGroup:
-          type: string
-        userId:
-          type: string
-        mailingLists:
-          type: object
-          description: An object of mailing list IDs and boolean subscription statuses.
-          examples:
-          - list_123: true
-      additionalProperties:
-        oneOf:
-        - type: string
-        - type: number
-        - type: boolean
     ContactSuppressionStatusResponse:
       type: object
       properties:
@@ -406,24 +531,81 @@ components:
           properties:
             id:
               type: string
+              description: The contact's Loops ID.
             email:
               type: string
+              description: The contact's email address.
             userId:
               type:
               - string
               - 'null'
+              description: The contact's unique user ID.
           required:
           - id
           - email
           - userId
         isSuppressed:
           type: boolean
+          description: Whether the contact is suppressed.
         removalQuota:
           $ref: '#/components/schemas/ContactSuppressionRemovalQuota'
+          description: The removal quota for the contact.
       required:
       - contact
       - isSuppressed
       - removalQuota
+      examples:
+      - contact:
+          id: clh3k9m2p4q6r8s0t2v4x6z8
+          email: alex@company.com
+          userId: usr_7f8e9d0c1b2a
+        isSuppressed: false
+        removalQuota:
+          limit: 5
+          remaining: 5
+    ContactUpdateRequest:
+      allOf:
+      - $ref: '#/components/schemas/ContactFields'
+      - type: object
+        properties:
+          email:
+            type: string
+            description: The contact's email address. **Required if `userId` is not provided.**
+          subscribed:
+            type: boolean
+            description: Whether the contact will receive campaign and workflow emails. We recommend leaving this field out of your update requests unless you specifically want to unsubscribe (`false`) or re-subscribe (`true`) a contact. All new contacts are subscribed by default.
+          userId:
+            type: string
+            description: The contact's unique user ID. **Required if `email` is not provided.**
+        anyOf:
+        - required:
+          - email
+        - required:
+          - userId
+      additionalProperties:
+        oneOf:
+        - type: string
+        - type: number
+        - type: boolean
+      examples:
+      - email: alex@company.com
+        firstName: Alex
+        lastName: Rivera
+        subscribed: true
+        userGroup: customers
+        userId: usr_7f8e9d0c1b2a
+        mailingLists:
+          clm2k8j4h6g0f8d6s4a2b0z8: true
+        favoriteColor: blue
+    MailingListSubscriptions:
+      type: object
+      description: 'Manage mailing list subscriptions.
+
+
+        Include key-value pairs of mailing list IDs and a `boolean` denoting if the contact should be added (`true`) or removed (`false`) from the list.'
+      examples:
+      - cm06f5v0e45nf0ml5754o9cix: true
+        cm16k73gq014h0mmj5b6jdi9r: false
   securitySchemes:
     apiKey:
       type: http

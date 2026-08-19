@@ -1,0 +1,78 @@
+generated: '2026-08-13'
+method: searched
+source: https://github.com/loops-so/skills
+docs: https://loops.so/docs/skills
+note: >-
+  These are NOT skills API Evangelist wrote for Loops. Loops publishes its own
+  Agent Skills bundle in a public repository and installs it with
+  `curl -fsSL https://install.loops.so/skills | sh`, plus plugin manifests for
+  Claude Code, Codex and Cursor (.claude-plugin/, .codex-plugin/,
+  .cursor-plugin/, .agents/plugins/). Each SKILL.md below is saved VERBATIM from
+  loops-so/skills at main, with no edits. Every skill carries its own semantic
+  version in frontmatter `metadata.version`. The reference material each skill
+  loads (references/*.md) lives in the provider's repo and is not mirrored here.
+provider_published: true
+repo: https://github.com/loops-so/skills
+install:
+  skills_only: curl -fsSL https://install.loops.so/skills | sh
+  cli_and_skills: curl -fsSL https://install.loops.so/wizard | sh
+  from_cli: loops skill install --all
+clients_supported:
+  - Claude Code
+  - Claude Desktop
+  - Codex
+  - Cursor
+skills:
+  - name: loops-api
+    file: loops-api.md
+    version: 1.6.0
+    api: loops:loops-api
+    summary: >-
+      Integrate Loops from application code, backend services and webhook
+      handlers using the HTTP API and official SDKs — contacts, contact
+      properties, mailing lists, events, API-key validation, transactional
+      email, content editing (campaigns, campaign groups, transactional groups,
+      audience segments, email messages, themes, components) and workflow
+      graph/node inspection and mutation.
+    references:
+      - https://github.com/loops-so/skills/blob/main/skills/loops-api/references/http-api.md
+  - name: loops-cli
+    file: loops-cli.md
+    version: 1.1.1
+    api: loops:loops-api
+    summary: >-
+      Drive Loops from the terminal — install and update the CLI, authenticate,
+      store and select per-team API keys, and run contact, event, transactional,
+      campaign, email-message, theme, component and upload commands.
+    references:
+      - https://github.com/loops-so/skills/blob/main/skills/loops-cli/references/cli.md
+  - name: loops-lmx
+    file: loops-lmx.md
+    version: 1.1.15
+    api: loops:loops-email-messages-api
+    summary: >-
+      Compose, review, migrate and modify email body content in LMX (Loops
+      Markup Extended), the markup the Loops editor and Content API use for
+      campaigns, workflow emails and transactional templates.
+    references:
+      - https://github.com/loops-so/skills/blob/main/skills/loops-lmx/references/lmx-spec.md
+      - https://github.com/loops-so/skills/blob/main/skills/loops-lmx/references/lmx-design-guidelines.md
+  - name: loops-email-sending-best-practices
+    file: loops-email-sending-best-practices.md
+    version: 1.0.0
+    summary: >-
+      Audit and plan an email program — deliverability, inbox placement, sender
+      reputation, consent and list hygiene, subject lines and preview text,
+      preference centres, and the marketing-versus-transactional split. Written
+      to work for any email stack, with Loops behaviour as the source of truth
+      when Loops is in play.
+    references:
+      - https://github.com/loops-so/skills/blob/main/skills/loops-email-sending-best-practices/references/deliverability.md
+      - https://github.com/loops-so/skills/blob/main/skills/loops-email-sending-best-practices/references/audience-and-consent.md
+      - https://github.com/loops-so/skills/blob/main/skills/loops-email-sending-best-practices/references/content-and-design.md
+      - https://github.com/loops-so/skills/blob/main/skills/loops-email-sending-best-practices/references/email-types-and-program-strategy.md
+      - https://github.com/loops-so/skills/blob/main/skills/loops-email-sending-best-practices/references/loops-operational-caveats.md
+skill_count: 4
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

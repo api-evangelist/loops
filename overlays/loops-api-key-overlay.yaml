@@ -1,0 +1,47 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — Loops API key API
+  version: 1.0.0
+  description: 'OpenAPI Overlay 1.0.0 capturing the enhancements API Evangelist derived for the Loops API key API. It does NOT modify the provider contract on disk: openapi/loops-api-key-api-openapi.yml is saved verbatim from https://app.loops.so/openapi.json and this overlay is applied on top. Everything added here is sourced from Loops'' own published documentation — the rate-limit tiers and response headers from https://loops.so/docs/api-reference/intro, the error envelope from the spec''s own 4xx schemas, and the Idempotency-Key contract from the header parameter Loops declares on its two send operations. Nothing is invented.'
+extends: loops-api-key-api-openapi.yml
+x-generated: '2026-08-13'
+x-method: generated
+x-source: https://loops.so/docs/api-reference/intro + openapi/_original/loops-openapi.yaml (1.21.6)
+actions:
+- target: $.info
+  description: Attach the public documentation and machine-readable contract locations, which the source document omits.
+  update:
+    contact:
+      name: Loops Support
+      url: https://app.loops.so/settings?page=support
+      email: help@loops.so
+    termsOfService: https://loops.so/terms
+    x-api-evangelist:
+      provider: loops
+      artifact-set: https://github.com/api-evangelist/loops
+- target: $
+  description: Add externalDocs pointing at the Loops API reference and the canonical published spec.
+  update:
+    externalDocs:
+      description: Loops API reference
+      url: https://loops.so/docs/api-reference/intro
+- target: $.paths['/api-key'].get
+  description: Annotate testApiKey with the published runtime semantics (rate limit tier, rate-limit response headers, error envelope).
+  update:
+    x-rate-limit:
+      limit: 10
+      window: 1s
+      scope: team
+      tier: default
+    x-rate-limit-headers:
+    - x-ratelimit-limit
+    - x-ratelimit-remaining
+    x-error-envelope:
+      format: proprietary-json
+      fields:
+      - success
+      - message
+      deprecated_fields:
+      - error
+      - path
+      rfc9457: false

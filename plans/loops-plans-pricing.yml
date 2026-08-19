@@ -4,38 +4,145 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Loops
 providerId: loops
 created: '2026-05-08'
-modified: '2026-05-08'
-reconciled: false
+modified: '2026-08-13'
+generated: '2026-08-13'
+method: searched
+source: https://loops.so/pricing
+reconciled: true
 tags:
-- Email Marketing
-- Transactional
-- Automation
-- SaaS
-- Campaigns
-- Plans
-description: Placeholder plans/pricing artifact for Loops. Replace with real published pricing once
-  the pipeline researches the provider's plans page.
-notes: Initial scaffold — plans/pricing have not yet been reconciled against the provider's documentation.
+  - Email Marketing
+  - Transactional
+  - Automation
+  - SaaS
+  - Campaigns
+  - Plans
+description: >-
+  Loops prices on stored subscribed contacts, not on sends. There is no separate
+  charge for email volume on paid plans, no per-seat fee, and transactional
+  sending is included. The published surface is a free plan plus a contact-count
+  slider; only two discrete price points are stated anywhere on the site — $0
+  for the free plan and $49/month for up to 5,000 contacts — with everything
+  above 5,000 contacts computed by the slider up to 1.5m+ subscribers. Free is a
+  genuine no-expiry tier, not a trial, and carries no credit-card requirement.
+notes: >-
+  The $49 Starter price and the free-plan quotas were read from the
+  schema.org Offer objects Loops embeds in its own pages (the /pricing and
+  homepage JSON-LD), which is the only machine-readable form of its pricing.
+  Higher tiers are rendered by a client-side slider and are not published as
+  discrete named tiers, so they are recorded as a computed band rather than
+  invented as a table. Billing itself runs through Stripe and the tier moves
+  automatically as contact count changes, in either direction, with up to 24
+  hours of lag.
 sources:
-- https://loops.so/
+  - https://loops.so/pricing
+  - https://loops.so/docs/account/billing
+  - https://loops.so/email-api
+billing:
+  model: subscribed-contact-count
+  period: monthly
+  paid_in_advance: true
+  processor: Stripe
+  seat_charges: false
+  send_charges: false
+  auto_tiering: true
+  auto_downgrade: true
+  tier_lag: up to 24 hours for contact additions or removals to affect the tier
+  cancellation: self-serve from the in-app Billing page
+  management_url: https://app.loops.so/settings?page=billing
+plan_count: 2
 plans:
-- id: loops-default
-  name: To Be Reconciled
-  type: enterprise
-  description: Initial scaffold; replace with provider plan tiers once pricing is reconciled.
-  entries:
-  - label: API Access
-    name: api_access
-    type: flat
-    metric: varies
-    limit: -1
-    timeFrame: usage
-    geo: global
-    unit: 1
-    price: see https://loops.so/
-    userMultiplied: false
-  elements:
-  - name: Pending Reconciliation
+  - id: loops-free
+    name: Free
+    type: free
+    price: 0
+    currency: USD
+    period: month
+    description: >-
+      "Early Stage Plan" — for early products and smaller audiences. All
+      features included. Free forever, no expiry, no credit card, no per-seat
+      charge.
+    limits:
+      - label: Stored subscribed contacts
+        name: contacts
+        limit: 1000
+        timeFrame: concurrent
+      - label: Email sends (marketing and transactional combined)
+        name: sends
+        limit: 4000
+        timeFrame: 30 days
+      - label: Email send rate
+        name: send_rate
+        limit: 10
+        timeFrame: second
+        note: Excess is queued, not rejected.
+      - label: API requests
+        name: api_requests
+        limit: 10
+        timeFrame: second
+        scope: team
+      - label: Free teams joinable per user
+        name: free_teams
+        limit: 3
+    elements:
+      - All features included
+      - '"Powered by Loops" footer on every email'
+      - Unlimited team seats
+  - id: loops-paid
+    name: Paid (contact-tiered)
+    type: usage-tiered
+    price: 49
+    price_note: >-
+      $49/month is the lowest paid price point and covers up to 5,000 contacts.
+      Above that, price scales continuously with subscribed-contact count on a
+      slider running to 1.5m+ subscribers; Loops does not publish the
+      intermediate tiers as named plans.
+    currency: USD
+    period: month
+    entry_tier:
+      contacts: 5000
+      price: 49
+    ceiling:
+      contacts: 1500000
+      note: Slider maximum shown as "1.5m+"; beyond it, contact Loops.
+    description: >-
+      Contact-tiered subscription. Removes the send cap and the Loops branding
+      footer. Transactional sending included at no additional charge.
+    limits:
+      - label: Email sends
+        name: sends
+        limit: -1
+        timeFrame: month
+        note: Unlimited — paid plans do not cap total sends.
+      - label: Email send rate
+        name: send_rate
+        limit: 1000
+        timeFrame: second
+        note: Excess is queued, not rejected.
+      - label: API requests
+        name: api_requests
+        limit: 10
+        timeFrame: second
+        scope: team
+        note: Higher limits available on request to support.
+      - label: Content API requests
+        name: content_api_requests
+        limit: 60
+        timeFrame: 60 seconds
+        scope: team
+    elements:
+      - No send cap
+      - No Loops branding footer
+      - Unlimited team seats
+      - Transactional email included
+enterprise:
+  contact_only: false
+  note: >-
+    No separate enterprise SKU or "contact sales" wall is published; the slider
+    covers the whole published range. A "Book a demo" path exists in the nav but
+    is not a pricing gate.
+free_trial:
+  present: false
+  note: Not a trial — the free plan is permanent and does not expire.
 maintainers:
-- FN: Kin Lane
-  email: kin@apievangelist.com
+  - FN: Kin Lane
+    email: kin@apievangelist.com

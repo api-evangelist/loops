@@ -1,22 +1,26 @@
 openapi: 3.1.0
 info:
-  title: Loops OpenAPI Spec API key Events API
+  title: Loops OpenAPI Spec Events API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
-  version: 1.8.0
+  version: 1.21.6
 servers:
 - url: https://app.loops.so/api/v1
 tags:
 - name: Events
-  description: Trigger email sending with events
+  description: Trigger workflows with events
 paths:
   /events/send:
     post:
+      operationId: sendEvent
       tags:
       - Events
       summary: Send an event
-      description: Send events to trigger emails in Loops.
+      description: Send events to trigger workflows.
+      x-mint:
+        href: /api-reference/send-event
+        content: <Note>Provide either an `email` or `userId` value or both to identify the contact. If both are provided, the system will look for a contact with either a matching `email` or `userId` value. If a contact is found for one of the values (e.g. `email`), the other value (e.g. `userId`) will be updated. If a contact is not found, a new contact will be created using both `email` and `userId` values.</Note>
       requestBody:
-        description: Provide either `email` or `userId` to identify the contact ([read more](https://loops.so/docs/api-reference/send-event#body)).<br>You can add event properties, which will be available in emails sent by this event. Values can be of type string, number, boolean or date ([see allowed date formats](https://loops.so/docs/events/properties#important-information-about-event-properties)).<br>Make sure to create the properties in Loops before using them in API calls.<br>You can add contact properties as keys in this request (of type `string`, `number`, `boolean` or `date` ([see available date formats](https://loops.so/docs/contacts/properties#dates))).
+        description: Provide either `email` or `userId` to identify the contact ([read more](https://loops.so/docs/api-reference/send-event#body)).<br>Event properties will be available in emails sent by this event. Values of properties can be of type `string`, `number`, `boolean` or `date` ([see allowed date formats](https://loops.so/docs/events/properties#important-information-about-event-properties)).<br>Make sure to create the properties in Loops before using them in API calls.<br>You can add contact properties as keys in this request (of type `string`, `number`, `boolean` or `date` ([see available date formats](https://loops.so/docs/contacts/properties#dates))).
         content:
           application/json:
             schema:
@@ -25,7 +29,13 @@ paths:
       parameters:
       - in: header
         name: Idempotency-Key
-        description: Include a unique ID for this request (maximum 100 characters) to avoid duplicate events. [More info](https://loops.so/docs/api-reference/send-event#param-idempotency-key)
+        description: 'Include a unique ID for this request (maximum 100 characters) to avoid duplicate emails.
+
+
+          The value should be a string of up to 100 characters and should be unique for each request. We recommend using V4 UUIDs or some other method with enough guaranteed entropy to avoid collisions during a 24 hour window.
+
+
+          This endpoint will return a `409 Conflict` response if the idempotency key has been used in the previous 24 hours.'
         schema:
           type: string
           maxLength: 100
@@ -54,30 +64,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    EventRequest:
-      type: object
-      required:
-      - eventName
-      properties:
-        email:
-          type: string
-        userId:
-          type: string
-        eventName:
-          type: string
-        eventProperties:
-          type: object
-          description: An object containing event property data for the event, available in emails sent by the event.
-        mailingLists:
-          type: object
-          description: An object of mailing list IDs and boolean subscription statuses.
-          examples:
-          - list_123: true
-      additionalProperties:
-        oneOf:
-        - type: string
-        - type: number
-        - type: boolean
     EventFailureResponse:
       type: object
       properties:
@@ -87,9 +73,60 @@ components:
           - false
         message:
           type: string
+          examples:
+          - Contact not found.
       required:
       - success
       - message
+      examples:
+      - success: false
+        message: Contact not found.
+    EventRequest:
+      type: object
+      required:
+      - eventName
+      anyOf:
+      - required:
+        - email
+      - required:
+        - userId
+      properties:
+        email:
+          type: string
+          description: The contact's email address. **Required if `userId` is not provided.**
+          examples:
+          - alex@company.com
+        userId:
+          type: string
+          description: The contact's unique user ID. **Required if `email` is not provided.**
+          examples:
+          - usr_7f8e9d0c1b2a
+        eventName:
+          type: string
+          description: The name of the event.
+          examples:
+          - signup
+        eventProperties:
+          type: object
+          description: An object containing event property data for the event, available in emails sent by the event.
+          examples:
+          - planName: Pro
+            importDate: 2021-01-01
+        mailingLists:
+          $ref: '#/components/schemas/MailingListSubscriptions'
+      additionalProperties:
+        oneOf:
+        - type: string
+        - type: number
+        - type: boolean
+      examples:
+      - email: alex@company.com
+        userId: usr_7f8e9d0c1b2a
+        eventName: signup
+        eventProperties:
+          plan: pro
+        mailingLists:
+          clm2k8j4h6g0f8d6s4a2b0z8: true
     EventSuccessResponse:
       type: object
       properties:
@@ -111,6 +148,18 @@ components:
       required:
       - success
       - message
+      examples:
+      - success: false
+        message: Idempotency key already used with a different request body.
+    MailingListSubscriptions:
+      type: object
+      description: 'Manage mailing list subscriptions.
+
+
+        Include key-value pairs of mailing list IDs and a `boolean` denoting if the contact should be added (`true`) or removed (`false`) from the list.'
+      examples:
+      - cm06f5v0e45nf0ml5754o9cix: true
+        cm16k73gq014h0mmj5b6jdi9r: false
   securitySchemes:
     apiKey:
       type: http

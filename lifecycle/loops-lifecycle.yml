@@ -1,0 +1,100 @@
+generated: '2026-08-13'
+method: searched
+source: https://loops.so/docs/api-reference/changelog + https://status.loops.so + openapi/_original/loops-openapi.yaml
+versioning:
+  scheme: path-prefix
+  current: v1
+  base_url: https://app.loops.so/api/v1
+  spec_version: 1.21.6
+  spec_url: https://app.loops.so/openapi.json
+  note: >-
+    The URL carries a single major version, `/v1`, which has not changed. Real
+    version movement is tracked in the OpenAPI document's `info.version`
+    (1.8.0 -> 1.21.6 between 2026-05 and 2026-08), which is published but is not
+    negotiable by a client — there is no version header, no version query
+    parameter and no way to pin a minor version. Additive changes therefore
+    arrive unannounced in-band.
+  policy_published: false
+deprecation:
+  policy_published: false
+  policy_url: https://loops.so/docs/api-reference/changelog
+  headers:
+    deprecation: false
+    sunset: false
+    rfc8594: false
+    note: >-
+      No Deprecation or Sunset response headers are declared in the OpenAPI or
+      documented. Deprecations are announced only as dated changelog entries.
+  practice: >-
+    Loops does announce deprecations and does honour backward compatibility for
+    a long window — the `error` and `path` error-envelope keys were deprecated
+    on 2025-09-11 and are still present and still served eleven months later.
+    What is missing is a stated window: no entry has ever carried a removal
+    date, and there is no page defining how long a deprecated field or endpoint
+    is supported.
+  deprecated_in_spec:
+    - target: response body field `error`
+      scope: every error response envelope
+      deprecated_on: '2025-09-11'
+      replacement: '`message`'
+      removal_date: null
+    - target: response body field `path`
+      scope: every error response envelope
+      deprecated_on: '2025-09-11'
+      replacement: null
+      removal_date: null
+  removed:
+    - target: GET /v1/contacts/customFields (List custom fields)
+      deprecated_on: '2025-01-14'
+      replacement: GET /v1/contacts/properties (List contact properties)
+      status: absent from OpenAPI 1.21.6
+  deprecated_operations: 0
+  note: >-
+    Zero operations in OpenAPI 1.21.6 carry `deprecated: true`. The two
+    deprecations that exist are marked at the schema-property level, inside the
+    error envelope.
+stability:
+  labels_used:
+    - open alpha
+  note: >-
+    Campaign (2026-04-24), transactional-email (2026-06-05) and workflow
+    (2026-06-22) endpoints all shipped labelled "open alpha" in the changelog.
+    The label does not appear in the OpenAPI document and Loops publishes no
+    definition of what alpha guarantees or when an endpoint graduates, so a
+    consumer cannot tell from the contract which of the 64 operations are still
+    alpha.
+status_page:
+  url: https://status.loops.so
+  provider: Atlassian Statuspage
+  api: https://status.loops.so/api/v2/summary.json
+  probed: '2026-08-13'
+  http_status: 200
+  components:
+    - Email Sending
+    - Loops
+    - API
+    - Campaigns
+    - App
+    - Transactional
+    - SMTP Relay
+    - Webhooks
+  subscriptions:
+    - email
+    - sms
+    - rss/webhook (Statuspage standard)
+  note: >-
+    Machine-readable and anonymous. An agent can poll
+    /api/v2/summary.json or /api/v2/status.json for component-level health
+    without authenticating.
+sla:
+  published: false
+  note: >-
+    No public uptime SLA, credit schedule or support-response commitment was
+    found on loops.so, the docs or the trust centre. Support is via the in-app
+    Support page (https://app.loops.so/settings?page=support) and help@loops.so.
+support:
+  url: https://app.loops.so/settings?page=support
+  email: help@loops.so
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,120 @@
+generated: '2026-08-13'
+method: searched
+source: https://loops.so/docs/sdks
+docs: https://loops.so/docs/sdks
+note: >-
+  Five first-party SDKs plus a first-party CLI, all published under the Loops-so
+  GitHub organization and released to their language registries. Versions and
+  publish dates below were read from each registry's own metadata endpoint on
+  2026-08-13. Every official package except the Nuxt module shipped a release in
+  August 2026, so the client layer tracks the 1.21.x API rather than lagging it;
+  the Nuxt module (nuxt-loops 1.1.0) has not been released since 2024-10-17 and
+  is the one abandonment signal in the set.
+packages:
+  - language: javascript
+    registry: npm
+    name: loops
+    url: https://www.npmjs.com/package/loops
+    install: npm install loops
+    repo: https://github.com/Loops-so/loops-js
+    docs: https://loops.so/docs/sdks/javascript
+    official: true
+    version: 7.2.0
+    published: '2026-08-10'
+  - language: go
+    registry: pkg.go.dev
+    name: github.com/loops-so/loops-go
+    url: https://pkg.go.dev/github.com/loops-so/loops-go
+    install: go get github.com/loops-so/loops-go
+    repo: https://github.com/loops-so/loops-go
+    docs: https://loops.so/docs/sdks/go
+    official: true
+    version: v0.5.0
+    published: '2026-08-07'
+  - language: php
+    registry: packagist
+    name: loops-so/loops
+    url: https://packagist.org/packages/loops-so/loops
+    install: composer require loops-so/loops
+    repo: https://github.com/loops-so/loops-php
+    docs: https://loops.so/docs/sdks/php
+    official: true
+    version: v3.3.0
+    published: '2026-08-12'
+  - language: ruby
+    registry: rubygems
+    name: loops_sdk
+    url: https://rubygems.org/gems/loops_sdk
+    install: gem install loops_sdk
+    repo: https://github.com/Loops-so/loops-rb
+    docs: https://loops.so/docs/sdks/ruby
+    official: true
+    version: 2.4.0
+    published: '2026-08-04'
+  - language: javascript
+    registry: npm
+    name: nuxt-loops
+    url: https://www.npmjs.com/package/nuxt-loops
+    install: npm install nuxt-loops
+    repo: https://github.com/Loops-so/loops-nuxt
+    docs: https://loops.so/docs/sdks/nuxt
+    official: true
+    kind: framework-module
+    version: 1.1.0
+    published: '2024-10-17'
+    note: >-
+      Official Nuxt module. Last release 2024-10-17, roughly two years behind the
+      other first-party SDKs and predating the campaign, workflow, theme,
+      component, upload and audience-segment endpoints added to the API through
+      2026.
+  - language: go
+    registry: pkg.go.dev
+    name: github.com/loops-so/cli
+    url: https://pkg.go.dev/github.com/loops-so/cli
+    install: brew install loops-so/tap/loops
+    repo: https://github.com/loops-so/cli
+    docs: https://loops.so/docs/cli
+    official: true
+    kind: cli
+    version: v0.10.1
+    published: '2026-08-13'
+    note: >-
+      The Loops CLI binary. Also installable via
+      `curl -fsSL https://install.loops.so/cli | sh`,
+      `go install github.com/loops-so/cli/cmd/loops@latest`, or the
+      loops-so/homebrew-tap Homebrew tap. See cli/loops-cli.yml.
+  - language: shell
+    registry: cdn
+    name: loops-so/skills
+    url: https://github.com/loops-so/skills
+    install: curl -fsSL https://install.loops.so/skills | sh
+    repo: https://github.com/loops-so/skills
+    docs: https://loops.so/docs/skills
+    official: true
+    kind: agent-skills
+    version: null
+    published: null
+    note: >-
+      Agent Skills bundle distributed by an unpinned installer script and by the
+      git repository, not by a package registry, so there is no metadata endpoint
+      to query and no version a consumer can pin. Individual skills carry their
+      own `metadata.version` in frontmatter (loops-api 1.6.0, loops-cli 1.1.1,
+      loops-lmx unversioned, loops-email-sending-best-practices 1.0.0); the
+      bundle as distributed does not. See skills/.
+community:
+  - language: php
+    name: plutolinks/loops-php
+    url: https://github.com/plutolinks/loops-php
+    official: false
+  - language: php
+    name: plutolinks/laravel-loops
+    url: https://github.com/plutolinks/laravel-loops
+    official: false
+  - language: ruby
+    name: danielfriis/loops_rails
+    url: https://github.com/danielfriis/loops_rails
+    official: false
+    note: Ruby on Rails integration, community-submitted.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

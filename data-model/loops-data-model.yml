@@ -1,0 +1,241 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/_original/loops-openapi.yaml (1.21.6) — $ref graph and id-reference fields across 219 component schemas
+enriched_from: https://loops.so/docs/api-reference/intro
+summary: >-
+  Loops has one identity core (the Contact) and three content cores (Campaign,
+  Transactional email, Workflow) that all bottom out in the same Email message
+  object. Everything sendable — a campaign, a workflow's send-email node, a
+  transactional template — resolves to an EmailMessage carrying LMX body
+  content, styled by a Theme and composed of Components. Audience selection is
+  the second axis: MailingList and AudienceSegment both select Contacts, and
+  both can target a Campaign or a Workflow.
+identifiers:
+  style: opaque string ids, no type prefix
+  note: >-
+    Loops does not use Stripe-style prefixed ids. Every identifier is a plain
+    opaque string (`campaignId`, `emailMessageId`, `workflowId`, `themeId`,
+    `transactionalId`, `audienceSegmentId`, `emailAssetId`, `nodeId`), so an id
+    is not self-describing and a caller cannot tell from a value which endpoint
+    it belongs to. Contacts are the exception: they carry both a Loops `id` and
+    two caller-supplied natural keys, `email` and `userId`, and most contact
+    operations accept either.
+entities:
+  - name: Contact
+    schema: Contact
+    description: A person in the audience. The identity root of the whole model.
+    natural_keys: [email, userId]
+    operations: [createContact, updateContact, findContact, deleteContact, getContactSuppression, removeContactSuppression]
+    note: >-
+      Custom contact properties are stored as arbitrary top-level keys on the
+      contact object (string, number, boolean or date) and must be declared as a
+      ContactProperty before use.
+  - name: ContactProperty
+    schema: ContactProperty
+    description: A declared custom attribute available on every Contact.
+    operations: [createContactProperty, listContactProperties]
+  - name: MailingList
+    schema: MailingList
+    description: A named, subscribable list. A Contact's memberships are expressed as MailingListSubscriptions.
+    operations: [listMailingLists]
+  - name: AudienceSegment
+    schema: AudienceSegment
+    description: A saved AudienceFilter over the audience, used to target campaigns and workflows.
+    operations: [listAudienceSegments, getAudienceSegment, createAudienceSegment]
+  - name: AudienceFilter
+    schema: AudienceFilter
+    description: >-
+      The filter expression itself — a tree of AudienceFilterCondition, which is
+      one of PropertyCondition, ActivityCondition or OptInCondition.
+  - name: Campaign
+    schema: CampaignListItem
+    description: A one-off marketing send with an audience target, optional group and optional schedule.
+    operations: [listCampaigns, createCampaign, getCampaign, updateCampaign]
+  - name: CampaignGroup
+    description: A folder for organising campaigns.
+    operations: [listCampaignGroups, createCampaignGroup, getCampaignGroup, updateCampaignGroup]
+  - name: TransactionalEmail
+    schema: TransactionalEmail
+    description: A named, published transactional template invoked by transactionalId with data variables.
+    operations: [listTransactionalEmails, listPublishedTransactionalEmails, createTransactionalEmail, getTransactionalEmail, updateTransactionalEmail, ensureTransactionalDraft, publishTransactionalEmail, sendTransactionalEmail]
+    note: Has an explicit draft/published lifecycle — the only entity in the model that does.
+  - name: TransactionalGroup
+    description: A folder for organising transactional emails.
+    operations: [listTransactionalGroups, createTransactionalGroup, getTransactionalGroup, updateTransactionalGroup]
+  - name: EmailMessage
+    description: >-
+      The email body itself, in LMX. The shared leaf of campaigns, workflow send
+      nodes and transactional templates. Carries CC/BCC, language, format and
+      property fallbacks; validated by Guardian.
+    operations: [getEmailMessage, updateEmailMessage, previewEmailMessage, getEmailMessageGuardian]
+    concurrency: optimistic, via contentRevisionId / expectedRevisionId (409 on stale)
+  - name: Theme
+    schema: Theme
+    description: Reusable visual styling (ThemeStyles) applied to email messages.
+    operations: [listThemes, createTheme, getTheme, updateTheme]
+  - name: Component
+    schema: Component
+    description: A reusable LMX block embedded in email messages.
+    operations: [listComponents, createComponent, getComponent, updateComponent]
+    note: Editing a component body can be rejected (422) when the change would break emails already using it.
+  - name: EmailAsset
+    description: An uploaded image, created by a two-step presigned-URL flow.
+    operations: [createUpload, completeUpload]
+  - name: Workflow
+    schema: WorkflowSummary
+    description: >-
+      A directed graph of WorkflowNodes with a rootNodeId, revisioned as a
+      whole. The largest object in the model — the workflow-node schema closure
+      alone is 99 schemas.
+    operations: [listWorkflows, createWorkflow, getWorkflow, updateWorkflowProperties, changeWorkflowMailingList]
+    concurrency: optimistic, via WorkflowRevisionId / WorkflowExpectedRevisionId
+  - name: WorkflowNode
+    schema: WorkflowNode
+    description: >-
+      A polymorphic node. Triggers — Signup, Event, ContactProperty, AddToList,
+      Blank. Actions — SendEmailAction, TimerAction, ExitAction. Control flow —
+      Branch, ExperimentBranch, Variant, AudienceFilter.
+    operations: [createWorkflowNode, getWorkflowNode, updateWorkflowNode, deleteWorkflowNode, deleteWorkflowNodeRecursively, addWorkflowBranch, rerouteNodeConnection]
+  - name: Event
+    description: >-
+      A named occurrence sent for a contact, optionally carrying eventProperties
+      and mailing-list changes. Write-only — there is no read endpoint for
+      events themselves.
+    operations: [sendEvent]
+  - name: EventPattern
+    schema: EventPattern
+    description: >-
+      A detected shape of an incoming event, including its observed
+      WorkflowEventProperty set. Read-only; Loops infers these from traffic.
+    operations: [listEventPatterns, getEventPattern, getEventPatternByName]
+  - name: Team
+    description: >-
+      The tenancy boundary. Every API key belongs to exactly one team; every
+      object above is team-scoped. Only exposed via testApiKey (which returns
+      teamName) and via the MCP `teams` tool.
+    operations: [testApiKey]
+  - name: DedicatedSendingIp
+    description: A dedicated sending IP assigned to the team.
+    operations: [listDedicatedSendingIps]
+relationships:
+  - from: Contact
+    to: MailingList
+    type: has_many
+    via: mailingLists (MailingListSubscriptions)
+  - from: Contact
+    to: ContactProperty
+    type: has_many
+    via: top-level custom property keys
+  - from: AudienceSegment
+    to: AudienceFilter
+    type: has_one
+    via: filter
+  - from: AudienceFilter
+    to: AudienceFilterCondition
+    type: has_many
+    via: conditions
+  - from: Campaign
+    to: EmailMessage
+    type: has_one
+    via: emailMessageId
+  - from: Campaign
+    to: CampaignGroup
+    type: belongs_to
+    via: campaignGroupId
+  - from: Campaign
+    to: MailingList
+    type: has_one
+    via: audience targeting (mailing list)
+  - from: Campaign
+    to: AudienceSegment
+    type: has_one
+    via: audience targeting (segment)
+  - from: Campaign
+    to: CampaignScheduling
+    type: has_one
+    via: scheduling
+  - from: TransactionalEmail
+    to: EmailMessage
+    type: has_one
+    via: emailMessageId (draft and published)
+  - from: TransactionalEmail
+    to: TransactionalGroup
+    type: belongs_to
+    via: transactionalGroupId
+  - from: EmailMessage
+    to: Theme
+    type: belongs_to
+    via: themeId
+  - from: EmailMessage
+    to: Component
+    type: has_many
+    via: LMX component references
+  - from: EmailMessage
+    to: EmailAsset
+    type: has_many
+    via: image references
+  - from: EmailMessage
+    to: GuardianRule
+    type: has_many
+    via: Guardian validation results
+  - from: Workflow
+    to: WorkflowNode
+    type: has_many
+    via: nodes / rootNodeId
+  - from: Workflow
+    to: MailingList
+    type: has_one
+    via: changeWorkflowMailingList
+  - from: WorkflowNode
+    to: WorkflowNode
+    type: has_many
+    via: WorkflowNextNodeIds
+  - from: SendEmailActionWorkflowNode
+    to: EmailMessage
+    type: has_one
+    via: emailMessageId
+  - from: EventTriggerWorkflowNode
+    to: EventPattern
+    type: belongs_to
+    via: eventName
+  - from: AudienceFilterWorkflowNode
+    to: AudienceFilter
+    type: has_one
+    via: filter
+  - from: Event
+    to: Contact
+    type: belongs_to
+    via: email or userId
+  - from: EventPattern
+    to: WorkflowEventProperty
+    type: has_many
+    via: properties
+  - from: Team
+    to: Contact
+    type: has_many
+    via: tenancy
+  - from: Team
+    to: DedicatedSendingIp
+    type: has_many
+    via: tenancy
+event_surface:
+  see: asyncapi/loops-webhooks-asyncapi.yml
+  note: >-
+    The webhook payloads project a deliberately reduced view of this graph:
+    WebhookContactIdentity (id, email, userId), WebhookContact, WebhookEmail and
+    WebhookMailingList, rather than the full Contact or EmailMessage objects.
+observations:
+  - >-
+    EmailMessage is the true centre of gravity. Three product concepts —
+    campaigns, workflow send-nodes and transactional templates — are three
+    front doors onto the same content object, which is why the LMX skill and
+    the content API rate limit apply across all three.
+  - >-
+    Optimistic concurrency is real but partial: content revisions on email
+    messages and revision ids on workflows, nothing on contacts or campaigns.
+  - >-
+    Events are write-only. There is no way to read the events you sent, only
+    the EventPatterns Loops inferred from them.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
