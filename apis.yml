@@ -30,6 +30,19 @@ tags:
 - Marketing Automation
 - Transactional Email
 - Lifecycle Email
+- Webhook
+- Software-as-a-Service
+- Communications
+- Developer Tools
+- MCP
+- Agents
+- Campaigns
+tags_raw:
+- Email
+- Email API
+- Marketing Automation
+- Transactional Email
+- Lifecycle Email
 - Webhooks
 - SaaS
 - Communications
@@ -48,6 +61,8 @@ apis:
   humanURL: https://loops.so/docs/api-reference/api-key
   baseURL: https://app.loops.so/api/v1
   tags:
+  - APIKeys
+  tags_raw:
   - API key
   properties:
   - type: OpenAPI
@@ -65,6 +80,8 @@ apis:
   humanURL: https://loops.so/docs/api-reference/list-audience-segments
   baseURL: https://app.loops.so/api/v1
   tags:
+  - Audience Segments
+  tags_raw:
   - Audience segments
   properties:
   - type: OpenAPI
@@ -217,6 +234,8 @@ apis:
   humanURL: https://loops.so/docs/api-reference/send-event
   baseURL: https://app.loops.so/api/v1
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
@@ -233,6 +252,8 @@ apis:
   humanURL: https://loops.so/docs/api-reference/list-mailing-lists
   baseURL: https://app.loops.so/api/v1
   tags:
+  - Mailing Lists
+  tags_raw:
   - Mailing lists
   properties:
   - type: OpenAPI
@@ -266,6 +287,8 @@ apis:
   humanURL: https://loops.so/docs/api-reference/send-transactional-email
   baseURL: https://app.loops.so/api/v1
   tags:
+  - Transactional Emails
+  tags_raw:
   - Transactional emails
   properties:
   - type: OpenAPI
@@ -371,6 +394,10 @@ apis:
   humanURL: https://loops.so/docs/webhooks
   baseURL: https://app.loops.so/api/v1
   tags:
+  - Webhook
+  - Event
+  - Email
+  tags_raw:
   - Webhooks
   - Events
   - Email
