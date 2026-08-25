@@ -6,10 +6,16 @@
       "feed_url": "https://loops.so/changelog",
       "title": "",
       "saved": 0,
-      "method": "none",
-      "error": "parse_failed"
+      "method": "none"
+    },
+    {
+      "source": "https://app.loops.so/settings?page=support",
+      "feed_url": "https://app.loops.so/settings?page=support",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     }
   ],
-  "fetched": "2026-08-15T12:11:08Z",
+  "fetched": "2026-08-22T20:20:02Z",
   "post_count": 8
 }
