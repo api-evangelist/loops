@@ -1,0 +1,54 @@
+slug: loops
+provider: Loops
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Telecommunications
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 4
+edges:
+- tag: Contacts
+  spec_file: loops-contacts-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.82
+  evidence: POST /v1/contacts/create createContact; GET /v1/contacts/find findContact; ContactSuppressionStatusResponse
+  reason: Create/update/find/delete of contact records plus suppression status is management of the customer
+    contact data record.
+- tag: Campaigns
+  spec_file: loops-campaigns-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: POST /v1/campaigns createCampaign 'Create a campaign'; CampaignSchedulingRequest, AudienceFilterInRequest
+  reason: Creating, scheduling and audience-targeting email marketing campaigns on an email marketing
+    platform realises digital/automated marketing execution.
+- tag: Audience segments
+  spec_file: loops-audience-segments-api-openapi.yml
+  capability_id: BC-420.20
+  capability_id_l1: BC-420
+  capability_name: Customer Segmentation Management
+  confidence: 0.74
+  evidence: POST /v1/audience-segments createAudienceSegment 'Create an audience segment'; schemas AudienceFilterCondition,
+    PropertyCondition, ActivityCondition
+  reason: Operations define and manage rule-based segments of contacts (property and activity conditions)
+    used to target email sends — this is customer segmentation, not a technical object.
+- tag: Workflows
+  spec_file: loops-workflows-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.7
+  evidence: POST /v1/workflows createWorkflow — Create a workflow; POST /v1/workflows/{workflowId}/mailing-list
+    changeWorkflowMailingList — Change workflow mailing list
+  reason: Workflows with mailing-list targeting, signup/event triggers and send-email actions are automated
+    lifecycle email journeys — marketing automation under Digital Marketing Management. Vendor describes
+    itself as 'marketing campaigns, product and lifecycle automation'.
