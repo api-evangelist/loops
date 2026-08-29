@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Components API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
   version: 1.21.6
 servers:
-- url: https://app.loops.so/api/v1
+- url: https://app.loops.so/api
 tags:
 - name: Components
   description: View email components
 paths:
-  /components/{componentId}:
+  /v1/components/{componentId}:
     parameters:
     - name: componentId
       in: path
@@ -106,7 +106,7 @@ paths:
                 $ref: '#/components/schemas/ComponentValidationFailureResponse'
       security:
       - apiKey: []
-  /components:
+  /v1/components:
     get:
       operationId: listComponents
       tags:
@@ -194,114 +194,30 @@ paths:
       - apiKey: []
 components:
   schemas:
-    Component:
+    UpdateComponentBody:
       type: object
-      properties:
-        id:
-          type: string
-          examples:
-          - clp2o4i6u8y0t5r3e1w7q9s1
-        name:
-          type: string
-          examples:
-          - Header
-        lmx:
-          type: string
-          description: The component body serialized as LMX.
-          examples:
-          - <Paragraph>Welcome to Acme</Paragraph>
-      required:
-      - id
-      - name
-      - lmx
-      examples:
-      - id: clp2o4i6u8y0t5r3e1w7q9s1
-        name: Header
-        lmx: <Paragraph>Welcome to Acme</Paragraph>
-    ComponentFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Component not found.
-    ComponentResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the component.
-        name:
-          type: string
-          description: The name of the component.
-        lmx:
-          type: string
-          description: The component body serialized as LMX.
-      required:
-      - id
-      - name
-      - lmx
-      examples:
-      - id: clp2o4i6u8y0t5r3e1w7q9s1
-        name: Header
-        lmx: <Paragraph>Welcome to Acme</Paragraph>
-    ComponentValidationFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        invalidTags:
-          type: array
-          description: The dynamic variables that the change would push into an email that cannot use them. Present only when the update was rejected for that reason.
-          items:
-            type: string
-      required:
-      - message
-      examples:
-      - message: Component uses unsupported contact properties.
-        invalidTags:
-        - companyName
-    CreateComponentBody:
-      type: object
+      description: At least one of `name` or `lmx` must be provided.
       properties:
         name:
           type: string
-          description: The component name.
         lmx:
           type: string
           description: The component body as an LMX string.
-      required:
-      - name
-      - lmx
+    UpdateComponentResponse:
+      allOf:
+      - $ref: '#/components/schemas/ComponentResponse'
+      - type: object
+        properties:
+          affectedEmailCount:
+            type: number
+            description: The number of emails using this component that were updated by the body change. `0` when only the name changed.
+        required:
+        - affectedEmailCount
       examples:
-      - name: Header
+      - id: clp2o4i6u8y0t5r3e1w7q9s1
+        name: Header
         lmx: <Paragraph>Welcome to Acme</Paragraph>
-    ListComponentsResponse:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Component'
-      required:
-      - pagination
-      - data
-      examples:
-      - pagination:
-          totalResults: 2
-          returnedResults: 2
-          perPage: 20
-          totalPages: 1
-          nextCursor: null
-          nextPage: null
-        data:
-        - id: clp2o4i6u8y0t5r3e1w7q9s1
-          name: Header
-          lmx: <Paragraph>Welcome to Acme</Paragraph>
+        affectedEmailCount: 3
     Pagination:
       type: object
       properties:
@@ -347,30 +263,114 @@ components:
         totalPages: 1
         nextCursor: null
         nextPage: null
-    UpdateComponentBody:
+    ComponentValidationFailureResponse:
       type: object
-      description: At least one of `name` or `lmx` must be provided.
+      properties:
+        message:
+          type: string
+        invalidTags:
+          type: array
+          description: The dynamic variables that the change would push into an email that cannot use them. Present only when the update was rejected for that reason.
+          items:
+            type: string
+      required:
+      - message
+      examples:
+      - message: Component uses unsupported contact properties.
+        invalidTags:
+        - companyName
+    ListComponentsResponse:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Component'
+      required:
+      - pagination
+      - data
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: clp2o4i6u8y0t5r3e1w7q9s1
+          name: Header
+          lmx: <Paragraph>Welcome to Acme</Paragraph>
+    CreateComponentBody:
+      type: object
       properties:
         name:
           type: string
+          description: The component name.
         lmx:
           type: string
           description: The component body as an LMX string.
-    UpdateComponentResponse:
-      allOf:
-      - $ref: '#/components/schemas/ComponentResponse'
-      - type: object
-        properties:
-          affectedEmailCount:
-            type: number
-            description: The number of emails using this component that were updated by the body change. `0` when only the name changed.
-        required:
-        - affectedEmailCount
+      required:
+      - name
+      - lmx
+      examples:
+      - name: Header
+        lmx: <Paragraph>Welcome to Acme</Paragraph>
+    ComponentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the component.
+        name:
+          type: string
+          description: The name of the component.
+        lmx:
+          type: string
+          description: The component body serialized as LMX.
+      required:
+      - id
+      - name
+      - lmx
       examples:
       - id: clp2o4i6u8y0t5r3e1w7q9s1
         name: Header
         lmx: <Paragraph>Welcome to Acme</Paragraph>
-        affectedEmailCount: 3
+    ComponentFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Component not found.
+    Component:
+      type: object
+      properties:
+        id:
+          type: string
+          examples:
+          - clp2o4i6u8y0t5r3e1w7q9s1
+        name:
+          type: string
+          examples:
+          - Header
+        lmx:
+          type: string
+          description: The component body serialized as LMX.
+          examples:
+          - <Paragraph>Welcome to Acme</Paragraph>
+      required:
+      - id
+      - name
+      - lmx
+      examples:
+      - id: clp2o4i6u8y0t5r3e1w7q9s1
+        name: Header
+        lmx: <Paragraph>Welcome to Acme</Paragraph>
   securitySchemes:
     apiKey:
       type: http

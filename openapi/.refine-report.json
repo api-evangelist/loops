@@ -1,34 +1,54 @@
 {
   "provider": "loops",
   "sources": [
-    "loops-api-key-api-openapi.yml",
-    "loops-campaigns-api-openapi.yml",
-    "loops-components-api-openapi.yml",
-    "loops-contact-properties-api-openapi.yml",
-    "loops-contacts-api-openapi.yml",
-    "loops-dedicated-sending-ips-api-openapi.yml",
-    "loops-email-messages-api-openapi.yml",
-    "loops-events-api-openapi.yml",
-    "loops-mailing-lists-api-openapi.yml",
-    "loops-themes-api-openapi.yml",
-    "loops-transactional-emails-api-openapi.yml"
+    "_original/loops-openapi.yaml"
   ],
   "outputs": [
     "loops-api-key-api-openapi.yml",
+    "loops-audience-segments-api-openapi.yml",
+    "loops-campaign-groups-api-openapi.yml",
     "loops-campaigns-api-openapi.yml",
     "loops-components-api-openapi.yml",
+    "loops-configuration-api-openapi.yml",
     "loops-contact-properties-api-openapi.yml",
     "loops-contacts-api-openapi.yml",
-    "loops-dedicated-sending-ips-api-openapi.yml",
     "loops-email-messages-api-openapi.yml",
+    "loops-event-patterns-api-openapi.yml",
     "loops-events-api-openapi.yml",
     "loops-mailing-lists-api-openapi.yml",
     "loops-themes-api-openapi.yml",
-    "loops-transactional-emails-api-openapi.yml"
+    "loops-transactional-emails-api-openapi.yml",
+    "loops-transactional-groups-api-openapi.yml",
+    "loops-uploads-api-openapi.yml",
+    "loops-webhooks-api-openapi.yml",
+    "loops-workflow-nodes-api-openapi.yml",
+    "loops-workflows-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "loops-openapi.yaml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0"
+  ],
+  "skipped": [
+    "loops-api-key-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-audience-segments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-campaign-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-components-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-configuration-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-contact-properties-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-contacts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-email-messages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-event-patterns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-mailing-lists-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-themes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-transactional-emails-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-transactional-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-uploads-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-workflow-nodes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-workflows-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

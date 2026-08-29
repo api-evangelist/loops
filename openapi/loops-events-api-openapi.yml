@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Events API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
   version: 1.21.6
 servers:
-- url: https://app.loops.so/api/v1
+- url: https://app.loops.so/api
 tags:
 - name: Events
   description: Trigger workflows with events
 paths:
-  /events/send:
+  /v1/events/send:
     post:
       operationId: sendEvent
       tags:
@@ -81,6 +81,15 @@ components:
       examples:
       - success: false
         message: Contact not found.
+    MailingListSubscriptions:
+      type: object
+      description: 'Manage mailing list subscriptions.
+
+
+        Include key-value pairs of mailing list IDs and a `boolean` denoting if the contact should be added (`true`) or removed (`false`) from the list.'
+      examples:
+      - cm06f5v0e45nf0ml5754o9cix: true
+        cm16k73gq014h0mmj5b6jdi9r: false
     EventRequest:
       type: object
       required:
@@ -151,15 +160,6 @@ components:
       examples:
       - success: false
         message: Idempotency key already used with a different request body.
-    MailingListSubscriptions:
-      type: object
-      description: 'Manage mailing list subscriptions.
-
-
-        Include key-value pairs of mailing list IDs and a `boolean` denoting if the contact should be added (`true`) or removed (`false`) from the list.'
-      examples:
-      - cm06f5v0e45nf0ml5754o9cix: true
-        cm16k73gq014h0mmj5b6jdi9r: false
   securitySchemes:
     apiKey:
       type: http

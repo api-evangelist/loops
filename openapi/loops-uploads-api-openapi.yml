@@ -1,15 +1,15 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Uploads API
   description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
   version: 1.21.6
 servers:
-- url: https://app.loops.so/api/v1
+- url: https://app.loops.so/api
 tags:
 - name: Uploads
   description: Upload image assets
 paths:
-  /uploads:
+  /v1/uploads:
     post:
       operationId: createUpload
       tags:
@@ -53,7 +53,7 @@ paths:
                 $ref: '#/components/schemas/UploadFailureResponse'
       security:
       - apiKey: []
-  /uploads/{emailAssetId}/complete:
+  /v1/uploads/{emailAssetId}/complete:
     parameters:
     - name: emailAssetId
       in: path
@@ -125,42 +125,6 @@ components:
       examples:
       - emailAssetId: cla3s5s7e9t1i3d5f7g9h1j3
         finalUrl: https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
-    CreateUploadRequest:
-      type: object
-      properties:
-        contentType:
-          type: string
-          description: The MIME type of the file to upload. Supported types are `image/jpeg`, `image/png`, `image/gif` and `image/webp`.
-          examples:
-          - image/png
-        contentLength:
-          type: integer
-          description: The size of the file in bytes. Must be a positive integer no greater than 4,000,000 bytes.
-          examples:
-          - 102400
-      required:
-      - contentType
-      - contentLength
-      additionalProperties: false
-    CreateUploadResponse:
-      type: object
-      properties:
-        emailAssetId:
-          type: string
-          examples:
-          - cla3s5s7e9t1i3d5f7g9h1j3
-          description: The ID of the created asset. Pass this as `emailAssetId` to `POST /v1/uploads/{emailAssetId}/complete` once the file has been uploaded.
-        presignedUrl:
-          type: string
-          description: The pre-signed URL to upload the file to with an HTTP `PUT` request. Send the same `Content-Type` and `Content-Length` used in the create request.
-          examples:
-          - https://loops-assets.s3.amazonaws.com/uploads/cla3s5s7e9t1i3d5f7g9h1j3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...
-      required:
-      - emailAssetId
-      - presignedUrl
-      examples:
-      - emailAssetId: cla3s5s7e9t1i3d5f7g9h1j3
-        presignedUrl: https://loops-assets.s3.amazonaws.com/uploads/cla3s5s7e9t1i3d5f7g9h1j3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...
     UploadFailureResponse:
       type: object
       properties:
@@ -203,6 +167,42 @@ components:
           description: The number of hours in the upload limit window.
           examples:
           - 24
+    CreateUploadRequest:
+      type: object
+      properties:
+        contentType:
+          type: string
+          description: The MIME type of the file to upload. Supported types are `image/jpeg`, `image/png`, `image/gif` and `image/webp`.
+          examples:
+          - image/png
+        contentLength:
+          type: integer
+          description: The size of the file in bytes. Must be a positive integer no greater than 4,000,000 bytes.
+          examples:
+          - 102400
+      required:
+      - contentType
+      - contentLength
+      additionalProperties: false
+    CreateUploadResponse:
+      type: object
+      properties:
+        emailAssetId:
+          type: string
+          examples:
+          - cla3s5s7e9t1i3d5f7g9h1j3
+          description: The ID of the created asset. Pass this as `emailAssetId` to `POST /v1/uploads/{emailAssetId}/complete` once the file has been uploaded.
+        presignedUrl:
+          type: string
+          description: The pre-signed URL to upload the file to with an HTTP `PUT` request. Send the same `Content-Type` and `Content-Length` used in the create request.
+          examples:
+          - https://loops-assets.s3.amazonaws.com/uploads/cla3s5s7e9t1i3d5f7g9h1j3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...
+      required:
+      - emailAssetId
+      - presignedUrl
+      examples:
+      - emailAssetId: cla3s5s7e9t1i3d5f7g9h1j3
+        presignedUrl: https://loops-assets.s3.amazonaws.com/uploads/cla3s5s7e9t1i3d5f7g9h1j3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...
   securitySchemes:
     apiKey:
       type: http
