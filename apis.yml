@@ -10,6 +10,18 @@ description: Loops is an email platform built for software companies, combining 
   Go, PHP, Ruby and Nuxt, a Go CLI, four versioned Agent Skills, and a hosted OAuth-protected MCP server at mcp.loops.so.
   Pricing is based on stored subscribed contacts rather than send volume, with a permanent free tier. The operating
   company is Astrodon Corporation.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
