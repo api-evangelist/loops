@@ -74,7 +74,7 @@ apis:
   humanURL: https://loops.so/docs/api-reference/api-key
   baseURL: https://app.loops.so/api/v1
   tags:
-  - API key
+  - APIKeys
   tags_raw:
   - API key
   properties:
@@ -94,7 +94,7 @@ apis:
   humanURL: https://loops.so/docs/api-reference/list-audience-segments
   baseURL: https://app.loops.so/api/v1
   tags:
-  - Audience segments
+  - Audience Segments
   tags_raw:
   - Audience segments
   properties:
@@ -313,7 +313,7 @@ apis:
   humanURL: https://loops.so/docs/api-reference/send-transactional-email
   baseURL: https://app.loops.so/api/v1
   tags:
-  - Transactional emails
+  - Transactional Emails
   tags_raw:
   - Transactional emails
   properties:
