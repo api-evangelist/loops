@@ -2,23 +2,21 @@
   "repo": "loops",
   "feeds": [
     {
-      "source": "https://loops.so/changelog",
-      "feed_url": "https://loops.so/changelog",
-      "title": "",
-      "saved": 0,
-      "method": "none",
-      "nature": "undetermined",
-      "nature_basis": null
-    },
-    {
       "source": "https://app.loops.so/settings?page=support",
       "feed_url": "https://app.loops.so/settings?page=support",
       "title": "",
       "saved": 0,
       "method": "none"
+    },
+    {
+      "source": "https://loops.so/changelog",
+      "feed_url": "https://loops.so/changelog",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     }
   ],
-  "fetched": "2026-08-30T22:33:40Z",
+  "fetched": "2026-09-06T19:17:18Z",
   "post_count": 8,
   "feed_nature": "undetermined",
   "feed_nature_basis": null,
