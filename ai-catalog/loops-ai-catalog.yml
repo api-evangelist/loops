@@ -41,6 +41,7 @@ conformance:
     informational:
     - '[Loops Agent Skills and Plugin] Media type ''application/agent-plugins+gzip'' is a valid application
       extension media type. ARD permits extension types without core registration.'
+  did_web: null
 catalog:
   host_display_name: Loops
   host_identifier: loops.so
