@@ -1,0 +1,57 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Loops",
+    "identifier": "loops.so",
+    "documentationUrl": "https://loops.so/developers"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:loops.so:mcp:loops",
+      "displayName": "Loops MCP",
+      "type": "application/mcp-server-card+json",
+      "description": "Manage contacts, send events, and send transactional email through the hosted Loops MCP server.",
+      "tags": [
+        "email",
+        "contacts",
+        "events",
+        "transactional-email"
+      ],
+      "version": "1.0.0",
+      "url": "https://loops.so/.well-known/mcp/server-card.json",
+      "publisher": {
+        "identifier": "loops.so",
+        "displayName": "Loops",
+        "identityType": "dns"
+      },
+      "trustManifest": {
+        "identity": "https://loops.so",
+        "identityType": "https"
+      }
+    },
+    {
+      "identifier": "urn:air:loops.so:plugin:loops",
+      "displayName": "Loops Agent Skills and Plugin",
+      "type": "application/agent-plugins+gzip",
+      "description": "Official installable skills for the Loops API, CLI, LMX email markup, and email-sending best practices.",
+      "tags": [
+        "email",
+        "api",
+        "cli",
+        "lmx",
+        "deliverability"
+      ],
+      "version": "0.1.0",
+      "url": "https://github.com/Loops-so/skills/archive/refs/heads/main.tar.gz",
+      "publisher": {
+        "identifier": "loops.so",
+        "displayName": "Loops",
+        "identityType": "dns"
+      },
+      "trustManifest": {
+        "identity": "https://loops.so",
+        "identityType": "https"
+      }
+    }
+  ]
+}
