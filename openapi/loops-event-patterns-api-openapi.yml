@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Event patterns API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
@@ -138,37 +138,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    EventPatternSummary:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the event pattern.
-        eventName:
-          type: string
-          description: The name of the event pattern. Use this when sending events with the API.
-        incomingWebhookPlatform:
-          type:
-          - string
-          - 'null'
-          description: The platform that sent this event pattern, if the event pattern is from an incoming webhook. Will be `null` for custom events.
-          enum:
-          - clerk
-          - polar
-          - stripe
-          - supabase
-          - 'null'
-      required:
-      - id
-      - eventName
-      - incomingWebhookPlatform
-    EventPatternFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
     EventPattern:
       type: object
       properties:
@@ -198,21 +167,30 @@ components:
       - eventName
       - eventProperties
       - incomingWebhookPlatform
-    WorkflowEventProperty:
+    EventPatternSummary:
       type: object
       properties:
-        name:
+        id:
           type: string
-        type:
+          description: The ID of the event pattern.
+        eventName:
           type: string
-          enum:
+          description: The name of the event pattern. Use this when sending events with the API.
+        incomingWebhookPlatform:
+          type:
           - string
-          - number
-          - boolean
-          - date
+          - 'null'
+          description: The platform that sent this event pattern, if the event pattern is from an incoming webhook. Will be `null` for custom events.
+          enum:
+          - clerk
+          - polar
+          - stripe
+          - supabase
+          - 'null'
       required:
-      - name
-      - type
+      - id
+      - eventName
+      - incomingWebhookPlatform
     ListEventPatternsResponse:
       type: object
       properties:
@@ -242,6 +220,28 @@ components:
       required:
       - pagination
       - data
+    EventPatternFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    WorkflowEventProperty:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - string
+          - number
+          - boolean
+          - date
+      required:
+      - name
+      - type
   securitySchemes:
     apiKey:
       type: http

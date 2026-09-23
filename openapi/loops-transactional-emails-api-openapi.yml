@@ -1,21 +1,23 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Transactional emails API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
 tags:
-- name: Transactional emails
+- name: Transactional Emails
   description: Create, manage, and send transactional emails
 paths:
   /v1/transactional:
     post:
       operationId: sendTransactionalEmail
       tags:
-      - Transactional emails
+      - Transactional Emails
       summary: Send a transactional email
-      description: 'Send a transactional email to a contact.<br>Please [email us](mailto:help@loops.so) to enable attachments on your account before using them with the API.
+      description: 'Send a transactional email to a contact.
+
+        Please email us to enable attachments on your account before using them with the API.
 
 
         To set dynamic Subject, From, Reply to, CC, BCC email header fields, add data variables to those fields in the editor, then include data for each variable in the API request. Read our transactional email guide for more details.'
@@ -91,7 +93,7 @@ paths:
       operationId: listPublishedTransactionalEmails
       deprecated: true
       tags:
-      - Transactional emails
+      - Transactional Emails
       summary: List transactional emails
       description: Get a list of published transactional emails.
       x-mint:
@@ -125,7 +127,7 @@ paths:
     get:
       operationId: listTransactionalEmails
       tags:
-      - Transactional emails
+      - Transactional Emails
       summary: List transactional emails
       description: Retrieve a paginated list of transactional emails, most recently created first.
       x-mint:
@@ -167,7 +169,7 @@ paths:
     post:
       operationId: createTransactionalEmail
       tags:
-      - Transactional emails
+      - Transactional Emails
       summary: Create a transactional email
       description: Create a new transactional email. An empty draft email message is created automatically and its `draftEmailMessageId` is returned. Use the `POST /v1/email-messages/{emailMessageId}` endpoint along with the returned `draftEmailMessageContentRevisionId` to set subject, sender, preview text, and LMX content, then call `POST /v1/transactional-emails/{transactionalId}/publish` to publish the draft.
       x-mint:
@@ -220,7 +222,7 @@ paths:
     get:
       operationId: getTransactionalEmail
       tags:
-      - Transactional emails
+      - Transactional Emails
       summary: Get a transactional email
       description: Retrieve a single transactional email by ID.
       x-mint:
@@ -255,7 +257,7 @@ paths:
     post:
       operationId: updateTransactionalEmail
       tags:
-      - Transactional emails
+      - Transactional Emails
       summary: Update a transactional email
       description: Update a transactional email by ID.
       x-mint:
@@ -304,7 +306,7 @@ paths:
     post:
       operationId: ensureTransactionalDraft
       tags:
-      - Transactional emails
+      - Transactional Emails
       summary: Ensure a draft email message
       description: Ensure the transactional email has a draft email message. If a draft already exists it is returned unchanged; otherwise a new empty draft is created (seeded from the most recent published version when present). Use `POST /v1/email-messages/{emailMessageId}` to edit the draft's content.
       x-mint:
@@ -355,7 +357,7 @@ paths:
     post:
       operationId: publishTransactionalEmail
       tags:
-      - Transactional emails
+      - Transactional Emails
       summary: Publish a transactional email draft
       description: Publish the transactional email's current draft email message. The draft becomes the published version and the draft is cleared.
       x-mint:
@@ -406,76 +408,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    TransactionalResource:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the transactional email.
-          examples:
-          - cll42l54f20i1la0lfooe3z12
-        name:
-          type: string
-          description: The name of the transactional email.
-          examples:
-          - Sign up confirmation
-        draftEmailMessageId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the draft email message. `null` if there is no draft version.
-          examples:
-          - cle5f7g9h1i3j5k7l9m1n3p5
-        publishedEmailMessageId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the published email message. `null` if there is no published version.
-          examples:
-          - cle5f7g9h1i3j5k7l9m1n3p5
-        transactionalGroupId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the group this transactional email belongs to.
-          examples:
-          - clg7n5p3q1r9s7t5u3v1w9y7
-        createdAt:
-          type: string
-          format: date-time
-          description: ISO 8601 timestamp for when the transactional email was created.
-          examples:
-          - 2025-06-29 07:47:39.370000+00:00
-        updatedAt:
-          type: string
-          format: date-time
-          description: ISO 8601 timestamp for when the transactional email was last updated.
-          examples:
-          - 2025-06-29 07:47:39.370000+00:00
-        dataVariables:
-          type: array
-          description: Data variable names used by the published email. Empty for unpublished transactional emails.
-          items:
-            type: string
-      required:
-      - id
-      - name
-      - draftEmailMessageId
-      - publishedEmailMessageId
-      - transactionalGroupId
-      - createdAt
-      - updatedAt
-      - dataVariables
-      examples:
-      - id: cll42l54f20i1la0lfooe3z12
-        name: Sign up confirmation
-        draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
-        publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
-        transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
-        createdAt: 2025-06-29 07:47:39.370000+00:00
-        updatedAt: 2025-06-29 07:47:39.370000+00:00
-        dataVariables:
-        - confirmationUrl
     UpdateTransactionalRequest:
       type: object
       minProperties: 1
@@ -547,279 +479,6 @@ components:
       - message
       examples:
       - message: Transactional email not found.
-    TransactionalSendFailureResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-          examples:
-          - 'Missing required data variable(s): confirmationUrl'
-      required:
-      - success
-      - message
-      examples:
-      - success: false
-        message: 'Missing required data variable(s): confirmationUrl'
-    ListTransactionalsResponse:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionalEmail'
-      examples:
-      - pagination:
-          totalResults: 2
-          returnedResults: 2
-          perPage: 20
-          totalPages: 1
-          nextCursor: null
-          nextPage: null
-        data:
-        - id: cll42l54f20i1la0lfooe3z12
-          name: Sign up confirmation
-          lastUpdated: 2025-06-29 07:47:39.370000+00:00
-          dataVariables:
-          - confirmationUrl
-    TransactionalRequest:
-      type: object
-      required:
-      - email
-      - transactionalId
-      properties:
-        email:
-          type: string
-          examples:
-          - alex@company.com
-          description: The recipient's email address.
-        transactionalId:
-          type: string
-          description: The ID of the transactional email to send.
-          examples:
-          - cll42l54f20i1la0lfooe3z12
-        addToAudience:
-          type: boolean
-          description: If `true`, a contact will be created in your audience using the `email` value (if a matching contact doesn't already exist).
-          examples:
-          - true
-        dataVariables:
-          type: object
-          description: 'An object containing data as defined by the data variables added to the transactional email template. Values can be of type string or number.
-
-
-            If you have added optional data variables to your email, you can exclude them from the dataVariables object or set the value to "".
-
-
-            If you have added an array data variable to your email, make sure to include an array matching the data variables you added to your array block.'
-          examples:
-          - name: Chris
-            passwordResetLink: https://example.com/reset-password
-        attachments:
-          type: array
-          description: A list containing file objects to be sent along with an email message. Attachments must be enabled by Loops support before they can be used with the API.
-          items:
-            type: object
-            required:
-            - filename
-            - contentType
-            - data
-            properties:
-              filename:
-                type: string
-                description: The name of the file, shown in email clients.
-              contentType:
-                type: string
-                description: The MIME type of the file.
-              data:
-                type: string
-                description: The base64-encoded content of the file.
-      examples:
-      - email: alex@company.com
-        transactionalId: cll42l54f20i1la0lfooe3z12
-        addToAudience: true
-        dataVariables:
-          name: Alex
-          passwordResetLink: https://app.company.com/reset/abc123
-    TransactionalFailure2Response:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-        path:
-          type: string
-      required:
-      - success
-      - message
-      - path
-    ListTransactionalsResourceResponse:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionalResource'
-      required:
-      - pagination
-      - data
-      examples:
-      - pagination:
-          totalResults: 2
-          returnedResults: 2
-          perPage: 20
-          totalPages: 1
-          nextCursor: null
-          nextPage: null
-        data:
-        - id: cll42l54f20i1la0lfooe3z12
-          name: Sign up confirmation
-          draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
-          publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
-          transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
-          createdAt: 2025-06-29 07:47:39.370000+00:00
-          updatedAt: 2025-06-29 07:47:39.370000+00:00
-          dataVariables:
-          - confirmationUrl
-    TransactionalFailure4Response:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-        error:
-          type: object
-          properties:
-            path:
-              type: string
-            reason:
-              type: string
-      required:
-      - success
-      - message
-      - error
-    TransactionalSuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-      required:
-      - success
-    TransactionalDraftResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the transactional email.
-        name:
-          type: string
-          description: The name of the transactional email.
-        draftEmailMessageId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the draft email message.
-        draftEmailMessageContentRevisionId:
-          type:
-          - string
-          - 'null'
-          description: The `contentRevisionId` of the draft email message. Pass this as `expectedRevisionId` on your first update via `POST /v1/email-messages/{emailMessageId}`.
-          examples:
-          - clrev1s10n2i3d4e5f6g7h8
-        publishedEmailMessageId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the published email message. `null` if there is no published version.
-        transactionalGroupId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the group this transactional email belongs to. Returned when creating a transactional email.
-        createdAt:
-          type: string
-          format: date-time
-          description: ISO 8601 timestamp for when the transactional email was created.
-        updatedAt:
-          type: string
-          format: date-time
-          description: ISO 8601 timestamp for when the transactional email was last updated.
-        dataVariables:
-          type: array
-          description: Data variable names used by the published email. Empty for unpublished transactional emails.
-          items:
-            type: string
-      required:
-      - id
-      - name
-      - draftEmailMessageId
-      - draftEmailMessageContentRevisionId
-      - publishedEmailMessageId
-      - createdAt
-      - updatedAt
-      - dataVariables
-      examples:
-      - id: cll42l54f20i1la0lfooe3z12
-        name: Sign up confirmation
-        draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
-        publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
-        transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
-        createdAt: 2025-06-29 07:47:39.370000+00:00
-        updatedAt: 2025-06-29 07:47:39.370000+00:00
-        dataVariables:
-        - confirmationUrl
-        draftEmailMessageContentRevisionId: clrev1s10n2i3d4e5f6g7h8
-    TransactionalFailure3Response:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-        error:
-          type: object
-          properties:
-            path:
-              type: string
-            message:
-              type: string
-      required:
-      - success
-      - message
-      - error
-    CreateTransactionalRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the transactional email.
-          examples:
-          - Welcome email
-        transactionalGroupId:
-          type: string
-          description: The ID of the group to add this transactional email to. Defaults to the team's default group when omitted.
-          examples:
-          - clg7n5p3q1r9s7t5u3v1w9y7
-      required:
-      - name
-      additionalProperties: false
     IdempotencyKeyFailureResponse:
       type: object
       properties:
@@ -893,6 +552,349 @@ components:
           path: dataVariables
           message: 'Missing required data variable(s): confirmationUrl'
         transactionalId: cll42l54f20i1la0lfooe3z12
+    TransactionalFailure3Response:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+        error:
+          type: object
+          properties:
+            path:
+              type: string
+            message:
+              type: string
+      required:
+      - success
+      - message
+      - error
+    CreateTransactionalRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the transactional email.
+          examples:
+          - Welcome email
+        transactionalGroupId:
+          type: string
+          description: The ID of the group to add this transactional email to. Defaults to the team's default group when omitted.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+      required:
+      - name
+      additionalProperties: false
+    ListTransactionalsResponse:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionalEmail'
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: cll42l54f20i1la0lfooe3z12
+          name: Sign up confirmation
+          lastUpdated: 2025-06-29 07:47:39.370000+00:00
+          dataVariables:
+          - confirmationUrl
+    ListTransactionalsResourceResponse:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionalResource'
+      required:
+      - pagination
+      - data
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: cll42l54f20i1la0lfooe3z12
+          name: Sign up confirmation
+          draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+          publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+          transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
+          createdAt: 2025-06-29 07:47:39.370000+00:00
+          updatedAt: 2025-06-29 07:47:39.370000+00:00
+          dataVariables:
+          - confirmationUrl
+    TransactionalSendFailureResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+          examples:
+          - 'Missing required data variable(s): confirmationUrl'
+      required:
+      - success
+      - message
+      examples:
+      - success: false
+        message: 'Missing required data variable(s): confirmationUrl'
+    TransactionalSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+      required:
+      - success
+    TransactionalRequest:
+      type: object
+      required:
+      - email
+      - transactionalId
+      properties:
+        email:
+          type: string
+          examples:
+          - alex@company.com
+          description: The recipient's email address.
+        transactionalId:
+          type: string
+          description: The ID of the transactional email to send.
+          examples:
+          - cll42l54f20i1la0lfooe3z12
+        addToAudience:
+          type: boolean
+          description: If `true`, a contact will be created in your audience using the `email` value (if a matching contact doesn't already exist).
+          examples:
+          - true
+        dataVariables:
+          type: object
+          description: 'An object containing data as defined by the data variables added to the transactional email template. Values can be of type string or number.
+
+
+            If you have added optional data variables to your email, you can exclude them from the dataVariables object or set the value to "".
+
+
+            If you have added an array data variable to your email, make sure to include an array matching the data variables you added to your array block.'
+          examples:
+          - name: Chris
+            passwordResetLink: https://example.com/reset-password
+        attachments:
+          type: array
+          description: A list containing file objects to be sent along with an email message. Attachments must be enabled by Loops support before they can be used with the API.
+          items:
+            type: object
+            required:
+            - filename
+            - contentType
+            - data
+            properties:
+              filename:
+                type: string
+                description: The name of the file, shown in email clients.
+              contentType:
+                type: string
+                description: The MIME type of the file.
+              data:
+                type: string
+                description: The base64-encoded content of the file.
+      examples:
+      - email: alex@company.com
+        transactionalId: cll42l54f20i1la0lfooe3z12
+        addToAudience: true
+        dataVariables:
+          name: Alex
+          passwordResetLink: https://app.company.com/reset/abc123
+    TransactionalDraftResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the transactional email.
+        name:
+          type: string
+          description: The name of the transactional email.
+        draftEmailMessageId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the draft email message.
+        draftEmailMessageContentRevisionId:
+          type:
+          - string
+          - 'null'
+          description: The `contentRevisionId` of the draft email message. Pass this as `expectedRevisionId` on your first update via `POST /v1/email-messages/{emailMessageId}`.
+          examples:
+          - clrev1s10n2i3d4e5f6g7h8
+        publishedEmailMessageId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the published email message. `null` if there is no published version.
+        transactionalGroupId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the group this transactional email belongs to. Returned when creating a transactional email.
+        createdAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp for when the transactional email was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp for when the transactional email was last updated.
+        dataVariables:
+          type: array
+          description: Data variable names used by the published email. Empty for unpublished transactional emails.
+          items:
+            type: string
+      required:
+      - id
+      - name
+      - draftEmailMessageId
+      - draftEmailMessageContentRevisionId
+      - publishedEmailMessageId
+      - createdAt
+      - updatedAt
+      - dataVariables
+      examples:
+      - id: cll42l54f20i1la0lfooe3z12
+        name: Sign up confirmation
+        draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        dataVariables:
+        - confirmationUrl
+        draftEmailMessageContentRevisionId: clrev1s10n2i3d4e5f6g7h8
+    TransactionalFailure2Response:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+        path:
+          type: string
+      required:
+      - success
+      - message
+      - path
+    TransactionalFailure4Response:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+        error:
+          type: object
+          properties:
+            path:
+              type: string
+            reason:
+              type: string
+      required:
+      - success
+      - message
+      - error
+    TransactionalResource:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the transactional email.
+          examples:
+          - cll42l54f20i1la0lfooe3z12
+        name:
+          type: string
+          description: The name of the transactional email.
+          examples:
+          - Sign up confirmation
+        draftEmailMessageId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the draft email message. `null` if there is no draft version.
+          examples:
+          - cle5f7g9h1i3j5k7l9m1n3p5
+        publishedEmailMessageId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the published email message. `null` if there is no published version.
+          examples:
+          - cle5f7g9h1i3j5k7l9m1n3p5
+        transactionalGroupId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the group this transactional email belongs to.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+        createdAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp for when the transactional email was created.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        updatedAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp for when the transactional email was last updated.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        dataVariables:
+          type: array
+          description: Data variable names used by the published email. Empty for unpublished transactional emails.
+          items:
+            type: string
+      required:
+      - id
+      - name
+      - draftEmailMessageId
+      - publishedEmailMessageId
+      - transactionalGroupId
+      - createdAt
+      - updatedAt
+      - dataVariables
+      examples:
+      - id: cll42l54f20i1la0lfooe3z12
+        name: Sign up confirmation
+        draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        dataVariables:
+        - confirmationUrl
   securitySchemes:
     apiKey:
       type: http

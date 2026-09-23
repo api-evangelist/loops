@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Events API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
@@ -64,6 +64,30 @@ paths:
       - apiKey: []
 components:
   schemas:
+    EventSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+      required:
+      - success
+    IdempotencyKeyFailureResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+      required:
+      - success
+      - message
+      examples:
+      - success: false
+        message: Idempotency key already used with a different request body.
     EventFailureResponse:
       type: object
       properties:
@@ -136,30 +160,6 @@ components:
           plan: pro
         mailingLists:
           clm2k8j4h6g0f8d6s4a2b0z8: true
-    EventSuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-      required:
-      - success
-    IdempotencyKeyFailureResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-      required:
-      - success
-      - message
-      examples:
-      - success: false
-        message: Idempotency key already used with a different request body.
   securitySchemes:
     apiKey:
       type: http

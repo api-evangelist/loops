@@ -29,7 +29,8 @@
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "loops-openapi.yaml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0"
+    "loops-openapi.yaml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "loops-api-key-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -48,6 +49,7 @@
     "loops-transactional-emails-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "loops-transactional-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "loops-uploads-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "loops-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "loops-workflow-nodes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "loops-workflows-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]

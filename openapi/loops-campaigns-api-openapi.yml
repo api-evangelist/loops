@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Campaigns API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
@@ -191,70 +191,24 @@ paths:
       - apiKey: []
 components:
   schemas:
-    OptInCondition:
+    CampaignSchedulingRequest:
       type: object
-      description: Matches contacts by mailing-list opt-in status.
+      description: When the campaign should send. `timestamp` is required and must be in the future when `method` is `schedule`, and must be omitted when `method` is `now`.
       properties:
-        type:
+        method:
           type: string
           enum:
-          - optIn
-        status:
-          type:
-          - string
-          - 'null'
-          enum:
-          - accepted
-          - pending
-          - rejected
-          - null
-      required:
-      - type
-      - status
-      examples:
-      - type: optIn
-        status: accepted
-    CreateCampaignRequest:
-      type: object
-      properties:
-        name:
+          - now
+          - schedule
+        timestamp:
           type: string
-          description: The campaign name.
-          examples:
-          - Spring announcement
-        campaignGroupId:
-          type: string
-          description: The ID of the group to add this campaign to. Defaults to the team's default group when omitted.
-          examples:
-          - clg7n5p3q1r9s7t5u3v1w9y7
-        mailingListId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the mailing list to send to.
-          examples:
-          - clm2k8j4h6g0f8d6s4a2b0z8
-        audienceSegmentId:
-          type:
-          - string
-          - 'null'
-          description: The ID of an audience segment. Setting this without also providing `audienceFilter` clears any existing `audienceFilter`. If both are provided, the filter is applied on top of the segment's filter.
-          examples:
-          - cls6e8g0i2k4m6o8q0s2u4w6
-        audienceFilter:
-          $ref: '#/components/schemas/AudienceFilterInRequest'
-        scheduling:
-          $ref: '#/components/schemas/CampaignSchedulingRequest'
+          format: date-time
       required:
-      - name
+      - method
       additionalProperties: false
-    AudienceFilterCondition:
-      oneOf:
-      - $ref: '#/components/schemas/PropertyCondition'
-      - $ref: '#/components/schemas/OptInCondition'
-      - $ref: '#/components/schemas/ActivityCondition'
-      discriminator:
-        propertyName: type
+      examples:
+      - method: schedule
+        timestamp: 2025-07-15 14:00:00+00:00
     Pagination:
       type: object
       properties:
@@ -300,79 +254,39 @@ components:
         totalPages: 1
         nextCursor: null
         nextPage: null
-    CampaignSchedulingRequest:
+    UpdateCampaignRequest:
       type: object
-      description: When the campaign should send. `timestamp` is required and must be in the future when `method` is `schedule`, and must be omitted when `method` is `now`.
+      description: At least one field must be provided.
       properties:
-        method:
+        name:
           type: string
-          enum:
-          - now
-          - schedule
-        timestamp:
+          description: The updated campaign name.
+          examples:
+          - Spring announcement
+        campaignGroupId:
           type: string
-          format: date-time
-      required:
-      - method
+          description: The ID of the group to move this campaign to.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+        mailingListId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the mailing list to send to.
+          examples:
+          - clm2k8j4h6g0f8d6s4a2b0z8
+        audienceSegmentId:
+          type:
+          - string
+          - 'null'
+          description: The ID of an audience segment. Setting this without also providing `audienceFilter` clears any existing `audienceFilter`. If both are provided, the filter is applied on top of the segment's filter.
+          examples:
+          - cls6e8g0i2k4m6o8q0s2u4w6
+        audienceFilter:
+          $ref: '#/components/schemas/AudienceFilterInRequest'
+        scheduling:
+          $ref: '#/components/schemas/CampaignSchedulingRequest'
       additionalProperties: false
-      examples:
-      - method: schedule
-        timestamp: 2025-07-15 14:00:00+00:00
-    PropertyCondition:
-      type: object
-      description: Matches contacts by a property value.
-      properties:
-        type:
-          type: string
-          enum:
-          - property
-        key:
-          type: string
-          description: The contact property name.
-        operator:
-          type: string
-          enum:
-          - any
-          - contains
-          - notContains
-          - equals
-          - notEquals
-          - greaterThan
-          - lessThan
-          - isTrue
-          - isFalse
-          - empty
-          - notEmpty
-          - dateEmpty
-          - dateNotEmpty
-          - after
-          - before
-          - between
-        value:
-          description: The comparison value. Omitted for value-less operators (e.g. `isTrue`, `empty`). A `{ from, to }` object for `between`.
-          oneOf:
-          - type: string
-          - type: number
-          - type: object
-            properties:
-              from:
-                type: string
-                format: date-time
-              to:
-                type: string
-                format: date-time
-            required:
-            - from
-            - to
-      required:
-      - type
-      - key
-      - operator
-      examples:
-      - type: property
-        key: plan
-        operator: equals
-        value: pro
     CreateCampaignResponse:
       type: object
       properties:
@@ -568,123 +482,6 @@ components:
         scheduling:
           method: now
           timestamp: null
-    CampaignScheduling:
-      type: object
-      description: When the campaign is scheduled to send.
-      properties:
-        method:
-          type: string
-          enum:
-          - now
-          - schedule
-        timestamp:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: ISO 8601 send time. Null when the method is `now`.
-      required:
-      - method
-      - timestamp
-      examples:
-      - method: schedule
-        timestamp: 2025-07-15 14:00:00+00:00
-    UpdateCampaignRequest:
-      type: object
-      description: At least one field must be provided.
-      properties:
-        name:
-          type: string
-          description: The updated campaign name.
-          examples:
-          - Spring announcement
-        campaignGroupId:
-          type: string
-          description: The ID of the group to move this campaign to.
-          examples:
-          - clg7n5p3q1r9s7t5u3v1w9y7
-        mailingListId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the mailing list to send to.
-          examples:
-          - clm2k8j4h6g0f8d6s4a2b0z8
-        audienceSegmentId:
-          type:
-          - string
-          - 'null'
-          description: The ID of an audience segment. Setting this without also providing `audienceFilter` clears any existing `audienceFilter`. If both are provided, the filter is applied on top of the segment's filter.
-          examples:
-          - cls6e8g0i2k4m6o8q0s2u4w6
-        audienceFilter:
-          $ref: '#/components/schemas/AudienceFilterInRequest'
-        scheduling:
-          $ref: '#/components/schemas/CampaignSchedulingRequest'
-      additionalProperties: false
-    CampaignFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Campaign not found.
-    AudienceFilter:
-      type:
-      - object
-      - 'null'
-      description: A tree of audience conditions combined with `match`.
-      properties:
-        match:
-          type: string
-          enum:
-          - all
-          - any
-        conditions:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/AudienceFilterCondition'
-      required:
-      - match
-      - conditions
-      additionalProperties: false
-    ListCampaignsResponse:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CampaignResponse'
-      required:
-      - pagination
-      - data
-      examples:
-      - pagination:
-          totalResults: 45
-          returnedResults: 20
-          perPage: 20
-          totalPages: 3
-          nextCursor: clp9k2m4n6p8q0r2s4t6u8v0
-          nextPage: https://app.loops.so/api/v1/campaign-groups?cursor=clp9k2m4n6p8q0r2s4t6u8v0&perPage=20
-        data:
-        - id: clc4m6n8p0q2r4s6t8u0v2x4
-          name: Spring announcement
-          status: Draft
-          createdAt: 2025-06-29 07:47:39.370000+00:00
-          updatedAt: 2025-06-29 07:47:39.370000+00:00
-          emailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
-          campaignGroupId: clg7n5p3q1r9s7t5u3v1w9y7
-          mailingListId: clm2k8j4h6g0f8d6s4a2b0z8
-          audienceSegmentId: null
-          audienceFilter: null
-          scheduling:
-            method: now
-            timestamp: null
     ActivityCondition:
       type: object
       description: Matches contacts by their activity on a campaign or workflow.
@@ -722,6 +519,186 @@ components:
         negate: false
         target: campaign
         id: clc4m6n8p0q2r4s6t8u0v2x4
+    AudienceFilterCondition:
+      oneOf:
+      - $ref: '#/components/schemas/PropertyCondition'
+      - $ref: '#/components/schemas/OptInCondition'
+      - $ref: '#/components/schemas/ActivityCondition'
+      discriminator:
+        propertyName: type
+    PropertyCondition:
+      type: object
+      description: Matches contacts by a property value.
+      properties:
+        type:
+          type: string
+          enum:
+          - property
+        key:
+          type: string
+          description: The contact property name.
+        operator:
+          type: string
+          enum:
+          - any
+          - contains
+          - notContains
+          - equals
+          - notEquals
+          - greaterThan
+          - lessThan
+          - isTrue
+          - isFalse
+          - empty
+          - notEmpty
+          - dateEmpty
+          - dateNotEmpty
+          - after
+          - before
+          - between
+        value:
+          description: The comparison value. Omitted for value-less operators (e.g. `isTrue`, `empty`). A `{ from, to }` object for `between`.
+          oneOf:
+          - type: string
+          - type: number
+          - type: object
+            properties:
+              from:
+                type: string
+                format: date-time
+              to:
+                type: string
+                format: date-time
+            required:
+            - from
+            - to
+      required:
+      - type
+      - key
+      - operator
+      examples:
+      - type: property
+        key: plan
+        operator: equals
+        value: pro
+    ListCampaignsResponse:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CampaignResponse'
+      required:
+      - pagination
+      - data
+      examples:
+      - pagination:
+          totalResults: 45
+          returnedResults: 20
+          perPage: 20
+          totalPages: 3
+          nextCursor: clp9k2m4n6p8q0r2s4t6u8v0
+          nextPage: https://app.loops.so/api/v1/campaign-groups?cursor=clp9k2m4n6p8q0r2s4t6u8v0&perPage=20
+        data:
+        - id: clc4m6n8p0q2r4s6t8u0v2x4
+          name: Spring announcement
+          status: Draft
+          createdAt: 2025-06-29 07:47:39.370000+00:00
+          updatedAt: 2025-06-29 07:47:39.370000+00:00
+          emailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+          campaignGroupId: clg7n5p3q1r9s7t5u3v1w9y7
+          mailingListId: clm2k8j4h6g0f8d6s4a2b0z8
+          audienceSegmentId: null
+          audienceFilter: null
+          scheduling:
+            method: now
+            timestamp: null
+    AudienceFilter:
+      type:
+      - object
+      - 'null'
+      description: A tree of audience conditions combined with `match`.
+      properties:
+        match:
+          type: string
+          enum:
+          - all
+          - any
+        conditions:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AudienceFilterCondition'
+      required:
+      - match
+      - conditions
+      additionalProperties: false
+    CampaignScheduling:
+      type: object
+      description: When the campaign is scheduled to send.
+      properties:
+        method:
+          type: string
+          enum:
+          - now
+          - schedule
+        timestamp:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: ISO 8601 send time. Null when the method is `now`.
+      required:
+      - method
+      - timestamp
+      examples:
+      - method: schedule
+        timestamp: 2025-07-15 14:00:00+00:00
+    CampaignFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Campaign not found.
+    CreateCampaignRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The campaign name.
+          examples:
+          - Spring announcement
+        campaignGroupId:
+          type: string
+          description: The ID of the group to add this campaign to. Defaults to the team's default group when omitted.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+        mailingListId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the mailing list to send to.
+          examples:
+          - clm2k8j4h6g0f8d6s4a2b0z8
+        audienceSegmentId:
+          type:
+          - string
+          - 'null'
+          description: The ID of an audience segment. Setting this without also providing `audienceFilter` clears any existing `audienceFilter`. If both are provided, the filter is applied on top of the segment's filter.
+          examples:
+          - cls6e8g0i2k4m6o8q0s2u4w6
+        audienceFilter:
+          $ref: '#/components/schemas/AudienceFilterInRequest'
+        scheduling:
+          $ref: '#/components/schemas/CampaignSchedulingRequest'
+      required:
+      - name
+      additionalProperties: false
     AudienceFilterInRequest:
       type:
       - object
@@ -742,6 +719,29 @@ components:
       - match
       - conditions
       additionalProperties: false
+    OptInCondition:
+      type: object
+      description: Matches contacts by mailing-list opt-in status.
+      properties:
+        type:
+          type: string
+          enum:
+          - optIn
+        status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - accepted
+          - pending
+          - rejected
+          - null
+      required:
+      - type
+      - status
+      examples:
+      - type: optIn
+        status: accepted
   securitySchemes:
     apiKey:
       type: http

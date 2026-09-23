@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Audience segments API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
 tags:
-- name: Audience segments
+- name: Audience Segments
   description: View audience segments
 paths:
   /v1/audience-segments/{audienceSegmentId}:
@@ -22,7 +22,7 @@ paths:
     get:
       operationId: getAudienceSegment
       tags:
-      - Audience segments
+      - Audience Segments
       summary: Get an audience segment
       description: Retrieve a single audience segment by ID.
       x-mint:
@@ -58,7 +58,7 @@ paths:
     get:
       operationId: listAudienceSegments
       tags:
-      - Audience segments
+      - Audience Segments
       summary: List audience segments
       description: Retrieve a paginated list of audience segments, most recently created first.
       x-mint:
@@ -100,7 +100,7 @@ paths:
     post:
       operationId: createAudienceSegment
       tags:
-      - Audience segments
+      - Audience Segments
       summary: Create an audience segment
       description: Create a new audience segment.
       x-mint:
@@ -140,36 +140,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    OptInCondition:
-      type: object
-      description: Matches contacts by mailing-list opt-in status.
-      properties:
-        type:
-          type: string
-          enum:
-          - optIn
-        status:
-          type:
-          - string
-          - 'null'
-          enum:
-          - accepted
-          - pending
-          - rejected
-          - null
-      required:
-      - type
-      - status
-      examples:
-      - type: optIn
-        status: accepted
-    AudienceFilterCondition:
-      oneOf:
-      - $ref: '#/components/schemas/PropertyCondition'
-      - $ref: '#/components/schemas/OptInCondition'
-      - $ref: '#/components/schemas/ActivityCondition'
-      discriminator:
-        propertyName: type
     Pagination:
       type: object
       properties:
@@ -215,96 +185,6 @@ components:
         totalPages: 1
         nextCursor: null
         nextPage: null
-    CreateAudienceSegmentRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          description: The name of the audience segment. Must be unique within the team.
-          examples:
-          - Active users
-        description:
-          type: string
-          maxLength: 1000
-          description: An optional description of the audience segment.
-        filter:
-          type: object
-          description: A tree of audience conditions combined with `match`.
-          properties:
-            match:
-              type: string
-              enum:
-              - all
-              - any
-            conditions:
-              type: array
-              minItems: 1
-              items:
-                $ref: '#/components/schemas/AudienceFilterCondition'
-          required:
-          - match
-          - conditions
-          additionalProperties: false
-      required:
-      - name
-      - filter
-      additionalProperties: false
-    PropertyCondition:
-      type: object
-      description: Matches contacts by a property value.
-      properties:
-        type:
-          type: string
-          enum:
-          - property
-        key:
-          type: string
-          description: The contact property name.
-        operator:
-          type: string
-          enum:
-          - any
-          - contains
-          - notContains
-          - equals
-          - notEquals
-          - greaterThan
-          - lessThan
-          - isTrue
-          - isFalse
-          - empty
-          - notEmpty
-          - dateEmpty
-          - dateNotEmpty
-          - after
-          - before
-          - between
-        value:
-          description: The comparison value. Omitted for value-less operators (e.g. `isTrue`, `empty`). A `{ from, to }` object for `between`.
-          oneOf:
-          - type: string
-          - type: number
-          - type: object
-            properties:
-              from:
-                type: string
-                format: date-time
-              to:
-                type: string
-                format: date-time
-            required:
-            - from
-            - to
-      required:
-      - type
-      - key
-      - operator
-      examples:
-      - type: property
-        key: plan
-        operator: equals
-        value: pro
     ListAudienceSegmentsResponse:
       type: object
       properties:
@@ -338,69 +218,8 @@ components:
               key: plan
               operator: equals
               value: pro
-    AudienceSegmentFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Audience segment not found.
     AudienceSegmentResponse:
       $ref: '#/components/schemas/AudienceSegment'
-      examples:
-      - id: cls6e8g0i2k4m6o8q0s2u4w6
-        name: Power users
-        description: Contacts on the pro plan
-        createdAt: 2025-06-29 07:47:39.370000+00:00
-        updatedAt: 2025-06-29 07:47:39.370000+00:00
-        filter:
-          match: all
-          conditions:
-          - type: property
-            key: plan
-            operator: equals
-            value: pro
-    AudienceSegment:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the audience segment.
-          examples:
-          - cls6e8g0i2k4m6o8q0s2u4w6
-        name:
-          type: string
-          description: The name of the audience segment.
-          examples:
-          - Power users
-        description:
-          type:
-          - string
-          - 'null'
-          description: An optional description of the audience segment.
-          examples:
-          - Contacts on the pro plan
-        createdAt:
-          type: string
-          description: ISO 8601 timestamp for when the audience segment was created.
-          examples:
-          - 2025-06-29 07:47:39.370000+00:00
-        updatedAt:
-          type: string
-          description: ISO 8601 timestamp for when the audience segment was last updated.
-          examples:
-          - 2025-06-29 07:47:39.370000+00:00
-        filter:
-          $ref: '#/components/schemas/AudienceFilter'
-      required:
-      - id
-      - name
-      - description
-      - createdAt
-      - updatedAt
-      - filter
       examples:
       - id: cls6e8g0i2k4m6o8q0s2u4w6
         name: Power users
@@ -471,6 +290,187 @@ components:
         negate: false
         target: campaign
         id: clc4m6n8p0q2r4s6t8u0v2x4
+    AudienceFilterCondition:
+      oneOf:
+      - $ref: '#/components/schemas/PropertyCondition'
+      - $ref: '#/components/schemas/OptInCondition'
+      - $ref: '#/components/schemas/ActivityCondition'
+      discriminator:
+        propertyName: type
+    PropertyCondition:
+      type: object
+      description: Matches contacts by a property value.
+      properties:
+        type:
+          type: string
+          enum:
+          - property
+        key:
+          type: string
+          description: The contact property name.
+        operator:
+          type: string
+          enum:
+          - any
+          - contains
+          - notContains
+          - equals
+          - notEquals
+          - greaterThan
+          - lessThan
+          - isTrue
+          - isFalse
+          - empty
+          - notEmpty
+          - dateEmpty
+          - dateNotEmpty
+          - after
+          - before
+          - between
+        value:
+          description: The comparison value. Omitted for value-less operators (e.g. `isTrue`, `empty`). A `{ from, to }` object for `between`.
+          oneOf:
+          - type: string
+          - type: number
+          - type: object
+            properties:
+              from:
+                type: string
+                format: date-time
+              to:
+                type: string
+                format: date-time
+            required:
+            - from
+            - to
+      required:
+      - type
+      - key
+      - operator
+      examples:
+      - type: property
+        key: plan
+        operator: equals
+        value: pro
+    CreateAudienceSegmentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          description: The name of the audience segment. Must be unique within the team.
+          examples:
+          - Active users
+        description:
+          type: string
+          maxLength: 1000
+          description: An optional description of the audience segment.
+        filter:
+          type: object
+          description: A tree of audience conditions combined with `match`.
+          properties:
+            match:
+              type: string
+              enum:
+              - all
+              - any
+            conditions:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/AudienceFilterCondition'
+          required:
+          - match
+          - conditions
+          additionalProperties: false
+      required:
+      - name
+      - filter
+      additionalProperties: false
+    AudienceSegment:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the audience segment.
+          examples:
+          - cls6e8g0i2k4m6o8q0s2u4w6
+        name:
+          type: string
+          description: The name of the audience segment.
+          examples:
+          - Power users
+        description:
+          type:
+          - string
+          - 'null'
+          description: An optional description of the audience segment.
+          examples:
+          - Contacts on the pro plan
+        createdAt:
+          type: string
+          description: ISO 8601 timestamp for when the audience segment was created.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        updatedAt:
+          type: string
+          description: ISO 8601 timestamp for when the audience segment was last updated.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        filter:
+          $ref: '#/components/schemas/AudienceFilter'
+      required:
+      - id
+      - name
+      - description
+      - createdAt
+      - updatedAt
+      - filter
+      examples:
+      - id: cls6e8g0i2k4m6o8q0s2u4w6
+        name: Power users
+        description: Contacts on the pro plan
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        filter:
+          match: all
+          conditions:
+          - type: property
+            key: plan
+            operator: equals
+            value: pro
+    AudienceSegmentFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Audience segment not found.
+    OptInCondition:
+      type: object
+      description: Matches contacts by mailing-list opt-in status.
+      properties:
+        type:
+          type: string
+          enum:
+          - optIn
+        status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - accepted
+          - pending
+          - rejected
+          - null
+      required:
+      - type
+      - status
+      examples:
+      - type: optIn
+        status: accepted
   securitySchemes:
     apiKey:
       type: http

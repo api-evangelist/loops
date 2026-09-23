@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Email messages API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
 tags:
-- name: Email messages
+- name: Email Messages
   description: Manage email message content for campaigns
 paths:
   /v1/email-messages/{emailMessageId}:
@@ -22,7 +22,7 @@ paths:
     get:
       operationId: getEmailMessage
       tags:
-      - Email messages
+      - Email Messages
       summary: Get an email message
       description: Retrieve an email message, including its compiled LMX content.
       x-mint:
@@ -63,7 +63,7 @@ paths:
     post:
       operationId: updateEmailMessage
       tags:
-      - Email messages
+      - Email Messages
       summary: Update an email message
       description: Update fields on an email message (subject, preview text, sender, LMX content). The campaign must be in draft status. Supply `expectedRevisionId` matching the current `contentRevisionId` — the server rejects mismatched revisions with 409.
       x-mint:
@@ -137,7 +137,7 @@ paths:
     post:
       operationId: previewEmailMessage
       tags:
-      - Email messages
+      - Email Messages
       summary: Send a preview of an email message
       description: Send a test preview of an email message to one or more addresses. The accepted variable fields depend on the parent's type - campaign previews accept `contactProperties`, workflow previews accept `contactProperties` and `eventProperties`, and transactional previews accept `dataVariables`. Supplying a field the parent cannot reference is rejected with 400.
       x-mint:
@@ -209,7 +209,7 @@ paths:
     get:
       operationId: getEmailMessageGuardian
       tags:
-      - Email messages
+      - Email Messages
       summary: Run Guardian checks on an email message
       description: Validate an email message's content against Guardian rules and return any errors and warnings. Errors must be resolved before the email can be published, warnings are advisory.
       x-mint:
@@ -266,35 +266,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    EmailMessageGuardianResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          description: Validation errors. These must be resolved before the email can be published.
-          items:
-            $ref: '#/components/schemas/GuardianRule'
-        warnings:
-          type: array
-          description: Validation warnings. These are advisory and do not block publishing.
-          items:
-            $ref: '#/components/schemas/GuardianRule'
-      required:
-      - errors
-      - warnings
-      example:
-        errors:
-        - rule: missingButtonHrefs
-          title: Missing button link
-          description: Buttons won't work without href value
-          items:
-          - label: Click here
-        - rule: missingLinkHrefs
-          title: Missing text link
-          description: Links won't work without href value
-          items:
-          - label: See more
-        warnings: []
     EmailMessageResponse:
       type: object
       properties:
@@ -428,6 +399,44 @@ components:
         lmx: <Paragraph>Hello, {firstName}!</Paragraph>
         contentRevisionId: clrev1s10n2i3d4e5f6g7h8
         updatedAt: 2025-06-29 07:47:39.370000+00:00
+    EmailMessageFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Email message not found.
+    EmailMessageGuardianResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          description: Validation errors. These must be resolved before the email can be published.
+          items:
+            $ref: '#/components/schemas/GuardianRule'
+        warnings:
+          type: array
+          description: Validation warnings. These are advisory and do not block publishing.
+          items:
+            $ref: '#/components/schemas/GuardianRule'
+      required:
+      - errors
+      - warnings
+      example:
+        errors:
+        - rule: missingButtonHrefs
+          title: Missing button link
+          description: Buttons won't work without href value
+          items:
+          - label: Click here
+        - rule: missingLinkHrefs
+          title: Missing text link
+          description: Links won't work without href value
+          items:
+          - label: See more
+        warnings: []
     EmailMessagePreviewRequest:
       type: object
       properties:
@@ -470,79 +479,6 @@ components:
           planName: Pro
         dataVariables:
           loginUrl: https://app.company.com/login
-    GuardianRule:
-      type: object
-      properties:
-        rule:
-          type: string
-          description: The identifier of the Guardian rule that fired.
-          enum:
-          - unsupportedContactProperties
-          - missingFallbackContactProperties
-          - unsupportedEventProperties
-          - missingFallbackEventProperties
-          - unsupportedDataVariables
-          - invalidCustomDataVariables
-          - missingRequiredDataVariables
-          - missingButtonHrefs
-          - invalidButtonHrefs
-          - shortenedYouTubeButtonHrefs
-          - missingLinkHrefs
-          - invalidLinkHrefs
-          - shortenedYouTubeLinkHrefs
-          - shortenedYouTubeImageHrefs
-          - emailWithoutMailtoButtonHrefs
-          - emailWithoutMailtoLinkHrefs
-          - emailWithoutMailtoImageHrefs
-          - bareArrayNodes
-          - missingSocialIconHrefs
-        title:
-          type: string
-          description: A short summary of the rule.
-        description:
-          type: string
-          description: A longer explanation of why the issue matters.
-        items:
-          type: array
-          description: The specific elements that triggered the rule.
-          items:
-            type: object
-            properties:
-              label:
-                type: string
-                description: A human-readable label for the item (for example, link text or a property name).
-              codeName:
-                type: string
-                description: Machine-readable identifier when the rule refers to a property or variable, when applicable.
-                example: firstName
-            required:
-            - label
-      required:
-      - rule
-      - title
-      - description
-      - items
-    EmailMessageFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Email message not found.
-    EmailMessagePreviewResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the email message the preview was sent for.
-          examples:
-          - cle5f7g9h1i3j5k7l9m1n3p5
-      required:
-      - id
-      examples:
-      - id: cle5f7g9h1i3j5k7l9m1n3p5
     UpdateEmailMessageRequest:
       type: object
       properties:
@@ -614,6 +550,70 @@ components:
         lmx: <Paragraph>Hello, {firstName}!</Paragraph>
         contactPropertiesFallbacks:
           firstName: there
+    EmailMessagePreviewResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the email message the preview was sent for.
+          examples:
+          - cle5f7g9h1i3j5k7l9m1n3p5
+      required:
+      - id
+      examples:
+      - id: cle5f7g9h1i3j5k7l9m1n3p5
+    GuardianRule:
+      type: object
+      properties:
+        rule:
+          type: string
+          description: The identifier of the Guardian rule that fired.
+          enum:
+          - unsupportedContactProperties
+          - missingFallbackContactProperties
+          - unsupportedEventProperties
+          - missingFallbackEventProperties
+          - unsupportedDataVariables
+          - invalidCustomDataVariables
+          - missingRequiredDataVariables
+          - missingButtonHrefs
+          - invalidButtonHrefs
+          - shortenedYouTubeButtonHrefs
+          - missingLinkHrefs
+          - invalidLinkHrefs
+          - shortenedYouTubeLinkHrefs
+          - shortenedYouTubeImageHrefs
+          - emailWithoutMailtoButtonHrefs
+          - emailWithoutMailtoLinkHrefs
+          - emailWithoutMailtoImageHrefs
+          - bareArrayNodes
+          - missingSocialIconHrefs
+        title:
+          type: string
+          description: A short summary of the rule.
+        description:
+          type: string
+          description: A longer explanation of why the issue matters.
+        items:
+          type: array
+          description: The specific elements that triggered the rule.
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+                description: A human-readable label for the item (for example, link text or a property name).
+              codeName:
+                type: string
+                description: Machine-readable identifier when the rule refers to a property or variable, when applicable.
+                example: firstName
+            required:
+            - label
+      required:
+      - rule
+      - title
+      - description
+      - items
   securitySchemes:
     apiKey:
       type: http

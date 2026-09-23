@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Transactional groups API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
@@ -221,6 +221,17 @@ components:
         totalPages: 1
         nextCursor: null
         nextPage: null
+    UpdateGroupRequest:
+      type: object
+      description: At least one field must be provided.
+      properties:
+        name:
+          type: string
+          description: The group name. Cannot be the reserved name "Unsorted".
+        description:
+          type: string
+          description: A description for the group.
+      additionalProperties: false
     ListGroupsResponse:
       type: object
       properties:
@@ -313,17 +324,6 @@ components:
       examples:
       - name: Newsletters
         description: Monthly newsletter campaigns
-    UpdateGroupRequest:
-      type: object
-      description: At least one field must be provided.
-      properties:
-        name:
-          type: string
-          description: The group name. Cannot be the reserved name "Unsorted".
-        description:
-          type: string
-          description: A description for the group.
-      additionalProperties: false
     GroupFailureResponse:
       type: object
       properties:

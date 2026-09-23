@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Configuration API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api

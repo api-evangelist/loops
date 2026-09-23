@@ -1,19 +1,19 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Mailing lists API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
 tags:
-- name: Mailing lists
+- name: Mailing Lists
   description: View mailing lists
 paths:
   /v1/lists:
     get:
       operationId: listMailingLists
       tags:
-      - Mailing lists
+      - Mailing Lists
       summary: List mailing lists
       description: Retrieve a list of your account's mailing lists.
       x-mint:

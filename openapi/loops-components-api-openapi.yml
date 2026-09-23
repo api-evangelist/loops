@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Components API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
@@ -194,30 +194,15 @@ paths:
       - apiKey: []
 components:
   schemas:
-    UpdateComponentBody:
+    ComponentFailureResponse:
       type: object
-      description: At least one of `name` or `lmx` must be provided.
       properties:
-        name:
+        message:
           type: string
-        lmx:
-          type: string
-          description: The component body as an LMX string.
-    UpdateComponentResponse:
-      allOf:
-      - $ref: '#/components/schemas/ComponentResponse'
-      - type: object
-        properties:
-          affectedEmailCount:
-            type: number
-            description: The number of emails using this component that were updated by the body change. `0` when only the name changed.
-        required:
-        - affectedEmailCount
+      required:
+      - message
       examples:
-      - id: clp2o4i6u8y0t5r3e1w7q9s1
-        name: Header
-        lmx: <Paragraph>Welcome to Acme</Paragraph>
-        affectedEmailCount: 3
+      - message: Component not found.
     Pagination:
       type: object
       properties:
@@ -303,50 +288,15 @@ components:
         - id: clp2o4i6u8y0t5r3e1w7q9s1
           name: Header
           lmx: <Paragraph>Welcome to Acme</Paragraph>
-    CreateComponentBody:
+    UpdateComponentBody:
       type: object
+      description: At least one of `name` or `lmx` must be provided.
       properties:
         name:
           type: string
-          description: The component name.
         lmx:
           type: string
           description: The component body as an LMX string.
-      required:
-      - name
-      - lmx
-      examples:
-      - name: Header
-        lmx: <Paragraph>Welcome to Acme</Paragraph>
-    ComponentResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the component.
-        name:
-          type: string
-          description: The name of the component.
-        lmx:
-          type: string
-          description: The component body serialized as LMX.
-      required:
-      - id
-      - name
-      - lmx
-      examples:
-      - id: clp2o4i6u8y0t5r3e1w7q9s1
-        name: Header
-        lmx: <Paragraph>Welcome to Acme</Paragraph>
-    ComponentFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Component not found.
     Component:
       type: object
       properties:
@@ -363,6 +313,56 @@ components:
           description: The component body serialized as LMX.
           examples:
           - <Paragraph>Welcome to Acme</Paragraph>
+      required:
+      - id
+      - name
+      - lmx
+      examples:
+      - id: clp2o4i6u8y0t5r3e1w7q9s1
+        name: Header
+        lmx: <Paragraph>Welcome to Acme</Paragraph>
+    CreateComponentBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The component name.
+        lmx:
+          type: string
+          description: The component body as an LMX string.
+      required:
+      - name
+      - lmx
+      examples:
+      - name: Header
+        lmx: <Paragraph>Welcome to Acme</Paragraph>
+    UpdateComponentResponse:
+      allOf:
+      - $ref: '#/components/schemas/ComponentResponse'
+      - type: object
+        properties:
+          affectedEmailCount:
+            type: number
+            description: The number of emails using this component that were updated by the body change. `0` when only the name changed.
+        required:
+        - affectedEmailCount
+      examples:
+      - id: clp2o4i6u8y0t5r3e1w7q9s1
+        name: Header
+        lmx: <Paragraph>Welcome to Acme</Paragraph>
+        affectedEmailCount: 3
+    ComponentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the component.
+        name:
+          type: string
+          description: The name of the component.
+        lmx:
+          type: string
+          description: The component body serialized as LMX.
       required:
       - id
       - name

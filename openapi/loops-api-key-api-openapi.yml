@@ -1,18 +1,18 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec API key API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
 tags:
-- name: API key
+- name: API Key
 paths:
   /v1/api-key:
     get:
       operationId: testApiKey
       tags:
-      - API key
+      - API Key
       summary: API key
       description: Test your API key and get team context.
       x-mint:

@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Contact properties API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
@@ -48,7 +48,9 @@ paths:
       tags:
       - Contact properties
       summary: List contact properties
-      description: Retrieve a list of your account's contact properties.<br>Use the `list` parameter to query "all" or "custom" properties.
+      description: 'Retrieve a list of your account''s contact properties.
+
+        Use the `list` parameter to query "all" or "custom" properties.'
       x-mint:
         href: /api-reference/list-contact-properties
         metadata:
@@ -93,31 +95,6 @@ components:
       examples:
       - success: false
         message: Property already exists.
-    ContactPropertyCreateRequest:
-      type: object
-      required:
-      - name
-      - type
-      description: There are a few [reserved names](https://loops.so/docs/contacts/properties#reserved-names) that you cannot use for contact properties.
-      properties:
-        name:
-          type: string
-          examples:
-          - favoriteColor
-          description: The name of the property. This should be in camelCase, like `planName` or `importDate`.
-        type:
-          type: string
-          examples:
-          - string
-          description: The type of property.
-          enum:
-          - string
-          - number
-          - boolean
-          - date
-      examples:
-      - name: favoriteColor
-        type: string
     ContactProperty:
       type: object
       properties:
@@ -152,6 +129,31 @@ components:
           - true
       required:
       - success
+    ContactPropertyCreateRequest:
+      type: object
+      required:
+      - name
+      - type
+      description: There are a few [reserved names](https://loops.so/docs/contacts/properties#reserved-names) that you cannot use for contact properties.
+      properties:
+        name:
+          type: string
+          examples:
+          - favoriteColor
+          description: The name of the property. This should be in camelCase, like `planName` or `importDate`.
+        type:
+          type: string
+          examples:
+          - string
+          description: The type of property.
+          enum:
+          - string
+          - number
+          - boolean
+          - date
+      examples:
+      - name: favoriteColor
+        type: string
   securitySchemes:
     apiKey:
       type: http

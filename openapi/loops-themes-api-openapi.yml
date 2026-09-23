@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Loops OpenAPI Spec Themes API
-  description: This is the OpenAPI Spec for the [Loops API](https://loops.so/docs/api).
+  description: This is the OpenAPI Spec for the Loops API.
   version: 1.21.6
 servers:
 - url: https://app.loops.so/api
@@ -173,24 +173,108 @@ paths:
       - apiKey: []
 components:
   schemas:
-    CreateThemeBody:
+    Pagination:
       type: object
       properties:
-        name:
-          type: string
-          description: The theme name.
+        totalResults:
+          type: number
           examples:
-          - Dark mode
-        styles:
-          description: Style attributes for the theme. Attributes use the same names as the LMX [`<Style />`](/creating-emails/lmx#document-styles) tag attributes.
-          $ref: '#/components/schemas/ThemeStyles'
+          - 2
+        returnedResults:
+          type: number
+          examples:
+          - 2
+        perPage:
+          type: number
+          examples:
+          - 20
+        totalPages:
+          type: number
+          examples:
+          - 1
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+        nextPage:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
       required:
-      - name
+      - totalResults
+      - returnedResults
+      - perPage
+      - totalPages
+      - nextCursor
+      - nextPage
       examples:
-      - name: Dark mode
+      - totalResults: 2
+        returnedResults: 2
+        perPage: 20
+        totalPages: 1
+        nextCursor: null
+        nextPage: null
+    UpdateThemeResponse:
+      allOf:
+      - $ref: '#/components/schemas/ThemeResponse'
+      - type: object
+        properties:
+          affectedEmailCount:
+            type: number
+            description: The number of emails using this theme that are affected by the style change. `0` when only the name changed.
+        required:
+        - affectedEmailCount
+      examples:
+      - id: clt3u5v7w9x1y3z5a7b9c1d3
+        name: Default
         styles:
-          backgroundColor: '#111827'
-          bodyColor: '#1f2937'
+          backgroundColor: '#f5f5f5'
+          backgroundXPadding: 24
+          backgroundYPadding: 24
+          bodyColor: '#ffffff'
+          bodyXPadding: 24
+          bodyYPadding: 24
+          bodyFontFamily: Helvetica
+          bodyFontCategory: sans-serif
+          borderColor: '#e5e5e5'
+          borderWidth: 1
+          borderRadius: 8
+          buttonBodyColor: '#111827'
+          buttonBodyXPadding: 16
+          buttonBodyYPadding: 12
+          buttonBorderColor: '#111827'
+          buttonBorderWidth: 0
+          buttonBorderRadius: 6
+          buttonTextColor: '#ffffff'
+          buttonTextFormat: 0
+          buttonTextFontSize: 16
+          dividerColor: '#e5e5e5'
+          dividerBorderWidth: 1
+          textBaseColor: '#374151'
+          textBaseFontSize: 16
+          textBaseLineHeight: 24
+          textBaseLetterSpacing: 0
+          textLinkColor: '#2563eb'
+          heading1Color: '#111827'
+          heading1FontSize: 28
+          heading1LineHeight: 36
+          heading1LetterSpacing: -0.5
+          heading2Color: '#111827'
+          heading2FontSize: 22
+          heading2LineHeight: 30
+          heading2LetterSpacing: -0.25
+          heading3Color: '#111827'
+          heading3FontSize: 18
+          heading3LineHeight: 26
+          heading3LetterSpacing: 0
+        isDefault: true
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        affectedEmailCount: 12
     Theme:
       type: object
       properties:
@@ -274,6 +358,41 @@ components:
         isDefault: true
         createdAt: 2025-06-29 07:47:39.370000+00:00
         updatedAt: 2025-06-29 07:47:39.370000+00:00
+    ThemeFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Theme not found.
+    UpdateThemeBody:
+      type: object
+      description: At least one of `name` or `styles` must be provided.
+      properties:
+        name:
+          type: string
+        styles:
+          $ref: '#/components/schemas/ThemeStyles'
+    CreateThemeBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The theme name.
+          examples:
+          - Dark mode
+        styles:
+          description: Style attributes for the theme. Attributes use the same names as the LMX [`<Style />`](/creating-emails/lmx#document-styles) tag attributes.
+          $ref: '#/components/schemas/ThemeStyles'
+      required:
+      - name
+      examples:
+      - name: Dark mode
+        styles:
+          backgroundColor: '#111827'
+          bodyColor: '#1f2937'
     ListThemesResponse:
       type: object
       properties:
@@ -340,51 +459,6 @@ components:
           isDefault: true
           createdAt: 2025-06-29 07:47:39.370000+00:00
           updatedAt: 2025-06-29 07:47:39.370000+00:00
-    Pagination:
-      type: object
-      properties:
-        totalResults:
-          type: number
-          examples:
-          - 2
-        returnedResults:
-          type: number
-          examples:
-          - 2
-        perPage:
-          type: number
-          examples:
-          - 20
-        totalPages:
-          type: number
-          examples:
-          - 1
-        nextCursor:
-          type:
-          - string
-          - 'null'
-          examples:
-          - null
-        nextPage:
-          type:
-          - string
-          - 'null'
-          examples:
-          - null
-      required:
-      - totalResults
-      - returnedResults
-      - perPage
-      - totalPages
-      - nextCursor
-      - nextPage
-      examples:
-      - totalResults: 2
-        returnedResults: 2
-        perPage: 20
-        totalPages: 1
-        nextCursor: null
-        nextPage: null
     ThemeResponse:
       type: object
       properties:
@@ -468,71 +542,6 @@ components:
         isDefault: true
         createdAt: 2025-06-29 07:47:39.370000+00:00
         updatedAt: 2025-06-29 07:47:39.370000+00:00
-    UpdateThemeBody:
-      type: object
-      description: At least one of `name` or `styles` must be provided.
-      properties:
-        name:
-          type: string
-        styles:
-          $ref: '#/components/schemas/ThemeStyles'
-    UpdateThemeResponse:
-      allOf:
-      - $ref: '#/components/schemas/ThemeResponse'
-      - type: object
-        properties:
-          affectedEmailCount:
-            type: number
-            description: The number of emails using this theme that are affected by the style change. `0` when only the name changed.
-        required:
-        - affectedEmailCount
-      examples:
-      - id: clt3u5v7w9x1y3z5a7b9c1d3
-        name: Default
-        styles:
-          backgroundColor: '#f5f5f5'
-          backgroundXPadding: 24
-          backgroundYPadding: 24
-          bodyColor: '#ffffff'
-          bodyXPadding: 24
-          bodyYPadding: 24
-          bodyFontFamily: Helvetica
-          bodyFontCategory: sans-serif
-          borderColor: '#e5e5e5'
-          borderWidth: 1
-          borderRadius: 8
-          buttonBodyColor: '#111827'
-          buttonBodyXPadding: 16
-          buttonBodyYPadding: 12
-          buttonBorderColor: '#111827'
-          buttonBorderWidth: 0
-          buttonBorderRadius: 6
-          buttonTextColor: '#ffffff'
-          buttonTextFormat: 0
-          buttonTextFontSize: 16
-          dividerColor: '#e5e5e5'
-          dividerBorderWidth: 1
-          textBaseColor: '#374151'
-          textBaseFontSize: 16
-          textBaseLineHeight: 24
-          textBaseLetterSpacing: 0
-          textLinkColor: '#2563eb'
-          heading1Color: '#111827'
-          heading1FontSize: 28
-          heading1LineHeight: 36
-          heading1LetterSpacing: -0.5
-          heading2Color: '#111827'
-          heading2FontSize: 22
-          heading2LineHeight: 30
-          heading2LetterSpacing: -0.25
-          heading3Color: '#111827'
-          heading3FontSize: 18
-          heading3LineHeight: 26
-          heading3LetterSpacing: 0
-        isDefault: true
-        createdAt: 2025-06-29 07:47:39.370000+00:00
-        updatedAt: 2025-06-29 07:47:39.370000+00:00
-        affectedEmailCount: 12
     ThemeStyles:
       type: object
       description: Flat map of style attributes, matching the attribute names accepted by the LMX `<Style />` tag.
@@ -615,15 +624,6 @@ components:
           type: number
         heading3LetterSpacing:
           type: number
-    ThemeFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Theme not found.
   securitySchemes:
     apiKey:
       type: http
