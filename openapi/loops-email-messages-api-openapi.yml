@@ -399,86 +399,6 @@ components:
         lmx: <Paragraph>Hello, {firstName}!</Paragraph>
         contentRevisionId: clrev1s10n2i3d4e5f6g7h8
         updatedAt: 2025-06-29 07:47:39.370000+00:00
-    EmailMessageFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Email message not found.
-    EmailMessageGuardianResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          description: Validation errors. These must be resolved before the email can be published.
-          items:
-            $ref: '#/components/schemas/GuardianRule'
-        warnings:
-          type: array
-          description: Validation warnings. These are advisory and do not block publishing.
-          items:
-            $ref: '#/components/schemas/GuardianRule'
-      required:
-      - errors
-      - warnings
-      example:
-        errors:
-        - rule: missingButtonHrefs
-          title: Missing button link
-          description: Buttons won't work without href value
-          items:
-          - label: Click here
-        - rule: missingLinkHrefs
-          title: Missing text link
-          description: Links won't work without href value
-          items:
-          - label: See more
-        warnings: []
-    EmailMessagePreviewRequest:
-      type: object
-      properties:
-        emails:
-          type: array
-          minItems: 1
-          items:
-            type: string
-          description: One or more addresses to send the preview to.
-        contactProperties:
-          type: object
-          additionalProperties:
-            type: string
-          description: Contact property values to render. Accepted for campaign and workflow previews.
-          example:
-            firstName: Alex
-        eventProperties:
-          type: object
-          additionalProperties:
-            type: string
-          description: Event property values to render. Accepted for workflow previews only.
-          example:
-            planName: Pro
-        dataVariables:
-          type: object
-          additionalProperties:
-            type: string
-          description: Transactional data variables to render. Accepted for transactional previews only.
-          example:
-            loginUrl: https://app.company.com/login
-      required:
-      - emails
-      additionalProperties: false
-      examples:
-      - emails:
-        - alex@company.com
-        contactProperties:
-          firstName: Alex
-        eventProperties:
-          planName: Pro
-        dataVariables:
-          loginUrl: https://app.company.com/login
     UpdateEmailMessageRequest:
       type: object
       properties:
@@ -550,6 +470,86 @@ components:
         lmx: <Paragraph>Hello, {firstName}!</Paragraph>
         contactPropertiesFallbacks:
           firstName: there
+    EmailMessageFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Email message not found.
+    EmailMessagePreviewRequest:
+      type: object
+      properties:
+        emails:
+          type: array
+          minItems: 1
+          items:
+            type: string
+          description: One or more addresses to send the preview to.
+        contactProperties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Contact property values to render. Accepted for campaign and workflow previews.
+          example:
+            firstName: Alex
+        eventProperties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Event property values to render. Accepted for workflow previews only.
+          example:
+            planName: Pro
+        dataVariables:
+          type: object
+          additionalProperties:
+            type: string
+          description: Transactional data variables to render. Accepted for transactional previews only.
+          example:
+            loginUrl: https://app.company.com/login
+      required:
+      - emails
+      additionalProperties: false
+      examples:
+      - emails:
+        - alex@company.com
+        contactProperties:
+          firstName: Alex
+        eventProperties:
+          planName: Pro
+        dataVariables:
+          loginUrl: https://app.company.com/login
+    EmailMessageGuardianResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          description: Validation errors. These must be resolved before the email can be published.
+          items:
+            $ref: '#/components/schemas/GuardianRule'
+        warnings:
+          type: array
+          description: Validation warnings. These are advisory and do not block publishing.
+          items:
+            $ref: '#/components/schemas/GuardianRule'
+      required:
+      - errors
+      - warnings
+      example:
+        errors:
+        - rule: missingButtonHrefs
+          title: Missing button link
+          description: Buttons won't work without href value
+          items:
+          - label: Click here
+        - rule: missingLinkHrefs
+          title: Missing text link
+          description: Links won't work without href value
+          items:
+          - label: See more
+        warnings: []
     EmailMessagePreviewResponse:
       type: object
       properties:

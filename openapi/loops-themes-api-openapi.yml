@@ -218,146 +218,88 @@ components:
         totalPages: 1
         nextCursor: null
         nextPage: null
-    UpdateThemeResponse:
-      allOf:
-      - $ref: '#/components/schemas/ThemeResponse'
-      - type: object
-        properties:
-          affectedEmailCount:
-            type: number
-            description: The number of emails using this theme that are affected by the style change. `0` when only the name changed.
-        required:
-        - affectedEmailCount
-      examples:
-      - id: clt3u5v7w9x1y3z5a7b9c1d3
-        name: Default
-        styles:
-          backgroundColor: '#f5f5f5'
-          backgroundXPadding: 24
-          backgroundYPadding: 24
-          bodyColor: '#ffffff'
-          bodyXPadding: 24
-          bodyYPadding: 24
-          bodyFontFamily: Helvetica
-          bodyFontCategory: sans-serif
-          borderColor: '#e5e5e5'
-          borderWidth: 1
-          borderRadius: 8
-          buttonBodyColor: '#111827'
-          buttonBodyXPadding: 16
-          buttonBodyYPadding: 12
-          buttonBorderColor: '#111827'
-          buttonBorderWidth: 0
-          buttonBorderRadius: 6
-          buttonTextColor: '#ffffff'
-          buttonTextFormat: 0
-          buttonTextFontSize: 16
-          dividerColor: '#e5e5e5'
-          dividerBorderWidth: 1
-          textBaseColor: '#374151'
-          textBaseFontSize: 16
-          textBaseLineHeight: 24
-          textBaseLetterSpacing: 0
-          textLinkColor: '#2563eb'
-          heading1Color: '#111827'
-          heading1FontSize: 28
-          heading1LineHeight: 36
-          heading1LetterSpacing: -0.5
-          heading2Color: '#111827'
-          heading2FontSize: 22
-          heading2LineHeight: 30
-          heading2LetterSpacing: -0.25
-          heading3Color: '#111827'
-          heading3FontSize: 18
-          heading3LineHeight: 26
-          heading3LetterSpacing: 0
-        isDefault: true
-        createdAt: 2025-06-29 07:47:39.370000+00:00
-        updatedAt: 2025-06-29 07:47:39.370000+00:00
-        affectedEmailCount: 12
-    Theme:
+    ThemeStyles:
       type: object
+      description: Flat map of style attributes, matching the attribute names accepted by the LMX `<Style />` tag.
       properties:
-        id:
+        backgroundColor:
           type: string
-          description: The ID of the theme.
-          examples:
-          - clt3u5v7w9x1y3z5a7b9c1d3
-        name:
+        backgroundXPadding:
+          type: number
+        backgroundYPadding:
+          type: number
+        bodyColor:
           type: string
-          description: The name of the theme.
-          examples:
-          - Default
-        styles:
-          $ref: '#/components/schemas/ThemeStyles'
-        isDefault:
-          type: boolean
-          description: Whether this theme is the team's default.
-          examples:
-          - true
-        createdAt:
+        bodyXPadding:
+          type: number
+        bodyYPadding:
+          type: number
+        bodyFontFamily:
           type: string
-          description: ISO 8601 timestamp for when the theme was created.
-          examples:
-          - 2025-06-29 07:47:39.370000+00:00
-        updatedAt:
+        bodyFontCategory:
           type: string
-          description: ISO 8601 timestamp for when the theme was last updated.
-          examples:
-          - 2025-06-29 07:47:39.370000+00:00
-      required:
-      - id
-      - name
-      - styles
-      - isDefault
-      - createdAt
-      - updatedAt
-      examples:
-      - id: clt3u5v7w9x1y3z5a7b9c1d3
-        name: Default
-        styles:
-          backgroundColor: '#f5f5f5'
-          backgroundXPadding: 24
-          backgroundYPadding: 24
-          bodyColor: '#ffffff'
-          bodyXPadding: 24
-          bodyYPadding: 24
-          bodyFontFamily: Helvetica
-          bodyFontCategory: sans-serif
-          borderColor: '#e5e5e5'
-          borderWidth: 1
-          borderRadius: 8
-          buttonBodyColor: '#111827'
-          buttonBodyXPadding: 16
-          buttonBodyYPadding: 12
-          buttonBorderColor: '#111827'
-          buttonBorderWidth: 0
-          buttonBorderRadius: 6
-          buttonTextColor: '#ffffff'
-          buttonTextFormat: 0
-          buttonTextFontSize: 16
-          dividerColor: '#e5e5e5'
-          dividerBorderWidth: 1
-          textBaseColor: '#374151'
-          textBaseFontSize: 16
-          textBaseLineHeight: 24
-          textBaseLetterSpacing: 0
-          textLinkColor: '#2563eb'
-          heading1Color: '#111827'
-          heading1FontSize: 28
-          heading1LineHeight: 36
-          heading1LetterSpacing: -0.5
-          heading2Color: '#111827'
-          heading2FontSize: 22
-          heading2LineHeight: 30
-          heading2LetterSpacing: -0.25
-          heading3Color: '#111827'
-          heading3FontSize: 18
-          heading3LineHeight: 26
-          heading3LetterSpacing: 0
-        isDefault: true
-        createdAt: 2025-06-29 07:47:39.370000+00:00
-        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        borderColor:
+          type: string
+        borderWidth:
+          type: number
+        borderRadius:
+          type: number
+        buttonBodyColor:
+          type: string
+        buttonBodyXPadding:
+          type: number
+        buttonBodyYPadding:
+          type: number
+        buttonBorderColor:
+          type: string
+        buttonBorderWidth:
+          type: number
+        buttonBorderRadius:
+          type: number
+        buttonTextColor:
+          type: string
+        buttonTextFormat:
+          type: number
+        buttonTextFontSize:
+          type: number
+        dividerColor:
+          type: string
+        dividerBorderWidth:
+          type: number
+        textBaseColor:
+          type: string
+        textBaseFontSize:
+          type: number
+        textBaseLineHeight:
+          type: number
+        textBaseLetterSpacing:
+          type: number
+        textLinkColor:
+          type: string
+        heading1Color:
+          type: string
+        heading1FontSize:
+          type: number
+        heading1LineHeight:
+          type: number
+        heading1LetterSpacing:
+          type: number
+        heading2Color:
+          type: string
+        heading2FontSize:
+          type: number
+        heading2LineHeight:
+          type: number
+        heading2LetterSpacing:
+          type: number
+        heading3Color:
+          type: string
+        heading3FontSize:
+          type: number
+        heading3LineHeight:
+          type: number
+        heading3LetterSpacing:
+          type: number
     ThemeFailureResponse:
       type: object
       properties:
@@ -367,14 +309,6 @@ components:
       - message
       examples:
       - message: Theme not found.
-    UpdateThemeBody:
-      type: object
-      description: At least one of `name` or `styles` must be provided.
-      properties:
-        name:
-          type: string
-        styles:
-          $ref: '#/components/schemas/ThemeStyles'
     CreateThemeBody:
       type: object
       properties:
@@ -393,72 +327,14 @@ components:
         styles:
           backgroundColor: '#111827'
           bodyColor: '#1f2937'
-    ListThemesResponse:
+    UpdateThemeBody:
       type: object
+      description: At least one of `name` or `styles` must be provided.
       properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Theme'
-      required:
-      - pagination
-      - data
-      examples:
-      - pagination:
-          totalResults: 2
-          returnedResults: 2
-          perPage: 20
-          totalPages: 1
-          nextCursor: null
-          nextPage: null
-        data:
-        - id: clt3u5v7w9x1y3z5a7b9c1d3
-          name: Default
-          styles:
-            backgroundColor: '#f5f5f5'
-            backgroundXPadding: 24
-            backgroundYPadding: 24
-            bodyColor: '#ffffff'
-            bodyXPadding: 24
-            bodyYPadding: 24
-            bodyFontFamily: Helvetica
-            bodyFontCategory: sans-serif
-            borderColor: '#e5e5e5'
-            borderWidth: 1
-            borderRadius: 8
-            buttonBodyColor: '#111827'
-            buttonBodyXPadding: 16
-            buttonBodyYPadding: 12
-            buttonBorderColor: '#111827'
-            buttonBorderWidth: 0
-            buttonBorderRadius: 6
-            buttonTextColor: '#ffffff'
-            buttonTextFormat: 0
-            buttonTextFontSize: 16
-            dividerColor: '#e5e5e5'
-            dividerBorderWidth: 1
-            textBaseColor: '#374151'
-            textBaseFontSize: 16
-            textBaseLineHeight: 24
-            textBaseLetterSpacing: 0
-            textLinkColor: '#2563eb'
-            heading1Color: '#111827'
-            heading1FontSize: 28
-            heading1LineHeight: 36
-            heading1LetterSpacing: -0.5
-            heading2Color: '#111827'
-            heading2FontSize: 22
-            heading2LineHeight: 30
-            heading2LetterSpacing: -0.25
-            heading3Color: '#111827'
-            heading3FontSize: 18
-            heading3LineHeight: 26
-            heading3LetterSpacing: 0
-          isDefault: true
-          createdAt: 2025-06-29 07:47:39.370000+00:00
-          updatedAt: 2025-06-29 07:47:39.370000+00:00
+        name:
+          type: string
+        styles:
+          $ref: '#/components/schemas/ThemeStyles'
     ThemeResponse:
       type: object
       properties:
@@ -542,88 +418,212 @@ components:
         isDefault: true
         createdAt: 2025-06-29 07:47:39.370000+00:00
         updatedAt: 2025-06-29 07:47:39.370000+00:00
-    ThemeStyles:
+    UpdateThemeResponse:
+      allOf:
+      - $ref: '#/components/schemas/ThemeResponse'
+      - type: object
+        properties:
+          affectedEmailCount:
+            type: number
+            description: The number of emails using this theme that are affected by the style change. `0` when only the name changed.
+        required:
+        - affectedEmailCount
+      examples:
+      - id: clt3u5v7w9x1y3z5a7b9c1d3
+        name: Default
+        styles:
+          backgroundColor: '#f5f5f5'
+          backgroundXPadding: 24
+          backgroundYPadding: 24
+          bodyColor: '#ffffff'
+          bodyXPadding: 24
+          bodyYPadding: 24
+          bodyFontFamily: Helvetica
+          bodyFontCategory: sans-serif
+          borderColor: '#e5e5e5'
+          borderWidth: 1
+          borderRadius: 8
+          buttonBodyColor: '#111827'
+          buttonBodyXPadding: 16
+          buttonBodyYPadding: 12
+          buttonBorderColor: '#111827'
+          buttonBorderWidth: 0
+          buttonBorderRadius: 6
+          buttonTextColor: '#ffffff'
+          buttonTextFormat: 0
+          buttonTextFontSize: 16
+          dividerColor: '#e5e5e5'
+          dividerBorderWidth: 1
+          textBaseColor: '#374151'
+          textBaseFontSize: 16
+          textBaseLineHeight: 24
+          textBaseLetterSpacing: 0
+          textLinkColor: '#2563eb'
+          heading1Color: '#111827'
+          heading1FontSize: 28
+          heading1LineHeight: 36
+          heading1LetterSpacing: -0.5
+          heading2Color: '#111827'
+          heading2FontSize: 22
+          heading2LineHeight: 30
+          heading2LetterSpacing: -0.25
+          heading3Color: '#111827'
+          heading3FontSize: 18
+          heading3LineHeight: 26
+          heading3LetterSpacing: 0
+        isDefault: true
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
+        affectedEmailCount: 12
+    ListThemesResponse:
       type: object
-      description: Flat map of style attributes, matching the attribute names accepted by the LMX `<Style />` tag.
       properties:
-        backgroundColor:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Theme'
+      required:
+      - pagination
+      - data
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: clt3u5v7w9x1y3z5a7b9c1d3
+          name: Default
+          styles:
+            backgroundColor: '#f5f5f5'
+            backgroundXPadding: 24
+            backgroundYPadding: 24
+            bodyColor: '#ffffff'
+            bodyXPadding: 24
+            bodyYPadding: 24
+            bodyFontFamily: Helvetica
+            bodyFontCategory: sans-serif
+            borderColor: '#e5e5e5'
+            borderWidth: 1
+            borderRadius: 8
+            buttonBodyColor: '#111827'
+            buttonBodyXPadding: 16
+            buttonBodyYPadding: 12
+            buttonBorderColor: '#111827'
+            buttonBorderWidth: 0
+            buttonBorderRadius: 6
+            buttonTextColor: '#ffffff'
+            buttonTextFormat: 0
+            buttonTextFontSize: 16
+            dividerColor: '#e5e5e5'
+            dividerBorderWidth: 1
+            textBaseColor: '#374151'
+            textBaseFontSize: 16
+            textBaseLineHeight: 24
+            textBaseLetterSpacing: 0
+            textLinkColor: '#2563eb'
+            heading1Color: '#111827'
+            heading1FontSize: 28
+            heading1LineHeight: 36
+            heading1LetterSpacing: -0.5
+            heading2Color: '#111827'
+            heading2FontSize: 22
+            heading2LineHeight: 30
+            heading2LetterSpacing: -0.25
+            heading3Color: '#111827'
+            heading3FontSize: 18
+            heading3LineHeight: 26
+            heading3LetterSpacing: 0
+          isDefault: true
+          createdAt: 2025-06-29 07:47:39.370000+00:00
+          updatedAt: 2025-06-29 07:47:39.370000+00:00
+    Theme:
+      type: object
+      properties:
+        id:
           type: string
-        backgroundXPadding:
-          type: number
-        backgroundYPadding:
-          type: number
-        bodyColor:
+          description: The ID of the theme.
+          examples:
+          - clt3u5v7w9x1y3z5a7b9c1d3
+        name:
           type: string
-        bodyXPadding:
-          type: number
-        bodyYPadding:
-          type: number
-        bodyFontFamily:
+          description: The name of the theme.
+          examples:
+          - Default
+        styles:
+          $ref: '#/components/schemas/ThemeStyles'
+        isDefault:
+          type: boolean
+          description: Whether this theme is the team's default.
+          examples:
+          - true
+        createdAt:
           type: string
-        bodyFontCategory:
+          description: ISO 8601 timestamp for when the theme was created.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+        updatedAt:
           type: string
-        borderColor:
-          type: string
-        borderWidth:
-          type: number
-        borderRadius:
-          type: number
-        buttonBodyColor:
-          type: string
-        buttonBodyXPadding:
-          type: number
-        buttonBodyYPadding:
-          type: number
-        buttonBorderColor:
-          type: string
-        buttonBorderWidth:
-          type: number
-        buttonBorderRadius:
-          type: number
-        buttonTextColor:
-          type: string
-        buttonTextFormat:
-          type: number
-        buttonTextFontSize:
-          type: number
-        dividerColor:
-          type: string
-        dividerBorderWidth:
-          type: number
-        textBaseColor:
-          type: string
-        textBaseFontSize:
-          type: number
-        textBaseLineHeight:
-          type: number
-        textBaseLetterSpacing:
-          type: number
-        textLinkColor:
-          type: string
-        heading1Color:
-          type: string
-        heading1FontSize:
-          type: number
-        heading1LineHeight:
-          type: number
-        heading1LetterSpacing:
-          type: number
-        heading2Color:
-          type: string
-        heading2FontSize:
-          type: number
-        heading2LineHeight:
-          type: number
-        heading2LetterSpacing:
-          type: number
-        heading3Color:
-          type: string
-        heading3FontSize:
-          type: number
-        heading3LineHeight:
-          type: number
-        heading3LetterSpacing:
-          type: number
+          description: ISO 8601 timestamp for when the theme was last updated.
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+      required:
+      - id
+      - name
+      - styles
+      - isDefault
+      - createdAt
+      - updatedAt
+      examples:
+      - id: clt3u5v7w9x1y3z5a7b9c1d3
+        name: Default
+        styles:
+          backgroundColor: '#f5f5f5'
+          backgroundXPadding: 24
+          backgroundYPadding: 24
+          bodyColor: '#ffffff'
+          bodyXPadding: 24
+          bodyYPadding: 24
+          bodyFontFamily: Helvetica
+          bodyFontCategory: sans-serif
+          borderColor: '#e5e5e5'
+          borderWidth: 1
+          borderRadius: 8
+          buttonBodyColor: '#111827'
+          buttonBodyXPadding: 16
+          buttonBodyYPadding: 12
+          buttonBorderColor: '#111827'
+          buttonBorderWidth: 0
+          buttonBorderRadius: 6
+          buttonTextColor: '#ffffff'
+          buttonTextFormat: 0
+          buttonTextFontSize: 16
+          dividerColor: '#e5e5e5'
+          dividerBorderWidth: 1
+          textBaseColor: '#374151'
+          textBaseFontSize: 16
+          textBaseLineHeight: 24
+          textBaseLetterSpacing: 0
+          textLinkColor: '#2563eb'
+          heading1Color: '#111827'
+          heading1FontSize: 28
+          heading1LineHeight: 36
+          heading1LetterSpacing: -0.5
+          heading2Color: '#111827'
+          heading2FontSize: 22
+          heading2LineHeight: 30
+          heading2LetterSpacing: -0.25
+          heading3Color: '#111827'
+          heading3FontSize: 18
+          heading3LineHeight: 26
+          heading3LetterSpacing: 0
+        isDefault: true
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
   securitySchemes:
     apiKey:
       type: http

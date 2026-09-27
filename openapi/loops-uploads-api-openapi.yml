@@ -106,23 +106,25 @@ paths:
       - apiKey: []
 components:
   schemas:
-    UploadLimitExceededFailureResponse:
+    CompleteUploadResponse:
       type: object
       properties:
-        message:
+        emailAssetId:
           type: string
           examples:
-          - 'Upload limit exceeded: max 50 uploads per 24 hours. Please contact support if you need to increase your upload limit.'
-        maxUploads:
-          type: integer
-          description: The maximum number of uploads allowed per window.
+          - cla3s5s7e9t1i3d5f7g9h1j3
+          description: The ID of the created asset.
+        finalUrl:
+          type: string
+          description: The public URL of the uploaded asset.
           examples:
-          - 50
-        windowHours:
-          type: integer
-          description: The number of hours in the upload limit window.
-          examples:
-          - 24
+          - https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
+      required:
+      - emailAssetId
+      - finalUrl
+      examples:
+      - emailAssetId: cla3s5s7e9t1i3d5f7g9h1j3
+        finalUrl: https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
     CreateUploadResponse:
       type: object
       properties:
@@ -159,25 +161,6 @@ components:
       - contentType
       - contentLength
       additionalProperties: false
-    CompleteUploadResponse:
-      type: object
-      properties:
-        emailAssetId:
-          type: string
-          examples:
-          - cla3s5s7e9t1i3d5f7g9h1j3
-          description: The ID of the created asset.
-        finalUrl:
-          type: string
-          description: The public URL of the uploaded asset.
-          examples:
-          - https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
-      required:
-      - emailAssetId
-      - finalUrl
-      examples:
-      - emailAssetId: cla3s5s7e9t1i3d5f7g9h1j3
-        finalUrl: https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
     UploadFailureResponse:
       type: object
       properties:
@@ -203,6 +186,23 @@ components:
         - image/gif
         - image/webp
         maxBytes: 4000000
+    UploadLimitExceededFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+          - 'Upload limit exceeded: max 50 uploads per 24 hours. Please contact support if you need to increase your upload limit.'
+        maxUploads:
+          type: integer
+          description: The maximum number of uploads allowed per window.
+          examples:
+          - 50
+        windowHours:
+          type: integer
+          description: The number of hours in the upload limit window.
+          examples:
+          - 24
   securitySchemes:
     apiKey:
       type: http

@@ -78,6 +78,15 @@ paths:
       - apiKey: []
 components:
   schemas:
+    ContactPropertySuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+      required:
+      - success
     ContactPropertyFailureResponse:
       type: object
       properties:
@@ -95,40 +104,6 @@ components:
       examples:
       - success: false
         message: Property already exists.
-    ContactProperty:
-      type: object
-      properties:
-        key:
-          type: string
-          description: The key of the contact property.
-        label:
-          type: string
-          description: The human-friendly label for this property.
-        type:
-          type: string
-          description: The type of property.
-          enum:
-          - string
-          - number
-          - boolean
-          - date
-      examples:
-      - key: favoriteColor
-        label: Favorite color
-        type: string
-      required:
-      - key
-      - label
-      - type
-    ContactPropertySuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-      required:
-      - success
     ContactPropertyCreateRequest:
       type: object
       required:
@@ -154,6 +129,31 @@ components:
       examples:
       - name: favoriteColor
         type: string
+    ContactProperty:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key of the contact property.
+        label:
+          type: string
+          description: The human-friendly label for this property.
+        type:
+          type: string
+          description: The type of property.
+          enum:
+          - string
+          - number
+          - boolean
+          - date
+      examples:
+      - key: favoriteColor
+        label: Favorite color
+        type: string
+      required:
+      - key
+      - label
+      - type
   securitySchemes:
     apiKey:
       type: http

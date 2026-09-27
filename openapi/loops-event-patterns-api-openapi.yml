@@ -138,59 +138,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    EventPattern:
-      type: object
-      properties:
-        id:
-          type: string
-        eventName:
-          type: string
-          description: The name of the event pattern. Use this when sending events with the API.
-        eventProperties:
-          type: array
-          items:
-            $ref: '#/components/schemas/WorkflowEventProperty'
-          description: The properties of the event pattern, which can be used in emails.
-        incomingWebhookPlatform:
-          type:
-          - string
-          - 'null'
-          description: The platform that sent this event pattern, if the event pattern is from an incoming webhook. Will be `null` for custom events.
-          enum:
-          - clerk
-          - polar
-          - stripe
-          - supabase
-          - 'null'
-      required:
-      - id
-      - eventName
-      - eventProperties
-      - incomingWebhookPlatform
-    EventPatternSummary:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the event pattern.
-        eventName:
-          type: string
-          description: The name of the event pattern. Use this when sending events with the API.
-        incomingWebhookPlatform:
-          type:
-          - string
-          - 'null'
-          description: The platform that sent this event pattern, if the event pattern is from an incoming webhook. Will be `null` for custom events.
-          enum:
-          - clerk
-          - polar
-          - stripe
-          - supabase
-          - 'null'
-      required:
-      - id
-      - eventName
-      - incomingWebhookPlatform
     ListEventPatternsResponse:
       type: object
       properties:
@@ -220,13 +167,6 @@ components:
       required:
       - pagination
       - data
-    EventPatternFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
     WorkflowEventProperty:
       type: object
       properties:
@@ -242,6 +182,66 @@ components:
       required:
       - name
       - type
+    EventPatternSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the event pattern.
+        eventName:
+          type: string
+          description: The name of the event pattern. Use this when sending events with the API.
+        incomingWebhookPlatform:
+          type:
+          - string
+          - 'null'
+          description: The platform that sent this event pattern, if the event pattern is from an incoming webhook. Will be `null` for custom events.
+          enum:
+          - clerk
+          - polar
+          - stripe
+          - supabase
+          - 'null'
+      required:
+      - id
+      - eventName
+      - incomingWebhookPlatform
+    EventPatternFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    EventPattern:
+      type: object
+      properties:
+        id:
+          type: string
+        eventName:
+          type: string
+          description: The name of the event pattern. Use this when sending events with the API.
+        eventProperties:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowEventProperty'
+          description: The properties of the event pattern, which can be used in emails.
+        incomingWebhookPlatform:
+          type:
+          - string
+          - 'null'
+          description: The platform that sent this event pattern, if the event pattern is from an incoming webhook. Will be `null` for custom events.
+          enum:
+          - clerk
+          - polar
+          - stripe
+          - supabase
+          - 'null'
+      required:
+      - id
+      - eventName
+      - eventProperties
+      - incomingWebhookPlatform
   securitySchemes:
     apiKey:
       type: http
