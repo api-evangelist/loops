@@ -78,32 +78,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    ContactPropertySuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-      required:
-      - success
-    ContactPropertyFailureResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-          examples:
-          - Property already exists.
-      required:
-      - success
-      - message
-      examples:
-      - success: false
-        message: Property already exists.
     ContactPropertyCreateRequest:
       type: object
       required:
@@ -129,6 +103,23 @@ components:
       examples:
       - name: favoriteColor
         type: string
+    ContactPropertyFailureResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+          examples:
+          - Property already exists.
+      required:
+      - success
+      - message
+      examples:
+      - success: false
+        message: Property already exists.
     ContactProperty:
       type: object
       properties:
@@ -154,6 +145,15 @@ components:
       - key
       - label
       - type
+    ContactPropertySuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+      required:
+      - success
   securitySchemes:
     apiKey:
       type: http

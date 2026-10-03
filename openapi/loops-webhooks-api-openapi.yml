@@ -619,26 +619,6 @@ webhooks:
       security: []
 components:
   schemas:
-    WebhookEmailOpenedPayload:
-      allOf:
-      - $ref: '#/components/schemas/WebhookMarketingEmailMetricPayload'
-      - type: object
-        required:
-        - eventName
-        properties:
-          eventName:
-            type: string
-            const: email.opened
-    WebhookEmailSpamReportedPayload:
-      allOf:
-      - $ref: '#/components/schemas/WebhookEmailMetricPayload'
-      - type: object
-        required:
-        - eventName
-        properties:
-          eventName:
-            type: string
-            const: email.spamReported
     WebhookContact:
       type: object
       required:
@@ -696,26 +676,16 @@ components:
           - null
       additionalProperties: true
       description: Full contact object, including custom properties.
-    WebhookTestingTestEventPayload:
-      type: object
-      required:
-      - eventName
-      - eventTime
-      - message
-      - webhookSchemaVersion
-      properties:
-        eventName:
-          type: string
-          const: testing.testEvent
-        eventTime:
-          type: integer
-          description: Unix timestamp in seconds.
-        message:
-          type: string
-          const: test
-        webhookSchemaVersion:
-          type: string
-          const: 1.0.0
+    WebhookEmailSoftBouncedPayload:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEmailMetricPayload'
+      - type: object
+        required:
+        - eventName
+        properties:
+          eventName:
+            type: string
+            const: email.softBounced
     WebhookTransactionalEmailSentPayload:
       allOf:
       - $ref: '#/components/schemas/WebhookBasePayload'
@@ -735,58 +705,19 @@ components:
             type: string
           email:
             $ref: '#/components/schemas/WebhookEmail'
-    WebhookMailingList:
-      type: object
-      description: Details of the mailing list.
-      required:
-      - id
-      - name
-      - description
-      - isPublic
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        isPublic:
-          type: boolean
-    WebhookEmailUnsubscribedPayload:
-      allOf:
-      - $ref: '#/components/schemas/WebhookMarketingEmailMetricPayload'
-      - type: object
-        required:
-        - eventName
-        properties:
-          eventName:
-            type: string
-            const: email.unsubscribed
-    WebhookContactMailingListUnsubscribedPayload:
+    WebhookContactCreatedPayload:
       allOf:
       - $ref: '#/components/schemas/WebhookBasePayload'
       - type: object
         required:
         - eventName
-        - mailingList
+        - contact
         properties:
           eventName:
             type: string
-            const: contact.mailingList.unsubscribed
-          mailingList:
-            $ref: '#/components/schemas/WebhookMailingList'
-    WebhookEmailResubscribedPayload:
-      allOf:
-      - $ref: '#/components/schemas/WebhookMarketingEmailMetricPayload'
-      - type: object
-        required:
-        - eventName
-        properties:
-          eventName:
-            type: string
-            const: email.resubscribed
+            const: contact.created
+          contact:
+            $ref: '#/components/schemas/WebhookContact'
     WebhookCampaignEmailSentPayload:
       allOf:
       - $ref: '#/components/schemas/WebhookBasePayload'
@@ -812,32 +743,184 @@ components:
             description: The mailing list(s) the email was sent to, or an empty array.
             items:
               $ref: '#/components/schemas/WebhookMailingList'
-    WebhookEmailMetricPayload:
+    WebhookContactUnsubscribedPayload:
       allOf:
       - $ref: '#/components/schemas/WebhookBasePayload'
       - type: object
         required:
-        - email
-        - sourceType
+        - eventName
         properties:
-          email:
-            $ref: '#/components/schemas/WebhookEmail'
-          sourceType:
+          eventName:
             type: string
-            enum:
-            - loop
-            - campaign
-            - transactional
-            description: The type of email this event relates to. Workflow emails use `loop`.
-          campaignId:
+            const: contact.unsubscribed
+    WebhookEmail:
+      type: object
+      required:
+      - id
+      - emailMessageId
+      - subject
+      properties:
+        id:
+          type: string
+          description: The ID of the email.
+        emailMessageId:
+          type: string
+          description: The ID of the sent version of the campaign, workflow or transactional email.
+        subject:
+          type: string
+          description: The subject of the email.
+    WebhookBasePayload:
+      type: object
+      required:
+      - eventName
+      - eventTime
+      - webhookSchemaVersion
+      - contactIdentity
+      properties:
+        eventName:
+          type: string
+        eventTime:
+          type: integer
+          description: Unix timestamp in seconds.
+        webhookSchemaVersion:
+          type: string
+          const: 1.0.0
+        contactIdentity:
+          $ref: '#/components/schemas/WebhookContactIdentity'
+    WebhookEmailSpamReportedPayload:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEmailMetricPayload'
+      - type: object
+        required:
+        - eventName
+        properties:
+          eventName:
             type: string
-            description: The ID of the campaign if `sourceType` is `campaign`.
+            const: email.spamReported
+    WebhookContactIdentity:
+      type: object
+      required:
+      - id
+      - email
+      - userId
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        userId:
+          type:
+          - string
+          - 'null'
+    WebhookEmailUnsubscribedPayload:
+      allOf:
+      - $ref: '#/components/schemas/WebhookMarketingEmailMetricPayload'
+      - type: object
+        required:
+        - eventName
+        properties:
+          eventName:
+            type: string
+            const: email.unsubscribed
+    WebhookContactMailingListSubscribedPayload:
+      allOf:
+      - $ref: '#/components/schemas/WebhookBasePayload'
+      - type: object
+        required:
+        - eventName
+        - mailingList
+        properties:
+          eventName:
+            type: string
+            const: contact.mailingList.subscribed
+          mailingList:
+            $ref: '#/components/schemas/WebhookMailingList'
+    WebhookEmailDeliveredPayload:
+      allOf:
+      - $ref: '#/components/schemas/WebhookEmailMetricPayload'
+      - type: object
+        required:
+        - eventName
+        properties:
+          eventName:
+            type: string
+            const: email.delivered
+    WebhookTestingTestEventPayload:
+      type: object
+      required:
+      - eventName
+      - eventTime
+      - message
+      - webhookSchemaVersion
+      properties:
+        eventName:
+          type: string
+          const: testing.testEvent
+        eventTime:
+          type: integer
+          description: Unix timestamp in seconds.
+        message:
+          type: string
+          const: test
+        webhookSchemaVersion:
+          type: string
+          const: 1.0.0
+    WebhookLoopEmailSentPayload:
+      allOf:
+      - $ref: '#/components/schemas/WebhookBasePayload'
+      - type: object
+        required:
+        - eventName
+        - loopId
+        - email
+        - mailingLists
+        - loopName
+        properties:
+          eventName:
+            type: string
+            const: loop.email.sent
           loopId:
             type: string
-            description: The ID of the workflow if `sourceType` is `loop`.
-          transactionalId:
+            description: The ID of the workflow.
+          loopName:
             type: string
-            description: The ID of the transactional email if `sourceType` is `transactional`.
+            description: The name of the workflow.
+          email:
+            $ref: '#/components/schemas/WebhookEmail'
+          mailingLists:
+            type: array
+            description: The mailing list(s) the email was sent to, or an empty array.
+            items:
+              $ref: '#/components/schemas/WebhookMailingList'
+    WebhookMailingList:
+      type: object
+      description: Details of the mailing list.
+      required:
+      - id
+      - name
+      - description
+      - isPublic
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        isPublic:
+          type: boolean
+    WebhookEmailResubscribedPayload:
+      allOf:
+      - $ref: '#/components/schemas/WebhookMarketingEmailMetricPayload'
+      - type: object
+        required:
+        - eventName
+        properties:
+          eventName:
+            type: string
+            const: email.resubscribed
     WebhookEmailHardBouncedPayload:
       allOf:
       - $ref: '#/components/schemas/WebhookEmailMetricPayload'
@@ -870,19 +953,6 @@ components:
           loopId:
             type: string
             description: The ID of the workflow if `sourceType` is `loop`.
-    WebhookContactMailingListSubscribedPayload:
-      allOf:
-      - $ref: '#/components/schemas/WebhookBasePayload'
-      - type: object
-        required:
-        - eventName
-        - mailingList
-        properties:
-          eventName:
-            type: string
-            const: contact.mailingList.subscribed
-          mailingList:
-            $ref: '#/components/schemas/WebhookMailingList'
     WebhookContactDeletedPayload:
       allOf:
       - $ref: '#/components/schemas/WebhookBasePayload'
@@ -893,110 +963,6 @@ components:
           eventName:
             type: string
             const: contact.deleted
-    WebhookContactCreatedPayload:
-      allOf:
-      - $ref: '#/components/schemas/WebhookBasePayload'
-      - type: object
-        required:
-        - eventName
-        - contact
-        properties:
-          eventName:
-            type: string
-            const: contact.created
-          contact:
-            $ref: '#/components/schemas/WebhookContact'
-    WebhookContactUnsubscribedPayload:
-      allOf:
-      - $ref: '#/components/schemas/WebhookBasePayload'
-      - type: object
-        required:
-        - eventName
-        properties:
-          eventName:
-            type: string
-            const: contact.unsubscribed
-    WebhookEmailSoftBouncedPayload:
-      allOf:
-      - $ref: '#/components/schemas/WebhookEmailMetricPayload'
-      - type: object
-        required:
-        - eventName
-        properties:
-          eventName:
-            type: string
-            const: email.softBounced
-    WebhookBasePayload:
-      type: object
-      required:
-      - eventName
-      - eventTime
-      - webhookSchemaVersion
-      - contactIdentity
-      properties:
-        eventName:
-          type: string
-        eventTime:
-          type: integer
-          description: Unix timestamp in seconds.
-        webhookSchemaVersion:
-          type: string
-          const: 1.0.0
-        contactIdentity:
-          $ref: '#/components/schemas/WebhookContactIdentity'
-    WebhookEmail:
-      type: object
-      required:
-      - id
-      - emailMessageId
-      - subject
-      properties:
-        id:
-          type: string
-          description: The ID of the email.
-        emailMessageId:
-          type: string
-          description: The ID of the sent version of the campaign, workflow or transactional email.
-        subject:
-          type: string
-          description: The subject of the email.
-    WebhookEmailDeliveredPayload:
-      allOf:
-      - $ref: '#/components/schemas/WebhookEmailMetricPayload'
-      - type: object
-        required:
-        - eventName
-        properties:
-          eventName:
-            type: string
-            const: email.delivered
-    WebhookLoopEmailSentPayload:
-      allOf:
-      - $ref: '#/components/schemas/WebhookBasePayload'
-      - type: object
-        required:
-        - eventName
-        - loopId
-        - email
-        - mailingLists
-        - loopName
-        properties:
-          eventName:
-            type: string
-            const: loop.email.sent
-          loopId:
-            type: string
-            description: The ID of the workflow.
-          loopName:
-            type: string
-            description: The name of the workflow.
-          email:
-            $ref: '#/components/schemas/WebhookEmail'
-          mailingLists:
-            type: array
-            description: The mailing list(s) the email was sent to, or an empty array.
-            items:
-              $ref: '#/components/schemas/WebhookMailingList'
     WebhookEmailClickedPayload:
       allOf:
       - $ref: '#/components/schemas/WebhookMarketingEmailMetricPayload'
@@ -1007,29 +973,56 @@ components:
           eventName:
             type: string
             const: email.clicked
-    WebhookContactIdentity:
-      type: object
-      required:
-      - id
-      - email
-      - userId
-      properties:
-        id:
-          type: string
-        email:
-          type: string
-        userId:
-          type:
-          - string
-          - 'null'
+    WebhookEmailOpenedPayload:
+      allOf:
+      - $ref: '#/components/schemas/WebhookMarketingEmailMetricPayload'
+      - type: object
+        required:
+        - eventName
+        properties:
+          eventName:
+            type: string
+            const: email.opened
+    WebhookContactMailingListUnsubscribedPayload:
+      allOf:
+      - $ref: '#/components/schemas/WebhookBasePayload'
+      - type: object
+        required:
+        - eventName
+        - mailingList
+        properties:
+          eventName:
+            type: string
+            const: contact.mailingList.unsubscribed
+          mailingList:
+            $ref: '#/components/schemas/WebhookMailingList'
+    WebhookEmailMetricPayload:
+      allOf:
+      - $ref: '#/components/schemas/WebhookBasePayload'
+      - type: object
+        required:
+        - email
+        - sourceType
+        properties:
+          email:
+            $ref: '#/components/schemas/WebhookEmail'
+          sourceType:
+            type: string
+            enum:
+            - loop
+            - campaign
+            - transactional
+            description: The type of email this event relates to. Workflow emails use `loop`.
+          campaignId:
+            type: string
+            description: The ID of the campaign if `sourceType` is `campaign`.
+          loopId:
+            type: string
+            description: The ID of the workflow if `sourceType` is `loop`.
+          transactionalId:
+            type: string
+            description: The ID of the transactional email if `sourceType` is `transactional`.
   parameters:
-    WebhookId:
-      name: webhook-id
-      in: header
-      required: true
-      schema:
-        type: string
-      description: Unique message ID. Use to deduplicate deliveries.
     WebhookSignature:
       name: webhook-signature
       in: header
@@ -1037,6 +1030,13 @@ components:
       schema:
         type: string
       description: HMAC signature for verifying the request. Verify using your endpoint signing secret from the Loops dashboard.
+    WebhookId:
+      name: webhook-id
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Unique message ID. Use to deduplicate deliveries.
     WebhookTimestamp:
       name: webhook-timestamp
       in: header

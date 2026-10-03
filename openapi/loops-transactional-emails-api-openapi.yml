@@ -408,106 +408,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    IdempotencyKeyFailureResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-      required:
-      - success
-      - message
-      examples:
-      - success: false
-        message: Idempotency key already used with a different request body.
-    CreateTransactionalRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the transactional email.
-          examples:
-          - Welcome email
-        transactionalGroupId:
-          type: string
-          description: The ID of the group to add this transactional email to. Defaults to the team's default group when omitted.
-          examples:
-          - clg7n5p3q1r9s7t5u3v1w9y7
-      required:
-      - name
-      additionalProperties: false
-    TransactionalFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          examples:
-          - Transactional email not found.
-      required:
-      - message
-      examples:
-      - message: Transactional email not found.
-    TransactionalFailure4Response:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-        error:
-          type: object
-          properties:
-            path:
-              type: string
-            reason:
-              type: string
-      required:
-      - success
-      - message
-      - error
-    ListTransactionalsResponse:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionalEmail'
-      examples:
-      - pagination:
-          totalResults: 2
-          returnedResults: 2
-          perPage: 20
-          totalPages: 1
-          nextCursor: null
-          nextPage: null
-        data:
-        - id: cll42l54f20i1la0lfooe3z12
-          name: Sign up confirmation
-          lastUpdated: 2025-06-29 07:47:39.370000+00:00
-          dataVariables:
-          - confirmationUrl
-    TransactionalFailure2Response:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-        path:
-          type: string
-      required:
-      - success
-      - message
-      - path
     TransactionalResource:
       type: object
       properties:
@@ -623,6 +523,125 @@ components:
         totalPages: 1
         nextCursor: null
         nextPage: null
+    UpdateTransactionalRequest:
+      type: object
+      minProperties: 1
+      description: At least one field must be provided.
+      properties:
+        name:
+          type: string
+          examples:
+          - Password reset email
+        transactionalGroupId:
+          type: string
+          description: The ID of the group to move this transactional email to.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+      additionalProperties: false
+    IdempotencyKeyFailureResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+      required:
+      - success
+      - message
+      examples:
+      - success: false
+        message: Idempotency key already used with a different request body.
+    TransactionalRequest:
+      type: object
+      required:
+      - email
+      - transactionalId
+      properties:
+        email:
+          type: string
+          examples:
+          - alex@company.com
+          description: The recipient's email address.
+        transactionalId:
+          type: string
+          description: The ID of the transactional email to send.
+          examples:
+          - cll42l54f20i1la0lfooe3z12
+        addToAudience:
+          type: boolean
+          description: If `true`, a contact will be created in your audience using the `email` value (if a matching contact doesn't already exist).
+          examples:
+          - true
+        dataVariables:
+          type: object
+          description: 'An object containing data as defined by the data variables added to the transactional email template. Values can be of type string or number.
+
+
+            If you have added optional data variables to your email, you can exclude them from the dataVariables object or set the value to "".
+
+
+            If you have added an array data variable to your email, make sure to include an array matching the data variables you added to your array block.'
+          examples:
+          - name: Chris
+            passwordResetLink: https://example.com/reset-password
+        attachments:
+          type: array
+          description: A list containing file objects to be sent along with an email message. Attachments must be enabled by Loops support before they can be used with the API.
+          items:
+            type: object
+            required:
+            - filename
+            - contentType
+            - data
+            properties:
+              filename:
+                type: string
+                description: The name of the file, shown in email clients.
+              contentType:
+                type: string
+                description: The MIME type of the file.
+              data:
+                type: string
+                description: The base64-encoded content of the file.
+      examples:
+      - email: alex@company.com
+        transactionalId: cll42l54f20i1la0lfooe3z12
+        addToAudience: true
+        dataVariables:
+          name: Alex
+          passwordResetLink: https://app.company.com/reset/abc123
+    ListTransactionalsResourceResponse:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionalResource'
+      required:
+      - pagination
+      - data
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: cll42l54f20i1la0lfooe3z12
+          name: Sign up confirmation
+          draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+          publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+          transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
+          createdAt: 2025-06-29 07:47:39.370000+00:00
+          updatedAt: 2025-06-29 07:47:39.370000+00:00
+          dataVariables:
+          - confirmationUrl
     TransactionalEmail:
       type: object
       properties:
@@ -649,6 +668,84 @@ components:
       - name
       - lastUpdated
       - dataVariables
+    TransactionalFailure3Response:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+        error:
+          type: object
+          properties:
+            path:
+              type: string
+            message:
+              type: string
+      required:
+      - success
+      - message
+      - error
+    TransactionalFailure2Response:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+        path:
+          type: string
+      required:
+      - success
+      - message
+      - path
+    ListTransactionalsResponse:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionalEmail'
+      examples:
+      - pagination:
+          totalResults: 2
+          returnedResults: 2
+          perPage: 20
+          totalPages: 1
+          nextCursor: null
+          nextPage: null
+        data:
+        - id: cll42l54f20i1la0lfooe3z12
+          name: Sign up confirmation
+          lastUpdated: 2025-06-29 07:47:39.370000+00:00
+          dataVariables:
+          - confirmationUrl
+    TransactionalFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+          - Transactional email not found.
+      required:
+      - message
+      examples:
+      - message: Transactional email not found.
+    TransactionalSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+      required:
+      - success
     TransactionalDraftResponse:
       type: object
       properties:
@@ -713,6 +810,59 @@ components:
         dataVariables:
         - confirmationUrl
         draftEmailMessageContentRevisionId: clrev1s10n2i3d4e5f6g7h8
+    CreateTransactionalRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the transactional email.
+          examples:
+          - Welcome email
+        transactionalGroupId:
+          type: string
+          description: The ID of the group to add this transactional email to. Defaults to the team's default group when omitted.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+      required:
+      - name
+      additionalProperties: false
+    TransactionalSendFailureResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+          examples:
+          - 'Missing required data variable(s): confirmationUrl'
+      required:
+      - success
+      - message
+      examples:
+      - success: false
+        message: 'Missing required data variable(s): confirmationUrl'
+    TransactionalFailure4Response:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+        error:
+          type: object
+          properties:
+            path:
+              type: string
+            reason:
+              type: string
+      required:
+      - success
+      - message
+      - error
     TransactionalFailure5Response:
       type: object
       properties:
@@ -745,156 +895,6 @@ components:
           path: dataVariables
           message: 'Missing required data variable(s): confirmationUrl'
         transactionalId: cll42l54f20i1la0lfooe3z12
-    TransactionalRequest:
-      type: object
-      required:
-      - email
-      - transactionalId
-      properties:
-        email:
-          type: string
-          examples:
-          - alex@company.com
-          description: The recipient's email address.
-        transactionalId:
-          type: string
-          description: The ID of the transactional email to send.
-          examples:
-          - cll42l54f20i1la0lfooe3z12
-        addToAudience:
-          type: boolean
-          description: If `true`, a contact will be created in your audience using the `email` value (if a matching contact doesn't already exist).
-          examples:
-          - true
-        dataVariables:
-          type: object
-          description: 'An object containing data as defined by the data variables added to the transactional email template. Values can be of type string or number.
-
-
-            If you have added optional data variables to your email, you can exclude them from the dataVariables object or set the value to "".
-
-
-            If you have added an array data variable to your email, make sure to include an array matching the data variables you added to your array block.'
-          examples:
-          - name: Chris
-            passwordResetLink: https://example.com/reset-password
-        attachments:
-          type: array
-          description: A list containing file objects to be sent along with an email message. Attachments must be enabled by Loops support before they can be used with the API.
-          items:
-            type: object
-            required:
-            - filename
-            - contentType
-            - data
-            properties:
-              filename:
-                type: string
-                description: The name of the file, shown in email clients.
-              contentType:
-                type: string
-                description: The MIME type of the file.
-              data:
-                type: string
-                description: The base64-encoded content of the file.
-      examples:
-      - email: alex@company.com
-        transactionalId: cll42l54f20i1la0lfooe3z12
-        addToAudience: true
-        dataVariables:
-          name: Alex
-          passwordResetLink: https://app.company.com/reset/abc123
-    TransactionalFailure3Response:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-        error:
-          type: object
-          properties:
-            path:
-              type: string
-            message:
-              type: string
-      required:
-      - success
-      - message
-      - error
-    TransactionalSendFailureResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-          examples:
-          - 'Missing required data variable(s): confirmationUrl'
-      required:
-      - success
-      - message
-      examples:
-      - success: false
-        message: 'Missing required data variable(s): confirmationUrl'
-    ListTransactionalsResourceResponse:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionalResource'
-      required:
-      - pagination
-      - data
-      examples:
-      - pagination:
-          totalResults: 2
-          returnedResults: 2
-          perPage: 20
-          totalPages: 1
-          nextCursor: null
-          nextPage: null
-        data:
-        - id: cll42l54f20i1la0lfooe3z12
-          name: Sign up confirmation
-          draftEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
-          publishedEmailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
-          transactionalGroupId: clg7n5p3q1r9s7t5u3v1w9y7
-          createdAt: 2025-06-29 07:47:39.370000+00:00
-          updatedAt: 2025-06-29 07:47:39.370000+00:00
-          dataVariables:
-          - confirmationUrl
-    UpdateTransactionalRequest:
-      type: object
-      minProperties: 1
-      description: At least one field must be provided.
-      properties:
-        name:
-          type: string
-          examples:
-          - Password reset email
-        transactionalGroupId:
-          type: string
-          description: The ID of the group to move this transactional email to.
-          examples:
-          - clg7n5p3q1r9s7t5u3v1w9y7
-      additionalProperties: false
-    TransactionalSuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-      required:
-      - success
   securitySchemes:
     apiKey:
       type: http

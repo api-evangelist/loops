@@ -64,6 +64,15 @@ paths:
       - apiKey: []
 components:
   schemas:
+    EventSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+      required:
+      - success
     IdempotencyKeyFailureResponse:
       type: object
       properties:
@@ -96,15 +105,6 @@ components:
       examples:
       - success: false
         message: Contact not found.
-    EventSuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-      required:
-      - success
     EventRequest:
       type: object
       required:

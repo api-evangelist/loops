@@ -138,35 +138,13 @@ paths:
       - apiKey: []
 components:
   schemas:
-    ListEventPatternsResponse:
+    EventPatternFailureResponse:
       type: object
       properties:
-        pagination:
-          type: object
-          properties:
-            totalResults:
-              type: number
-            returnedResults:
-              type: number
-            perPage:
-              type: number
-            totalPages:
-              type: number
-            nextCursor:
-              type:
-              - string
-              - 'null'
-            nextPage:
-              type:
-              - string
-              - 'null'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/EventPatternSummary'
+        message:
+          type: string
       required:
-      - pagination
-      - data
+      - message
     WorkflowEventProperty:
       type: object
       properties:
@@ -206,13 +184,6 @@ components:
       - id
       - eventName
       - incomingWebhookPlatform
-    EventPatternFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
     EventPattern:
       type: object
       properties:
@@ -242,6 +213,35 @@ components:
       - eventName
       - eventProperties
       - incomingWebhookPlatform
+    ListEventPatternsResponse:
+      type: object
+      properties:
+        pagination:
+          type: object
+          properties:
+            totalResults:
+              type: number
+            returnedResults:
+              type: number
+            perPage:
+              type: number
+            totalPages:
+              type: number
+            nextCursor:
+              type:
+              - string
+              - 'null'
+            nextPage:
+              type:
+              - string
+              - 'null'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventPatternSummary'
+      required:
+      - pagination
+      - data
   securitySchemes:
     apiKey:
       type: http

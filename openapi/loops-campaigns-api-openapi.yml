@@ -191,6 +191,122 @@ paths:
       - apiKey: []
 components:
   schemas:
+    Pagination:
+      type: object
+      properties:
+        totalResults:
+          type: number
+          examples:
+          - 2
+        returnedResults:
+          type: number
+          examples:
+          - 2
+        perPage:
+          type: number
+          examples:
+          - 20
+        totalPages:
+          type: number
+          examples:
+          - 1
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+        nextPage:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+      required:
+      - totalResults
+      - returnedResults
+      - perPage
+      - totalPages
+      - nextCursor
+      - nextPage
+      examples:
+      - totalResults: 2
+        returnedResults: 2
+        perPage: 20
+        totalPages: 1
+        nextCursor: null
+        nextPage: null
+    ActivityCondition:
+      type: object
+      description: Matches contacts by their activity on a campaign or workflow.
+      properties:
+        type:
+          type: string
+          enum:
+          - activity
+        action:
+          type: string
+          enum:
+          - sent
+          - opened
+          - clicked
+        negate:
+          type: boolean
+        target:
+          type: string
+          enum:
+          - campaign
+          - workflow
+          - workflowEmail
+        id:
+          type: string
+          description: The ID of the campaign, workflow, or workflow email.
+      required:
+      - type
+      - action
+      - negate
+      - target
+      - id
+      examples:
+      - type: activity
+        action: opened
+        negate: false
+        target: campaign
+        id: clc4m6n8p0q2r4s6t8u0v2x4
+    CreateCampaignRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The campaign name.
+          examples:
+          - Spring announcement
+        campaignGroupId:
+          type: string
+          description: The ID of the group to add this campaign to. Defaults to the team's default group when omitted.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+        mailingListId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the mailing list to send to.
+          examples:
+          - clm2k8j4h6g0f8d6s4a2b0z8
+        audienceSegmentId:
+          type:
+          - string
+          - 'null'
+          description: The ID of an audience segment. Setting this without also providing `audienceFilter` clears any existing `audienceFilter`. If both are provided, the filter is applied on top of the segment's filter.
+          examples:
+          - cls6e8g0i2k4m6o8q0s2u4w6
+        audienceFilter:
+          $ref: '#/components/schemas/AudienceFilterInRequest'
+        scheduling:
+          $ref: '#/components/schemas/CampaignSchedulingRequest'
+      required:
+      - name
+      additionalProperties: false
     UpdateCampaignRequest:
       type: object
       description: At least one field must be provided.
@@ -318,90 +434,13 @@ components:
         scheduling:
           method: now
           timestamp: null
-    CampaignScheduling:
-      type: object
-      description: When the campaign is scheduled to send.
-      properties:
-        method:
-          type: string
-          enum:
-          - now
-          - schedule
-        timestamp:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: ISO 8601 send time. Null when the method is `now`.
-      required:
-      - method
-      - timestamp
-      examples:
-      - method: schedule
-        timestamp: 2025-07-15 14:00:00+00:00
-    CampaignSchedulingRequest:
-      type: object
-      description: When the campaign should send. `timestamp` is required and must be in the future when `method` is `schedule`, and must be omitted when `method` is `now`.
-      properties:
-        method:
-          type: string
-          enum:
-          - now
-          - schedule
-        timestamp:
-          type: string
-          format: date-time
-      required:
-      - method
-      additionalProperties: false
-      examples:
-      - method: schedule
-        timestamp: 2025-07-15 14:00:00+00:00
-    Pagination:
-      type: object
-      properties:
-        totalResults:
-          type: number
-          examples:
-          - 2
-        returnedResults:
-          type: number
-          examples:
-          - 2
-        perPage:
-          type: number
-          examples:
-          - 20
-        totalPages:
-          type: number
-          examples:
-          - 1
-        nextCursor:
-          type:
-          - string
-          - 'null'
-          examples:
-          - null
-        nextPage:
-          type:
-          - string
-          - 'null'
-          examples:
-          - null
-      required:
-      - totalResults
-      - returnedResults
-      - perPage
-      - totalPages
-      - nextCursor
-      - nextPage
-      examples:
-      - totalResults: 2
-        returnedResults: 2
-        perPage: 20
-        totalPages: 1
-        nextCursor: null
-        nextPage: null
+    AudienceFilterCondition:
+      oneOf:
+      - $ref: '#/components/schemas/PropertyCondition'
+      - $ref: '#/components/schemas/OptInCondition'
+      - $ref: '#/components/schemas/ActivityCondition'
+      discriminator:
+        propertyName: type
     CreateCampaignResponse:
       type: object
       properties:
@@ -503,6 +542,33 @@ components:
           method: now
           timestamp: null
         emailMessageContentRevisionId: clrev1s10n2i3d4e5f6g7h8
+    CampaignFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Campaign not found.
+    CampaignSchedulingRequest:
+      type: object
+      description: When the campaign should send. `timestamp` is required and must be in the future when `method` is `schedule`, and must be omitted when `method` is `now`.
+      properties:
+        method:
+          type: string
+          enum:
+          - now
+          - schedule
+        timestamp:
+          type: string
+          format: date-time
+      required:
+      - method
+      additionalProperties: false
+      examples:
+      - method: schedule
+        timestamp: 2025-07-15 14:00:00+00:00
     ListCampaignsResponse:
       type: object
       properties:
@@ -537,116 +603,6 @@ components:
           scheduling:
             method: now
             timestamp: null
-    OptInCondition:
-      type: object
-      description: Matches contacts by mailing-list opt-in status.
-      properties:
-        type:
-          type: string
-          enum:
-          - optIn
-        status:
-          type:
-          - string
-          - 'null'
-          enum:
-          - accepted
-          - pending
-          - rejected
-          - null
-      required:
-      - type
-      - status
-      examples:
-      - type: optIn
-        status: accepted
-    CreateCampaignRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The campaign name.
-          examples:
-          - Spring announcement
-        campaignGroupId:
-          type: string
-          description: The ID of the group to add this campaign to. Defaults to the team's default group when omitted.
-          examples:
-          - clg7n5p3q1r9s7t5u3v1w9y7
-        mailingListId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the mailing list to send to.
-          examples:
-          - clm2k8j4h6g0f8d6s4a2b0z8
-        audienceSegmentId:
-          type:
-          - string
-          - 'null'
-          description: The ID of an audience segment. Setting this without also providing `audienceFilter` clears any existing `audienceFilter`. If both are provided, the filter is applied on top of the segment's filter.
-          examples:
-          - cls6e8g0i2k4m6o8q0s2u4w6
-        audienceFilter:
-          $ref: '#/components/schemas/AudienceFilterInRequest'
-        scheduling:
-          $ref: '#/components/schemas/CampaignSchedulingRequest'
-      required:
-      - name
-      additionalProperties: false
-    AudienceFilterCondition:
-      oneOf:
-      - $ref: '#/components/schemas/PropertyCondition'
-      - $ref: '#/components/schemas/OptInCondition'
-      - $ref: '#/components/schemas/ActivityCondition'
-      discriminator:
-        propertyName: type
-    CampaignFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Campaign not found.
-    ActivityCondition:
-      type: object
-      description: Matches contacts by their activity on a campaign or workflow.
-      properties:
-        type:
-          type: string
-          enum:
-          - activity
-        action:
-          type: string
-          enum:
-          - sent
-          - opened
-          - clicked
-        negate:
-          type: boolean
-        target:
-          type: string
-          enum:
-          - campaign
-          - workflow
-          - workflowEmail
-        id:
-          type: string
-          description: The ID of the campaign, workflow, or workflow email.
-      required:
-      - type
-      - action
-      - negate
-      - target
-      - id
-      examples:
-      - type: activity
-        action: opened
-        negate: false
-        target: campaign
-        id: clc4m6n8p0q2r4s6t8u0v2x4
     PropertyCondition:
       type: object
       description: Matches contacts by a property value.
@@ -702,6 +658,27 @@ components:
         key: plan
         operator: equals
         value: pro
+    CampaignScheduling:
+      type: object
+      description: When the campaign is scheduled to send.
+      properties:
+        method:
+          type: string
+          enum:
+          - now
+          - schedule
+        timestamp:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: ISO 8601 send time. Null when the method is `now`.
+      required:
+      - method
+      - timestamp
+      examples:
+      - method: schedule
+        timestamp: 2025-07-15 14:00:00+00:00
     AudienceFilterInRequest:
       type:
       - object
@@ -722,6 +699,29 @@ components:
       - match
       - conditions
       additionalProperties: false
+    OptInCondition:
+      type: object
+      description: Matches contacts by mailing-list opt-in status.
+      properties:
+        type:
+          type: string
+          enum:
+          - optIn
+        status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - accepted
+          - pending
+          - rejected
+          - null
+      required:
+      - type
+      - status
+      examples:
+      - type: optIn
+        status: accepted
     AudienceFilter:
       type:
       - object

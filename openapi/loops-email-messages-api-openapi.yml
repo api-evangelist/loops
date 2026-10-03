@@ -266,6 +266,100 @@ paths:
       - apiKey: []
 components:
   schemas:
+    EmailMessagePreviewRequest:
+      type: object
+      properties:
+        emails:
+          type: array
+          minItems: 1
+          items:
+            type: string
+          description: One or more addresses to send the preview to.
+        contactProperties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Contact property values to render. Accepted for campaign and workflow previews.
+          example:
+            firstName: Alex
+        eventProperties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Event property values to render. Accepted for workflow previews only.
+          example:
+            planName: Pro
+        dataVariables:
+          type: object
+          additionalProperties:
+            type: string
+          description: Transactional data variables to render. Accepted for transactional previews only.
+          example:
+            loginUrl: https://app.company.com/login
+      required:
+      - emails
+      additionalProperties: false
+      examples:
+      - emails:
+        - alex@company.com
+        contactProperties:
+          firstName: Alex
+        eventProperties:
+          planName: Pro
+        dataVariables:
+          loginUrl: https://app.company.com/login
+    GuardianRule:
+      type: object
+      properties:
+        rule:
+          type: string
+          description: The identifier of the Guardian rule that fired.
+          enum:
+          - unsupportedContactProperties
+          - missingFallbackContactProperties
+          - unsupportedEventProperties
+          - missingFallbackEventProperties
+          - unsupportedDataVariables
+          - invalidCustomDataVariables
+          - missingRequiredDataVariables
+          - missingButtonHrefs
+          - invalidButtonHrefs
+          - shortenedYouTubeButtonHrefs
+          - missingLinkHrefs
+          - invalidLinkHrefs
+          - shortenedYouTubeLinkHrefs
+          - shortenedYouTubeImageHrefs
+          - emailWithoutMailtoButtonHrefs
+          - emailWithoutMailtoLinkHrefs
+          - emailWithoutMailtoImageHrefs
+          - bareArrayNodes
+          - missingSocialIconHrefs
+        title:
+          type: string
+          description: A short summary of the rule.
+        description:
+          type: string
+          description: A longer explanation of why the issue matters.
+        items:
+          type: array
+          description: The specific elements that triggered the rule.
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+                description: A human-readable label for the item (for example, link text or a property name).
+              codeName:
+                type: string
+                description: Machine-readable identifier when the rule refers to a property or variable, when applicable.
+                example: firstName
+            required:
+            - label
+      required:
+      - rule
+      - title
+      - description
+      - items
     EmailMessageResponse:
       type: object
       properties:
@@ -470,57 +564,18 @@ components:
         lmx: <Paragraph>Hello, {firstName}!</Paragraph>
         contactPropertiesFallbacks:
           firstName: there
-    EmailMessageFailureResponse:
+    EmailMessagePreviewResponse:
       type: object
       properties:
-        message:
+        id:
           type: string
+          description: The ID of the email message the preview was sent for.
+          examples:
+          - cle5f7g9h1i3j5k7l9m1n3p5
       required:
-      - message
+      - id
       examples:
-      - message: Email message not found.
-    EmailMessagePreviewRequest:
-      type: object
-      properties:
-        emails:
-          type: array
-          minItems: 1
-          items:
-            type: string
-          description: One or more addresses to send the preview to.
-        contactProperties:
-          type: object
-          additionalProperties:
-            type: string
-          description: Contact property values to render. Accepted for campaign and workflow previews.
-          example:
-            firstName: Alex
-        eventProperties:
-          type: object
-          additionalProperties:
-            type: string
-          description: Event property values to render. Accepted for workflow previews only.
-          example:
-            planName: Pro
-        dataVariables:
-          type: object
-          additionalProperties:
-            type: string
-          description: Transactional data variables to render. Accepted for transactional previews only.
-          example:
-            loginUrl: https://app.company.com/login
-      required:
-      - emails
-      additionalProperties: false
-      examples:
-      - emails:
-        - alex@company.com
-        contactProperties:
-          firstName: Alex
-        eventProperties:
-          planName: Pro
-        dataVariables:
-          loginUrl: https://app.company.com/login
+      - id: cle5f7g9h1i3j5k7l9m1n3p5
     EmailMessageGuardianResponse:
       type: object
       properties:
@@ -550,70 +605,15 @@ components:
           items:
           - label: See more
         warnings: []
-    EmailMessagePreviewResponse:
+    EmailMessageFailureResponse:
       type: object
       properties:
-        id:
+        message:
           type: string
-          description: The ID of the email message the preview was sent for.
-          examples:
-          - cle5f7g9h1i3j5k7l9m1n3p5
       required:
-      - id
+      - message
       examples:
-      - id: cle5f7g9h1i3j5k7l9m1n3p5
-    GuardianRule:
-      type: object
-      properties:
-        rule:
-          type: string
-          description: The identifier of the Guardian rule that fired.
-          enum:
-          - unsupportedContactProperties
-          - missingFallbackContactProperties
-          - unsupportedEventProperties
-          - missingFallbackEventProperties
-          - unsupportedDataVariables
-          - invalidCustomDataVariables
-          - missingRequiredDataVariables
-          - missingButtonHrefs
-          - invalidButtonHrefs
-          - shortenedYouTubeButtonHrefs
-          - missingLinkHrefs
-          - invalidLinkHrefs
-          - shortenedYouTubeLinkHrefs
-          - shortenedYouTubeImageHrefs
-          - emailWithoutMailtoButtonHrefs
-          - emailWithoutMailtoLinkHrefs
-          - emailWithoutMailtoImageHrefs
-          - bareArrayNodes
-          - missingSocialIconHrefs
-        title:
-          type: string
-          description: A short summary of the rule.
-        description:
-          type: string
-          description: A longer explanation of why the issue matters.
-        items:
-          type: array
-          description: The specific elements that triggered the rule.
-          items:
-            type: object
-            properties:
-              label:
-                type: string
-                description: A human-readable label for the item (for example, link text or a property name).
-              codeName:
-                type: string
-                description: Machine-readable identifier when the rule refers to a property or variable, when applicable.
-                example: firstName
-            required:
-            - label
-      required:
-      - rule
-      - title
-      - description
-      - items
+      - message: Email message not found.
   securitySchemes:
     apiKey:
       type: http

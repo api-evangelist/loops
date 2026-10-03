@@ -249,50 +249,89 @@ paths:
       - apiKey: []
 components:
   schemas:
-    SimplifiedWorkflowNode:
-      oneOf:
-      - $ref: '#/components/schemas/SimplifiedSignupTriggerWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedEventTriggerWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedContactPropertyTriggerWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedAddToListTriggerWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedBlankTriggerWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedAudienceFilterWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedTimerActionWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedSendEmailActionWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedExitActionWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedBranchWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedExperimentBranchWorkflowNode'
-      - $ref: '#/components/schemas/SimplifiedVariantWorkflowNode'
-      discriminator:
-        propertyName: typeName
-    SimplifiedSendEmailActionWorkflowNode:
+    CreateWorkflowRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the workflow.
+        description:
+          type: string
+          description: The description of the workflow.
+        mailingListId:
+          type:
+          - string
+          - 'null'
+          description: The ID of a mailing list the workflow sends to. After creation, the mailing list can be changed with the `/v1/workflows/{workflowId}/mailing-list` endpoint.
+      required:
+      - name
+      additionalProperties: false
+    NullableWorkflowRevisionId:
+      type:
+      - string
+      - 'null'
+      description: The current workflow revision token. Pass the latest value as `expectedRevisionId` on the next workflow mutation. Will be `null` for workflows without a revision token yet.
+    SimplifiedContactPropertyTriggerWorkflowNode:
       type: object
       properties:
         typeName:
           type: string
           enum:
-          - SendEmailAction
+          - ContactPropertyTrigger
         nextNodeIds:
           $ref: '#/components/schemas/WorkflowNextNodeIds'
-        emailMessageId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the email message to send. To edit this email, use the `POST /v1/email-messages/{emailMessageId}` endpoint.
-        subject:
-          type: string
-          description: The subject of the email message (reference only).
+        contactPropertyQuery:
+          oneOf:
+          - $ref: '#/components/schemas/WorkflowContactPropertyQuery'
+          - type: 'null'
+        reEligible:
+          $ref: '#/components/schemas/WorkflowReEligible'
       required:
       - typeName
       - nextNodeIds
-      - emailMessageId
-      - subject
+      - contactPropertyQuery
+      - reEligible
       additionalProperties: false
-      examples:
-      - typeName: SendEmailAction
-        nextNodeIds: []
-        emailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
-        subject: Welcome to Acme!
+    WorkflowTimerAmount:
+      type: number
+      description: The amount of time to wait before triggering the next node. Set to `0` to move to the next node immediately.
+    SimplifiedAudienceFilterWorkflowNode:
+      type: object
+      properties:
+        typeName:
+          type: string
+          enum:
+          - AudienceFilter
+        nextNodeIds:
+          $ref: '#/components/schemas/WorkflowNextNodeIds'
+      required:
+      - typeName
+      - nextNodeIds
+      additionalProperties: false
+    WorkflowExpectedRevisionId:
+      type:
+      - string
+      - 'null'
+      description: The workflow revision token returned by the latest workflow read or mutation. Older workflows may return `null` before their first revision-aware mutation; pass `null` back as `expectedRevisionId` in that case. If the token is stale, the API returns a `409 Conflict` error.
+    WorkflowMailingListPreview:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - dryRun
+          - queuedContactsFound
+        mailingListId:
+          type:
+          - string
+          - 'null'
+        queuedContactCount:
+          type: number
+          description: The number of queued contacts that would be removed from the workflow due to the mailing list changing.
+      required:
+      - status
+      - mailingListId
+      - queuedContactCount
     Pagination:
       type: object
       properties:
@@ -338,105 +377,126 @@ components:
         totalPages: 1
         nextCursor: null
         nextPage: null
-    SimplifiedSignupTriggerWorkflowNode:
+    SimplifiedVariantWorkflowNode:
       type: object
       properties:
         typeName:
           type: string
           enum:
-          - SignupTrigger
+          - VariantNode
+        nextNodeIds:
+          $ref: '#/components/schemas/WorkflowNextNodeIds'
+        isControl:
+          type: boolean
+          description: Whether this is the control variant of an experiment.
+      required:
+      - typeName
+      - nextNodeIds
+      - isControl
+      additionalProperties: false
+    SimplifiedBlankTriggerWorkflowNode:
+      type: object
+      properties:
+        typeName:
+          type: string
+          enum:
+          - BlankTrigger
         nextNodeIds:
           $ref: '#/components/schemas/WorkflowNextNodeIds'
       required:
       - typeName
       - nextNodeIds
       additionalProperties: false
-    WorkflowReEligible:
-      type: boolean
-      description: If `true`, the contacts will be able to enter this workflow every time the trigger is matched. If `false`, contacts will only ever enter this workflow once. Matches the "Trigger frequency" option in the UI.
-    SimplifiedTimerActionWorkflowNode:
+    SimplifiedAddToListTriggerWorkflowNode:
       type: object
       properties:
         typeName:
           type: string
           enum:
-          - TimerAction
+          - AddToListTrigger
         nextNodeIds:
           $ref: '#/components/schemas/WorkflowNextNodeIds'
-        amount:
-          $ref: '#/components/schemas/WorkflowTimerAmount'
-        unit:
-          $ref: '#/components/schemas/WorkflowTimerUnit'
-      required:
-      - typeName
-      - nextNodeIds
-      - amount
-      - unit
-      additionalProperties: false
-      examples:
-      - typeName: TimerAction
-        nextNodeIds:
-        - cln1a3b5c7d9e1f3g5h7i9j1
-        amount: 2
-        unit: d
-    SimplifiedContactPropertyTriggerWorkflowNode:
-      type: object
-      properties:
-        typeName:
-          type: string
-          enum:
-          - ContactPropertyTrigger
-        nextNodeIds:
-          $ref: '#/components/schemas/WorkflowNextNodeIds'
-        contactPropertyQuery:
-          oneOf:
-          - $ref: '#/components/schemas/WorkflowContactPropertyQuery'
-          - type: 'null'
+        mailingListId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the mailing list that triggers the workflow.
         reEligible:
           $ref: '#/components/schemas/WorkflowReEligible'
       required:
       - typeName
       - nextNodeIds
-      - contactPropertyQuery
+      - mailingListId
       - reEligible
       additionalProperties: false
-    WorkflowTimerAmount:
-      type: number
-      description: The amount of time to wait before triggering the next node. Set to `0` to move to the next node immediately.
-    CreateWorkflowRequest:
+    SimplifiedWorkflowNode:
+      oneOf:
+      - $ref: '#/components/schemas/SimplifiedSignupTriggerWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedEventTriggerWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedContactPropertyTriggerWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedAddToListTriggerWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedBlankTriggerWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedAudienceFilterWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedTimerActionWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedSendEmailActionWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedExitActionWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedBranchWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedExperimentBranchWorkflowNode'
+      - $ref: '#/components/schemas/SimplifiedVariantWorkflowNode'
+      discriminator:
+        propertyName: typeName
+    UpdateWorkflowPropertiesRequest:
       type: object
+      description: At least one property must be provided.
       properties:
+        expectedRevisionId:
+          $ref: '#/components/schemas/WorkflowExpectedRevisionId'
         name:
           type: string
-          description: The name of the workflow.
+          description: The updated workflow name.
         description:
           type: string
-          description: The description of the workflow.
-        mailingListId:
-          type:
-          - string
-          - 'null'
-          description: The ID of a mailing list the workflow sends to. After creation, the mailing list can be changed with the `/v1/workflows/{workflowId}/mailing-list` endpoint.
+          description: The updated workflow description.
       required:
-      - name
+      - expectedRevisionId
+      anyOf:
+      - required:
+        - name
+      - required:
+        - description
       additionalProperties: false
-    SimplifiedExperimentBranchWorkflowNode:
+    WorkflowTimerUnit:
+      type: string
+      enum:
+      - m
+      - h
+      - d
+      description: The unit of time for the timer action node. m = minutes, h = hours, d = days.
+    ListWorkflowsResponse:
       type: object
       properties:
-        typeName:
-          type: string
-          enum:
-          - ExperimentBranchNode
-        nextNodeIds:
-          $ref: '#/components/schemas/WorkflowNextNodeIds'
-        samplingRate:
-          type: number
-          description: The percentage of contacts that will be sent to variant branches, between `0` and `100`. The remaining percentage will be sent to the control branch.
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowSummary'
       required:
-      - typeName
-      - nextNodeIds
-      - samplingRate
-      additionalProperties: false
+      - pagination
+      - data
+      examples:
+      - pagination:
+          totalResults: 45
+          returnedResults: 20
+          perPage: 20
+          totalPages: 3
+          nextCursor: clp9k2m4n6p8q0r2s4t6u8v0
+          nextPage: https://app.loops.so/api/v1/campaign-groups?cursor=clp9k2m4n6p8q0r2s4t6u8v0&perPage=20
+        data:
+        - id: clw1a3b5c7d9e1f3g5h7i9j1
+          name: Welcome series
+          createdAt: 2025-06-29 07:47:39.370000+00:00
+          updatedAt: 2025-06-29 07:47:39.370000+00:00
     WorkflowContactPropertyQuery:
       type: object
       description: Define the contact property change that triggers the workflow. In update requests, `key` must resolve to an existing contact property that is available for Contact Updated triggers. Hidden or unsupported fields, such as `createdAt`, `notes`, and computed contact properties, are rejected.
@@ -458,6 +518,110 @@ components:
       - key
       - is
       - was
+    ChangeWorkflowMailingListResponse:
+      oneOf:
+      - $ref: '#/components/schemas/WorkflowMailingListPreview'
+      - $ref: '#/components/schemas/WorkflowMailingListUpdatedResponse'
+    WorkflowContactPropertyComparison:
+      type: object
+      description: For Contact Updated triggers, the API validates `operator` against the selected contact property's type and the side of the comparison. The `was` comparison can use any operator supported by the selected property type. The `is` comparison uses the same operators, except number and boolean properties cannot use `empty`. String properties support `any`, `equal`, `not_equal`, `contains`, `not_contains`, `empty`, and `not_empty`. Number properties support `any`, `greater_than`, `less_than`, `numeric_equal`, `numeric_not_equal`, `empty`, and `not_empty`. Boolean properties support `any`, `true`, `false`, `empty`, and `not_empty`. Date properties support `any`, `empty`, `not_empty`, `after`, `before`, and `between`.
+      properties:
+        value:
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+        operator:
+          type: string
+          description: The comparison operator. It must be valid for the selected contact property's type and for the `is` or `was` side of the comparison. Number and boolean properties allow `empty` on `was`, but not on `is`.
+          enum:
+          - any
+          - contains
+          - not_contains
+          - empty
+          - not_empty
+          - equal
+          - not_equal
+          - greater_than
+          - less_than
+          - 'true'
+          - 'false'
+          - numeric_equal
+          - numeric_not_equal
+          - after
+          - before
+          - between
+      required:
+      - value
+      - operator
+    SimplifiedExitActionWorkflowNode:
+      type: object
+      properties:
+        typeName:
+          type: string
+          enum:
+          - ExitAction
+        nextNodeIds:
+          $ref: '#/components/schemas/WorkflowNextNodeIds'
+      required:
+      - typeName
+      - nextNodeIds
+      additionalProperties: false
+    WorkflowReEligible:
+      type: boolean
+      description: If `true`, the contacts will be able to enter this workflow every time the trigger is matched. If `false`, contacts will only ever enter this workflow once. Matches the "Trigger frequency" option in the UI.
+    WorkflowQueuedContactPolicy:
+      type: string
+      enum:
+      - fail
+      - discard
+      default: fail
+      description: '`fail` returns queued-contact impact instead of mutating. `discard` confirms that matching queued contacts should be discarded. Defaults to `fail` when omitted.'
+    SimplifiedSendEmailActionWorkflowNode:
+      type: object
+      properties:
+        typeName:
+          type: string
+          enum:
+          - SendEmailAction
+        nextNodeIds:
+          $ref: '#/components/schemas/WorkflowNextNodeIds'
+        emailMessageId:
+          type:
+          - string
+          - 'null'
+          description: The ID of the email message to send. To edit this email, use the `POST /v1/email-messages/{emailMessageId}` endpoint.
+        subject:
+          type: string
+          description: The subject of the email message (reference only).
+      required:
+      - typeName
+      - nextNodeIds
+      - emailMessageId
+      - subject
+      additionalProperties: false
+      examples:
+      - typeName: SendEmailAction
+        nextNodeIds: []
+        emailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
+        subject: Welcome to Acme!
+    SimplifiedExperimentBranchWorkflowNode:
+      type: object
+      properties:
+        typeName:
+          type: string
+          enum:
+          - ExperimentBranchNode
+        nextNodeIds:
+          $ref: '#/components/schemas/WorkflowNextNodeIds'
+        samplingRate:
+          type: number
+          description: The percentage of contacts that will be sent to variant branches, between `0` and `100`. The remaining percentage will be sent to the control branch.
+      required:
+      - typeName
+      - nextNodeIds
+      - samplingRate
+      additionalProperties: false
     WorkflowSummary:
       type: object
       properties:
@@ -493,6 +657,109 @@ components:
         name: Welcome series
         createdAt: 2025-06-29 07:47:39.370000+00:00
         updatedAt: 2025-06-29 07:47:39.370000+00:00
+    SimplifiedEventTriggerWorkflowNode:
+      type: object
+      properties:
+        typeName:
+          type: string
+          enum:
+          - EventTrigger
+        nextNodeIds:
+          $ref: '#/components/schemas/WorkflowNextNodeIds'
+        eventName:
+          type:
+          - string
+          - 'null'
+          description: The name of the event that triggers the workflow.
+        reEligible:
+          $ref: '#/components/schemas/WorkflowReEligible'
+      required:
+      - typeName
+      - nextNodeIds
+      - eventName
+      - reEligible
+      additionalProperties: false
+      examples:
+      - typeName: EventTrigger
+        nextNodeIds:
+        - cln1a3b5c7d9e1f3g5h7i9j1
+        eventName: signup
+        reEligible: false
+    WorkflowRevisionId:
+      type:
+      - string
+      description: The current workflow revision token. Pass the latest value as `expectedRevisionId` on the next workflow mutation.
+    ChangeWorkflowMailingListRequest:
+      type: object
+      properties:
+        expectedRevisionId:
+          $ref: '#/components/schemas/WorkflowExpectedRevisionId'
+        mailingListId:
+          type:
+          - string
+          - 'null'
+          description: 'The mailing list to use for the workflow. When assigning a mailing list, queued contacts excluded by the new list can return `queuedContactsFound`; retry with `queuedContactPolicy: "discard"` to apply the change and discard those contacts. Use `null` to clear the workflow mailing list; clearing does not discard queued contacts.'
+        dryRun:
+          type: boolean
+          description: If `true`, the request will be validated but the workflow will not be modified.
+        queuedContactPolicy:
+          $ref: '#/components/schemas/WorkflowQueuedContactPolicy'
+      required:
+      - expectedRevisionId
+      - mailingListId
+      additionalProperties: false
+    SimplifiedTimerActionWorkflowNode:
+      type: object
+      properties:
+        typeName:
+          type: string
+          enum:
+          - TimerAction
+        nextNodeIds:
+          $ref: '#/components/schemas/WorkflowNextNodeIds'
+        amount:
+          $ref: '#/components/schemas/WorkflowTimerAmount'
+        unit:
+          $ref: '#/components/schemas/WorkflowTimerUnit'
+      required:
+      - typeName
+      - nextNodeIds
+      - amount
+      - unit
+      additionalProperties: false
+      examples:
+      - typeName: TimerAction
+        nextNodeIds:
+        - cln1a3b5c7d9e1f3g5h7i9j1
+        amount: 2
+        unit: d
+    SimplifiedSignupTriggerWorkflowNode:
+      type: object
+      properties:
+        typeName:
+          type: string
+          enum:
+          - SignupTrigger
+        nextNodeIds:
+          $ref: '#/components/schemas/WorkflowNextNodeIds'
+      required:
+      - typeName
+      - nextNodeIds
+      additionalProperties: false
+    WorkflowFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Workflow not found.
+    WorkflowNextNodeIds:
+      type: array
+      items:
+        type: string
+      description: The IDs of the nodes that are downstream of this node.
     WorkflowMailingListUpdatedResponse:
       type: object
       properties:
@@ -517,42 +784,6 @@ components:
       - workflowRevisionId
       - queuedContactCount
       - workflow
-    SimplifiedBlankTriggerWorkflowNode:
-      type: object
-      properties:
-        typeName:
-          type: string
-          enum:
-          - BlankTrigger
-        nextNodeIds:
-          $ref: '#/components/schemas/WorkflowNextNodeIds'
-      required:
-      - typeName
-      - nextNodeIds
-      additionalProperties: false
-    ChangeWorkflowMailingListRequest:
-      type: object
-      properties:
-        expectedRevisionId:
-          $ref: '#/components/schemas/WorkflowExpectedRevisionId'
-        mailingListId:
-          type:
-          - string
-          - 'null'
-          description: 'The mailing list to use for the workflow. When assigning a mailing list, queued contacts excluded by the new list can return `queuedContactsFound`; retry with `queuedContactPolicy: "discard"` to apply the change and discard those contacts. Use `null` to clear the workflow mailing list; clearing does not discard queued contacts.'
-        dryRun:
-          type: boolean
-          description: If `true`, the request will be validated but the workflow will not be modified.
-        queuedContactPolicy:
-          $ref: '#/components/schemas/WorkflowQueuedContactPolicy'
-      required:
-      - expectedRevisionId
-      - mailingListId
-      additionalProperties: false
-    WorkflowRevisionId:
-      type:
-      - string
-      description: The current workflow revision token. Pass the latest value as `expectedRevisionId` on the next workflow mutation.
     SimplifiedBranchWorkflowNode:
       type: object
       properties:
@@ -566,62 +797,6 @@ components:
       - typeName
       - nextNodeIds
       additionalProperties: false
-    WorkflowContactPropertyComparison:
-      type: object
-      description: For Contact Updated triggers, the API validates `operator` against the selected contact property's type and the side of the comparison. The `was` comparison can use any operator supported by the selected property type. The `is` comparison uses the same operators, except number and boolean properties cannot use `empty`. String properties support `any`, `equal`, `not_equal`, `contains`, `not_contains`, `empty`, and `not_empty`. Number properties support `any`, `greater_than`, `less_than`, `numeric_equal`, `numeric_not_equal`, `empty`, and `not_empty`. Boolean properties support `any`, `true`, `false`, `empty`, and `not_empty`. Date properties support `any`, `empty`, `not_empty`, `after`, `before`, and `between`.
-      properties:
-        value:
-          oneOf:
-          - type: string
-          - type: number
-          - type: boolean
-        operator:
-          type: string
-          description: The comparison operator. It must be valid for the selected contact property's type and for the `is` or `was` side of the comparison. Number and boolean properties allow `empty` on `was`, but not on `is`.
-          enum:
-          - any
-          - contains
-          - not_contains
-          - empty
-          - not_empty
-          - equal
-          - not_equal
-          - greater_than
-          - less_than
-          - 'true'
-          - 'false'
-          - numeric_equal
-          - numeric_not_equal
-          - after
-          - before
-          - between
-      required:
-      - value
-      - operator
-    SimplifiedVariantWorkflowNode:
-      type: object
-      properties:
-        typeName:
-          type: string
-          enum:
-          - VariantNode
-        nextNodeIds:
-          $ref: '#/components/schemas/WorkflowNextNodeIds'
-        isControl:
-          type: boolean
-          description: Whether this is the control variant of an experiment.
-      required:
-      - typeName
-      - nextNodeIds
-      - isControl
-      additionalProperties: false
-    WorkflowQueuedContactPolicy:
-      type: string
-      enum:
-      - fail
-      - discard
-      default: fail
-      description: '`fail` returns queued-contact impact instead of mutating. `discard` confirms that matching queued contacts should be discarded. Defaults to `fail` when omitted.'
     SimplifiedWorkflow:
       type: object
       properties:
@@ -686,181 +861,6 @@ components:
             nextNodeIds: []
             emailMessageId: cle5f7g9h1i3j5k7l9m1n3p5
             subject: Welcome to Acme!
-    SimplifiedEventTriggerWorkflowNode:
-      type: object
-      properties:
-        typeName:
-          type: string
-          enum:
-          - EventTrigger
-        nextNodeIds:
-          $ref: '#/components/schemas/WorkflowNextNodeIds'
-        eventName:
-          type:
-          - string
-          - 'null'
-          description: The name of the event that triggers the workflow.
-        reEligible:
-          $ref: '#/components/schemas/WorkflowReEligible'
-      required:
-      - typeName
-      - nextNodeIds
-      - eventName
-      - reEligible
-      additionalProperties: false
-      examples:
-      - typeName: EventTrigger
-        nextNodeIds:
-        - cln1a3b5c7d9e1f3g5h7i9j1
-        eventName: signup
-        reEligible: false
-    WorkflowNextNodeIds:
-      type: array
-      items:
-        type: string
-      description: The IDs of the nodes that are downstream of this node.
-    WorkflowFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Workflow not found.
-    WorkflowTimerUnit:
-      type: string
-      enum:
-      - m
-      - h
-      - d
-      description: The unit of time for the timer action node. m = minutes, h = hours, d = days.
-    UpdateWorkflowPropertiesRequest:
-      type: object
-      description: At least one property must be provided.
-      properties:
-        expectedRevisionId:
-          $ref: '#/components/schemas/WorkflowExpectedRevisionId'
-        name:
-          type: string
-          description: The updated workflow name.
-        description:
-          type: string
-          description: The updated workflow description.
-      required:
-      - expectedRevisionId
-      anyOf:
-      - required:
-        - name
-      - required:
-        - description
-      additionalProperties: false
-    ListWorkflowsResponse:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/WorkflowSummary'
-      required:
-      - pagination
-      - data
-      examples:
-      - pagination:
-          totalResults: 45
-          returnedResults: 20
-          perPage: 20
-          totalPages: 3
-          nextCursor: clp9k2m4n6p8q0r2s4t6u8v0
-          nextPage: https://app.loops.so/api/v1/campaign-groups?cursor=clp9k2m4n6p8q0r2s4t6u8v0&perPage=20
-        data:
-        - id: clw1a3b5c7d9e1f3g5h7i9j1
-          name: Welcome series
-          createdAt: 2025-06-29 07:47:39.370000+00:00
-          updatedAt: 2025-06-29 07:47:39.370000+00:00
-    SimplifiedExitActionWorkflowNode:
-      type: object
-      properties:
-        typeName:
-          type: string
-          enum:
-          - ExitAction
-        nextNodeIds:
-          $ref: '#/components/schemas/WorkflowNextNodeIds'
-      required:
-      - typeName
-      - nextNodeIds
-      additionalProperties: false
-    SimplifiedAddToListTriggerWorkflowNode:
-      type: object
-      properties:
-        typeName:
-          type: string
-          enum:
-          - AddToListTrigger
-        nextNodeIds:
-          $ref: '#/components/schemas/WorkflowNextNodeIds'
-        mailingListId:
-          type:
-          - string
-          - 'null'
-          description: The ID of the mailing list that triggers the workflow.
-        reEligible:
-          $ref: '#/components/schemas/WorkflowReEligible'
-      required:
-      - typeName
-      - nextNodeIds
-      - mailingListId
-      - reEligible
-      additionalProperties: false
-    NullableWorkflowRevisionId:
-      type:
-      - string
-      - 'null'
-      description: The current workflow revision token. Pass the latest value as `expectedRevisionId` on the next workflow mutation. Will be `null` for workflows without a revision token yet.
-    WorkflowMailingListPreview:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - dryRun
-          - queuedContactsFound
-        mailingListId:
-          type:
-          - string
-          - 'null'
-        queuedContactCount:
-          type: number
-          description: The number of queued contacts that would be removed from the workflow due to the mailing list changing.
-      required:
-      - status
-      - mailingListId
-      - queuedContactCount
-    WorkflowExpectedRevisionId:
-      type:
-      - string
-      - 'null'
-      description: The workflow revision token returned by the latest workflow read or mutation. Older workflows may return `null` before their first revision-aware mutation; pass `null` back as `expectedRevisionId` in that case. If the token is stale, the API returns a `409 Conflict` error.
-    SimplifiedAudienceFilterWorkflowNode:
-      type: object
-      properties:
-        typeName:
-          type: string
-          enum:
-          - AudienceFilter
-        nextNodeIds:
-          $ref: '#/components/schemas/WorkflowNextNodeIds'
-      required:
-      - typeName
-      - nextNodeIds
-      additionalProperties: false
-    ChangeWorkflowMailingListResponse:
-      oneOf:
-      - $ref: '#/components/schemas/WorkflowMailingListPreview'
-      - $ref: '#/components/schemas/WorkflowMailingListUpdatedResponse'
   securitySchemes:
     apiKey:
       type: http

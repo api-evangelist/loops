@@ -287,23 +287,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    ContactSuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-        id:
-          type: string
-          examples:
-          - clh3k9m2p4q6r8s0t2v4x6z8
-      required:
-      - success
-      - id
-      examples:
-      - success: true
-        id: clh3k9m2p4q6r8s0t2v4x6z8
     ContactDeleteResponse:
       type: object
       properties:
@@ -327,6 +310,206 @@ components:
       examples:
       - cm06f5v0e45nf0ml5754o9cix: true
         cm16k73gq014h0mmj5b6jdi9r: false
+    ContactRequest:
+      allOf:
+      - $ref: '#/components/schemas/ContactFields'
+      - type: object
+        required:
+        - email
+    ContactSuppressionRemovalQuota:
+      type: object
+      properties:
+        limit:
+          type: number
+          description: The number of suppression removals allowed in a rolling 30 day period.
+          examples:
+          - 100
+        remaining:
+          type: number
+          description: The remaining number of suppression removals left in the current 30 day period.
+          examples:
+          - 10
+      required:
+      - limit
+      - remaining
+    ContactUpdateRequest:
+      allOf:
+      - $ref: '#/components/schemas/ContactFields'
+      - type: object
+        properties:
+          email:
+            type: string
+            description: The contact's email address. **Required if `userId` is not provided.**
+          subscribed:
+            type: boolean
+            description: Whether the contact will receive campaign and workflow emails. We recommend leaving this field out of your update requests unless you specifically want to unsubscribe (`false`) or re-subscribe (`true`) a contact. All new contacts are subscribed by default.
+          userId:
+            type: string
+            description: The contact's unique user ID. **Required if `email` is not provided.**
+        anyOf:
+        - required:
+          - email
+        - required:
+          - userId
+      additionalProperties:
+        oneOf:
+        - type: string
+        - type: number
+        - type: boolean
+      examples:
+      - email: alex@company.com
+        firstName: Alex
+        lastName: Rivera
+        subscribed: true
+        userGroup: customers
+        userId: usr_7f8e9d0c1b2a
+        mailingLists:
+          clm2k8j4h6g0f8d6s4a2b0z8: true
+        favoriteColor: blue
+    ContactFields:
+      type: object
+      properties:
+        email:
+          type: string
+          examples:
+          - alex@company.com
+          description: The contact's email address.
+        firstName:
+          type: string
+          description: The contact's first name.
+          examples:
+          - Alex
+        lastName:
+          type: string
+          description: The contact's last name.
+          examples:
+          - Rivera
+        source:
+          type: string
+          description: A custom source value to replace the default “API”.
+          examples:
+          - API
+        subscribed:
+          type: boolean
+          description: Whether the contact will receive campaign and workflow emails. All new contacts are subscribed by default.
+        userGroup:
+          type: string
+          description: The contact's user group.
+          examples:
+          - customers
+        userId:
+          type: string
+          description: A unique user ID (for example, from an external application).
+          examples:
+          - usr_7f8e9d0c1b2a
+        mailingLists:
+          $ref: '#/components/schemas/MailingListSubscriptions'
+      additionalProperties:
+        oneOf:
+        - type: string
+        - type: number
+        - type: boolean
+      examples:
+      - email: alex@company.com
+        firstName: Alex
+        lastName: Rivera
+        subscribed: true
+        userGroup: customers
+        userId: usr_7f8e9d0c1b2a
+        mailingLists:
+          clm2k8j4h6g0f8d6s4a2b0z8: true
+        favoriteColor: blue
+    ContactFailureResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+          examples:
+          - Invalid email address.
+      required:
+      - success
+      - message
+      examples:
+      - success: false
+        message: Invalid email address.
+    ContactSuppressionStatusResponse:
+      type: object
+      properties:
+        contact:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The contact's Loops ID.
+            email:
+              type: string
+              description: The contact's email address.
+            userId:
+              type:
+              - string
+              - 'null'
+              description: The contact's unique user ID.
+          required:
+          - id
+          - email
+          - userId
+        isSuppressed:
+          type: boolean
+          description: Whether the contact is suppressed.
+        removalQuota:
+          $ref: '#/components/schemas/ContactSuppressionRemovalQuota'
+          description: The removal quota for the contact.
+      required:
+      - contact
+      - isSuppressed
+      - removalQuota
+      examples:
+      - contact:
+          id: clh3k9m2p4q6r8s0t2v4x6z8
+          email: alex@company.com
+          userId: usr_7f8e9d0c1b2a
+        isSuppressed: false
+        removalQuota:
+          limit: 5
+          remaining: 5
+    ContactDeleteRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          examples:
+          - alex@company.com
+        userId:
+          type: string
+          examples:
+          - usr_7f8e9d0c1b2a
+      required:
+      - email
+      - userId
+      examples:
+      - email: alex@company.com
+        userId: usr_7f8e9d0c1b2a
+    ContactSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+        id:
+          type: string
+          examples:
+          - clh3k9m2p4q6r8s0t2v4x6z8
+      required:
+      - success
+      - id
+      examples:
+      - success: true
+        id: clh3k9m2p4q6r8s0t2v4x6z8
     Contact:
       type: object
       properties:
@@ -405,22 +588,6 @@ components:
         mailingLists:
           clm2k8j4h6g0f8d6s4a2b0z8: true
         optInStatus: accepted
-    ContactSuppressionRemovalQuota:
-      type: object
-      properties:
-        limit:
-          type: number
-          description: The number of suppression removals allowed in a rolling 30 day period.
-          examples:
-          - 100
-        remaining:
-          type: number
-          description: The remaining number of suppression removals left in the current 30 day period.
-          examples:
-          - 10
-      required:
-      - limit
-      - remaining
     ContactSuppressionRemoveResponse:
       type: object
       properties:
@@ -439,173 +606,6 @@ components:
       - success
       - message
       - removalQuota
-    ContactSuppressionStatusResponse:
-      type: object
-      properties:
-        contact:
-          type: object
-          properties:
-            id:
-              type: string
-              description: The contact's Loops ID.
-            email:
-              type: string
-              description: The contact's email address.
-            userId:
-              type:
-              - string
-              - 'null'
-              description: The contact's unique user ID.
-          required:
-          - id
-          - email
-          - userId
-        isSuppressed:
-          type: boolean
-          description: Whether the contact is suppressed.
-        removalQuota:
-          $ref: '#/components/schemas/ContactSuppressionRemovalQuota'
-          description: The removal quota for the contact.
-      required:
-      - contact
-      - isSuppressed
-      - removalQuota
-      examples:
-      - contact:
-          id: clh3k9m2p4q6r8s0t2v4x6z8
-          email: alex@company.com
-          userId: usr_7f8e9d0c1b2a
-        isSuppressed: false
-        removalQuota:
-          limit: 5
-          remaining: 5
-    ContactDeleteRequest:
-      type: object
-      properties:
-        email:
-          type: string
-          examples:
-          - alex@company.com
-        userId:
-          type: string
-          examples:
-          - usr_7f8e9d0c1b2a
-      required:
-      - email
-      - userId
-      examples:
-      - email: alex@company.com
-        userId: usr_7f8e9d0c1b2a
-    ContactFields:
-      type: object
-      properties:
-        email:
-          type: string
-          examples:
-          - alex@company.com
-          description: The contact's email address.
-        firstName:
-          type: string
-          description: The contact's first name.
-          examples:
-          - Alex
-        lastName:
-          type: string
-          description: The contact's last name.
-          examples:
-          - Rivera
-        source:
-          type: string
-          description: A custom source value to replace the default “API”.
-          examples:
-          - API
-        subscribed:
-          type: boolean
-          description: Whether the contact will receive campaign and workflow emails. All new contacts are subscribed by default.
-        userGroup:
-          type: string
-          description: The contact's user group.
-          examples:
-          - customers
-        userId:
-          type: string
-          description: A unique user ID (for example, from an external application).
-          examples:
-          - usr_7f8e9d0c1b2a
-        mailingLists:
-          $ref: '#/components/schemas/MailingListSubscriptions'
-      additionalProperties:
-        oneOf:
-        - type: string
-        - type: number
-        - type: boolean
-      examples:
-      - email: alex@company.com
-        firstName: Alex
-        lastName: Rivera
-        subscribed: true
-        userGroup: customers
-        userId: usr_7f8e9d0c1b2a
-        mailingLists:
-          clm2k8j4h6g0f8d6s4a2b0z8: true
-        favoriteColor: blue
-    ContactRequest:
-      allOf:
-      - $ref: '#/components/schemas/ContactFields'
-      - type: object
-        required:
-        - email
-    ContactFailureResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-          examples:
-          - Invalid email address.
-      required:
-      - success
-      - message
-      examples:
-      - success: false
-        message: Invalid email address.
-    ContactUpdateRequest:
-      allOf:
-      - $ref: '#/components/schemas/ContactFields'
-      - type: object
-        properties:
-          email:
-            type: string
-            description: The contact's email address. **Required if `userId` is not provided.**
-          subscribed:
-            type: boolean
-            description: Whether the contact will receive campaign and workflow emails. We recommend leaving this field out of your update requests unless you specifically want to unsubscribe (`false`) or re-subscribe (`true`) a contact. All new contacts are subscribed by default.
-          userId:
-            type: string
-            description: The contact's unique user ID. **Required if `email` is not provided.**
-        anyOf:
-        - required:
-          - email
-        - required:
-          - userId
-      additionalProperties:
-        oneOf:
-        - type: string
-        - type: number
-        - type: boolean
-      examples:
-      - email: alex@company.com
-        firstName: Alex
-        lastName: Rivera
-        subscribed: true
-        userGroup: customers
-        userId: usr_7f8e9d0c1b2a
-        mailingLists:
-          clm2k8j4h6g0f8d6s4a2b0z8: true
-        favoriteColor: blue
   securitySchemes:
     apiKey:
       type: http

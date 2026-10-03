@@ -106,25 +106,23 @@ paths:
       - apiKey: []
 components:
   schemas:
-    CompleteUploadResponse:
+    CreateUploadRequest:
       type: object
       properties:
-        emailAssetId:
+        contentType:
           type: string
+          description: The MIME type of the file to upload. Supported types are `image/jpeg`, `image/png`, `image/gif` and `image/webp`.
           examples:
-          - cla3s5s7e9t1i3d5f7g9h1j3
-          description: The ID of the created asset.
-        finalUrl:
-          type: string
-          description: The public URL of the uploaded asset.
+          - image/png
+        contentLength:
+          type: integer
+          description: The size of the file in bytes. Must be a positive integer no greater than 4,000,000 bytes.
           examples:
-          - https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
+          - 102400
       required:
-      - emailAssetId
-      - finalUrl
-      examples:
-      - emailAssetId: cla3s5s7e9t1i3d5f7g9h1j3
-        finalUrl: https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
+      - contentType
+      - contentLength
+      additionalProperties: false
     CreateUploadResponse:
       type: object
       properties:
@@ -144,23 +142,23 @@ components:
       examples:
       - emailAssetId: cla3s5s7e9t1i3d5f7g9h1j3
         presignedUrl: https://loops-assets.s3.amazonaws.com/uploads/cla3s5s7e9t1i3d5f7g9h1j3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...
-    CreateUploadRequest:
+    UploadLimitExceededFailureResponse:
       type: object
       properties:
-        contentType:
+        message:
           type: string
-          description: The MIME type of the file to upload. Supported types are `image/jpeg`, `image/png`, `image/gif` and `image/webp`.
           examples:
-          - image/png
-        contentLength:
+          - 'Upload limit exceeded: max 50 uploads per 24 hours. Please contact support if you need to increase your upload limit.'
+        maxUploads:
           type: integer
-          description: The size of the file in bytes. Must be a positive integer no greater than 4,000,000 bytes.
+          description: The maximum number of uploads allowed per window.
           examples:
-          - 102400
-      required:
-      - contentType
-      - contentLength
-      additionalProperties: false
+          - 50
+        windowHours:
+          type: integer
+          description: The number of hours in the upload limit window.
+          examples:
+          - 24
     UploadFailureResponse:
       type: object
       properties:
@@ -186,23 +184,25 @@ components:
         - image/gif
         - image/webp
         maxBytes: 4000000
-    UploadLimitExceededFailureResponse:
+    CompleteUploadResponse:
       type: object
       properties:
-        message:
+        emailAssetId:
           type: string
           examples:
-          - 'Upload limit exceeded: max 50 uploads per 24 hours. Please contact support if you need to increase your upload limit.'
-        maxUploads:
-          type: integer
-          description: The maximum number of uploads allowed per window.
+          - cla3s5s7e9t1i3d5f7g9h1j3
+          description: The ID of the created asset.
+        finalUrl:
+          type: string
+          description: The public URL of the uploaded asset.
           examples:
-          - 50
-        windowHours:
-          type: integer
-          description: The number of hours in the upload limit window.
-          examples:
-          - 24
+          - https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
+      required:
+      - emailAssetId
+      - finalUrl
+      examples:
+      - emailAssetId: cla3s5s7e9t1i3d5f7g9h1j3
+        finalUrl: https://assets.loops.so/cla3s5s7e9t1i3d5f7g9h1j3/logo.png
   securitySchemes:
     apiKey:
       type: http
