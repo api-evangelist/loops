@@ -113,6 +113,8 @@ apis:
   humanURL: https://loops.so/docs/api-reference/list-campaign-groups
   baseURL: https://app.loops.so/api/v1
   tags:
+  - Campaign Groups
+  tags_raw:
   - Campaign groups
   properties:
   - type: OpenAPI
