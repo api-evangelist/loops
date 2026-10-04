@@ -241,6 +241,17 @@ components:
       examples:
       - name: Newsletters
         description: Monthly newsletter campaigns
+    GroupFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+          - Group not found.
+      required:
+      - message
+      examples:
+      - message: Group not found.
     ListGroupsResponse:
       type: object
       properties:
@@ -272,17 +283,17 @@ components:
           description: ''
           createdAt: 2025-06-30 12:00:00+00:00
           updatedAt: 2025-06-30 12:00:00+00:00
-    GroupFailureResponse:
+    UpdateGroupRequest:
       type: object
+      description: At least one field must be provided.
       properties:
-        message:
+        name:
           type: string
-          examples:
-          - Group not found.
-      required:
-      - message
-      examples:
-      - message: Group not found.
+          description: The group name. Cannot be the reserved name "Unsorted".
+        description:
+          type: string
+          description: A description for the group.
+      additionalProperties: false
     GroupResponse:
       type: object
       properties:
@@ -325,17 +336,6 @@ components:
         description: Top of funnel campaigns
         createdAt: 2025-06-29 07:47:39.370000+00:00
         updatedAt: 2025-06-29 07:47:39.370000+00:00
-    UpdateGroupRequest:
-      type: object
-      description: At least one field must be provided.
-      properties:
-        name:
-          type: string
-          description: The group name. Cannot be the reserved name "Unsorted".
-        description:
-          type: string
-          description: A description for the group.
-      additionalProperties: false
   securitySchemes:
     apiKey:
       type: http

@@ -138,13 +138,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    EventPatternFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
     WorkflowEventProperty:
       type: object
       properties:
@@ -160,6 +153,13 @@ components:
       required:
       - name
       - type
+    EventPatternFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
     EventPatternSummary:
       type: object
       properties:

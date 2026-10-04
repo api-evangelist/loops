@@ -308,6 +308,115 @@ components:
           planName: Pro
         dataVariables:
           loginUrl: https://app.company.com/login
+    UpdateEmailMessageRequest:
+      type: object
+      properties:
+        expectedRevisionId:
+          type: string
+          description: The `contentRevisionId` you last fetched, or the `emailMessageContentRevisionId` you received when creating the campaign.
+        subject:
+          type: string
+        previewText:
+          type: string
+        fromName:
+          type: string
+        fromEmail:
+          type: string
+          description: The email sender email address, without the team's sending domain.
+          examples:
+          - hello
+        replyToEmail:
+          type: string
+          description: Reply-to email. Must be empty or a valid email address.
+        ccEmail:
+          type: string
+          description: CC email address. Requires the team to have CC/BCC enabled.
+        bccEmail:
+          type: string
+          description: BCC email address. Requires the team to have CC/BCC enabled.
+        languageCode:
+          type: string
+          description: ISO 639-1 language code for the email, e.g. `en` or `fr`.
+        emailFormat:
+          type: string
+          enum:
+          - styled
+          - plain
+          description: The rendering format of the email.
+        lmx:
+          type: string
+          description: The email body serialized as LMX. Styles must be embedded in the LMX `<Style />` tag.
+        contactPropertiesFallbacks:
+          type: object
+          description: 'Fallback values for contact properties, keyed by property name. Per-key merge: a string value sets the fallback, a null value deletes it, and keys omitted from the map are left unchanged.'
+          additionalProperties:
+            type:
+            - string
+            - 'null'
+        eventPropertiesFallbacks:
+          type: object
+          description: 'Fallback values for event properties, keyed by property name. Per-key merge: a string value sets the fallback, a null value deletes it, and keys omitted from the map are left unchanged.'
+          additionalProperties:
+            type:
+            - string
+            - 'null'
+        dataVariablesFallbacks:
+          type: object
+          description: 'Fallback values for data variables, keyed by variable name. Per-key merge: a string value sets the fallback, a null value deletes it, and keys omitted from the map are left unchanged.'
+          additionalProperties:
+            type:
+            - string
+            - 'null'
+      additionalProperties: false
+      examples:
+      - expectedRevisionId: clrev1s10n2i3d4e5f6g7h8
+        subject: Spring product updates
+        previewText: See what's new this season
+        fromName: Acme Team
+        fromEmail: hello
+        replyToEmail: support@company.com
+        emailFormat: styled
+        lmx: <Paragraph>Hello, {firstName}!</Paragraph>
+        contactPropertiesFallbacks:
+          firstName: there
+    EmailMessageFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Email message not found.
+    EmailMessageGuardianResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          description: Validation errors. These must be resolved before the email can be published.
+          items:
+            $ref: '#/components/schemas/GuardianRule'
+        warnings:
+          type: array
+          description: Validation warnings. These are advisory and do not block publishing.
+          items:
+            $ref: '#/components/schemas/GuardianRule'
+      required:
+      - errors
+      - warnings
+      example:
+        errors:
+        - rule: missingButtonHrefs
+          title: Missing button link
+          description: Buttons won't work without href value
+          items:
+          - label: Click here
+        - rule: missingLinkHrefs
+          title: Missing text link
+          description: Links won't work without href value
+          items:
+          - label: See more
+        warnings: []
     GuardianRule:
       type: object
       properties:
@@ -360,6 +469,18 @@ components:
       - title
       - description
       - items
+    EmailMessagePreviewResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the email message the preview was sent for.
+          examples:
+          - cle5f7g9h1i3j5k7l9m1n3p5
+      required:
+      - id
+      examples:
+      - id: cle5f7g9h1i3j5k7l9m1n3p5
     EmailMessageResponse:
       type: object
       properties:
@@ -493,127 +614,6 @@ components:
         lmx: <Paragraph>Hello, {firstName}!</Paragraph>
         contentRevisionId: clrev1s10n2i3d4e5f6g7h8
         updatedAt: 2025-06-29 07:47:39.370000+00:00
-    UpdateEmailMessageRequest:
-      type: object
-      properties:
-        expectedRevisionId:
-          type: string
-          description: The `contentRevisionId` you last fetched, or the `emailMessageContentRevisionId` you received when creating the campaign.
-        subject:
-          type: string
-        previewText:
-          type: string
-        fromName:
-          type: string
-        fromEmail:
-          type: string
-          description: The email sender email address, without the team's sending domain.
-          examples:
-          - hello
-        replyToEmail:
-          type: string
-          description: Reply-to email. Must be empty or a valid email address.
-        ccEmail:
-          type: string
-          description: CC email address. Requires the team to have CC/BCC enabled.
-        bccEmail:
-          type: string
-          description: BCC email address. Requires the team to have CC/BCC enabled.
-        languageCode:
-          type: string
-          description: ISO 639-1 language code for the email, e.g. `en` or `fr`.
-        emailFormat:
-          type: string
-          enum:
-          - styled
-          - plain
-          description: The rendering format of the email.
-        lmx:
-          type: string
-          description: The email body serialized as LMX. Styles must be embedded in the LMX `<Style />` tag.
-        contactPropertiesFallbacks:
-          type: object
-          description: 'Fallback values for contact properties, keyed by property name. Per-key merge: a string value sets the fallback, a null value deletes it, and keys omitted from the map are left unchanged.'
-          additionalProperties:
-            type:
-            - string
-            - 'null'
-        eventPropertiesFallbacks:
-          type: object
-          description: 'Fallback values for event properties, keyed by property name. Per-key merge: a string value sets the fallback, a null value deletes it, and keys omitted from the map are left unchanged.'
-          additionalProperties:
-            type:
-            - string
-            - 'null'
-        dataVariablesFallbacks:
-          type: object
-          description: 'Fallback values for data variables, keyed by variable name. Per-key merge: a string value sets the fallback, a null value deletes it, and keys omitted from the map are left unchanged.'
-          additionalProperties:
-            type:
-            - string
-            - 'null'
-      additionalProperties: false
-      examples:
-      - expectedRevisionId: clrev1s10n2i3d4e5f6g7h8
-        subject: Spring product updates
-        previewText: See what's new this season
-        fromName: Acme Team
-        fromEmail: hello
-        replyToEmail: support@company.com
-        emailFormat: styled
-        lmx: <Paragraph>Hello, {firstName}!</Paragraph>
-        contactPropertiesFallbacks:
-          firstName: there
-    EmailMessagePreviewResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the email message the preview was sent for.
-          examples:
-          - cle5f7g9h1i3j5k7l9m1n3p5
-      required:
-      - id
-      examples:
-      - id: cle5f7g9h1i3j5k7l9m1n3p5
-    EmailMessageGuardianResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          description: Validation errors. These must be resolved before the email can be published.
-          items:
-            $ref: '#/components/schemas/GuardianRule'
-        warnings:
-          type: array
-          description: Validation warnings. These are advisory and do not block publishing.
-          items:
-            $ref: '#/components/schemas/GuardianRule'
-      required:
-      - errors
-      - warnings
-      example:
-        errors:
-        - rule: missingButtonHrefs
-          title: Missing button link
-          description: Buttons won't work without href value
-          items:
-          - label: Click here
-        - rule: missingLinkHrefs
-          title: Missing text link
-          description: Links won't work without href value
-          items:
-          - label: See more
-        warnings: []
-    EmailMessageFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Email message not found.
   securitySchemes:
     apiKey:
       type: http

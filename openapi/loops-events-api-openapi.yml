@@ -64,30 +64,15 @@ paths:
       - apiKey: []
 components:
   schemas:
-    EventSuccessResponse:
+    MailingListSubscriptions:
       type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-      required:
-      - success
-    IdempotencyKeyFailureResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-      required:
-      - success
-      - message
+      description: 'Manage mailing list subscriptions.
+
+
+        Include key-value pairs of mailing list IDs and a `boolean` denoting if the contact should be added (`true`) or removed (`false`) from the list.'
       examples:
-      - success: false
-        message: Idempotency key already used with a different request body.
+      - cm06f5v0e45nf0ml5754o9cix: true
+        cm16k73gq014h0mmj5b6jdi9r: false
     EventFailureResponse:
       type: object
       properties:
@@ -105,6 +90,15 @@ components:
       examples:
       - success: false
         message: Contact not found.
+    EventSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+      required:
+      - success
     EventRequest:
       type: object
       required:
@@ -151,15 +145,21 @@ components:
           plan: pro
         mailingLists:
           clm2k8j4h6g0f8d6s4a2b0z8: true
-    MailingListSubscriptions:
+    IdempotencyKeyFailureResponse:
       type: object
-      description: 'Manage mailing list subscriptions.
-
-
-        Include key-value pairs of mailing list IDs and a `boolean` denoting if the contact should be added (`true`) or removed (`false`) from the list.'
+      properties:
+        success:
+          type: boolean
+          examples:
+          - false
+        message:
+          type: string
+      required:
+      - success
+      - message
       examples:
-      - cm06f5v0e45nf0ml5754o9cix: true
-        cm16k73gq014h0mmj5b6jdi9r: false
+      - success: false
+        message: Idempotency key already used with a different request body.
   securitySchemes:
     apiKey:
       type: http

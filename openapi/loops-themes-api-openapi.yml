@@ -173,78 +173,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    ThemeFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Theme not found.
-    Pagination:
-      type: object
-      properties:
-        totalResults:
-          type: number
-          examples:
-          - 2
-        returnedResults:
-          type: number
-          examples:
-          - 2
-        perPage:
-          type: number
-          examples:
-          - 20
-        totalPages:
-          type: number
-          examples:
-          - 1
-        nextCursor:
-          type:
-          - string
-          - 'null'
-          examples:
-          - null
-        nextPage:
-          type:
-          - string
-          - 'null'
-          examples:
-          - null
-      required:
-      - totalResults
-      - returnedResults
-      - perPage
-      - totalPages
-      - nextCursor
-      - nextPage
-      examples:
-      - totalResults: 2
-        returnedResults: 2
-        perPage: 20
-        totalPages: 1
-        nextCursor: null
-        nextPage: null
-    CreateThemeBody:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The theme name.
-          examples:
-          - Dark mode
-        styles:
-          description: Style attributes for the theme. Attributes use the same names as the LMX [`<Style />`](/creating-emails/lmx#document-styles) tag attributes.
-          $ref: '#/components/schemas/ThemeStyles'
-      required:
-      - name
-      examples:
-      - name: Dark mode
-        styles:
-          backgroundColor: '#111827'
-          bodyColor: '#1f2937'
     ListThemesResponse:
       type: object
       properties:
@@ -311,6 +239,51 @@ components:
           isDefault: true
           createdAt: 2025-06-29 07:47:39.370000+00:00
           updatedAt: 2025-06-29 07:47:39.370000+00:00
+    Pagination:
+      type: object
+      properties:
+        totalResults:
+          type: number
+          examples:
+          - 2
+        returnedResults:
+          type: number
+          examples:
+          - 2
+        perPage:
+          type: number
+          examples:
+          - 20
+        totalPages:
+          type: number
+          examples:
+          - 1
+        nextCursor:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+        nextPage:
+          type:
+          - string
+          - 'null'
+          examples:
+          - null
+      required:
+      - totalResults
+      - returnedResults
+      - perPage
+      - totalPages
+      - nextCursor
+      - nextPage
+      examples:
+      - totalResults: 2
+        returnedResults: 2
+        perPage: 20
+        totalPages: 1
+        nextCursor: null
+        nextPage: null
     UpdateThemeResponse:
       allOf:
       - $ref: '#/components/schemas/ThemeResponse'
@@ -368,6 +341,33 @@ components:
         createdAt: 2025-06-29 07:47:39.370000+00:00
         updatedAt: 2025-06-29 07:47:39.370000+00:00
         affectedEmailCount: 12
+    ThemeFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Theme not found.
+    CreateThemeBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The theme name.
+          examples:
+          - Dark mode
+        styles:
+          description: Style attributes for the theme. Attributes use the same names as the LMX [`<Style />`](/creating-emails/lmx#document-styles) tag attributes.
+          $ref: '#/components/schemas/ThemeStyles'
+      required:
+      - name
+      examples:
+      - name: Dark mode
+        styles:
+          backgroundColor: '#111827'
+          bodyColor: '#1f2937'
     ThemeResponse:
       type: object
       properties:

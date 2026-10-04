@@ -287,20 +287,6 @@ paths:
       - apiKey: []
 components:
   schemas:
-    ContactDeleteResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - true
-        message:
-          type: string
-          examples:
-          - Contact deleted.
-      required:
-      - success
-      - message
     MailingListSubscriptions:
       type: object
       description: 'Manage mailing list subscriptions.
@@ -310,28 +296,23 @@ components:
       examples:
       - cm06f5v0e45nf0ml5754o9cix: true
         cm16k73gq014h0mmj5b6jdi9r: false
-    ContactRequest:
-      allOf:
-      - $ref: '#/components/schemas/ContactFields'
-      - type: object
-        required:
-        - email
-    ContactSuppressionRemovalQuota:
+    ContactDeleteRequest:
       type: object
       properties:
-        limit:
-          type: number
-          description: The number of suppression removals allowed in a rolling 30 day period.
+        email:
+          type: string
           examples:
-          - 100
-        remaining:
-          type: number
-          description: The remaining number of suppression removals left in the current 30 day period.
+          - alex@company.com
+        userId:
+          type: string
           examples:
-          - 10
+          - usr_7f8e9d0c1b2a
       required:
-      - limit
-      - remaining
+      - email
+      - userId
+      examples:
+      - email: alex@company.com
+        userId: usr_7f8e9d0c1b2a
     ContactUpdateRequest:
       allOf:
       - $ref: '#/components/schemas/ContactFields'
@@ -366,6 +347,23 @@ components:
         mailingLists:
           clm2k8j4h6g0f8d6s4a2b0z8: true
         favoriteColor: blue
+    ContactSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          examples:
+          - true
+        id:
+          type: string
+          examples:
+          - clh3k9m2p4q6r8s0t2v4x6z8
+      required:
+      - success
+      - id
+      examples:
+      - success: true
+        id: clh3k9m2p4q6r8s0t2v4x6z8
     ContactFields:
       type: object
       properties:
@@ -419,23 +417,6 @@ components:
         mailingLists:
           clm2k8j4h6g0f8d6s4a2b0z8: true
         favoriteColor: blue
-    ContactFailureResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          examples:
-          - false
-        message:
-          type: string
-          examples:
-          - Invalid email address.
-      required:
-      - success
-      - message
-      examples:
-      - success: false
-        message: Invalid email address.
     ContactSuppressionStatusResponse:
       type: object
       properties:
@@ -476,40 +457,41 @@ components:
         removalQuota:
           limit: 5
           remaining: 5
-    ContactDeleteRequest:
+    ContactSuppressionRemoveResponse:
       type: object
       properties:
-        email:
+        success:
+          type: boolean
+          description: Whether the suppression removal was successful.
+          examples:
+          - true
+        message:
           type: string
           examples:
-          - alex@company.com
-        userId:
-          type: string
-          examples:
-          - usr_7f8e9d0c1b2a
+          - Email removed from suppression list.
+        removalQuota:
+          $ref: '#/components/schemas/ContactSuppressionRemovalQuota'
       required:
-      - email
-      - userId
-      examples:
-      - email: alex@company.com
-        userId: usr_7f8e9d0c1b2a
-    ContactSuccessResponse:
+      - success
+      - message
+      - removalQuota
+    ContactFailureResponse:
       type: object
       properties:
         success:
           type: boolean
           examples:
-          - true
-        id:
+          - false
+        message:
           type: string
           examples:
-          - clh3k9m2p4q6r8s0t2v4x6z8
+          - Invalid email address.
       required:
       - success
-      - id
+      - message
       examples:
-      - success: true
-        id: clh3k9m2p4q6r8s0t2v4x6z8
+      - success: false
+        message: Invalid email address.
     Contact:
       type: object
       properties:
@@ -588,24 +570,42 @@ components:
         mailingLists:
           clm2k8j4h6g0f8d6s4a2b0z8: true
         optInStatus: accepted
-    ContactSuppressionRemoveResponse:
+    ContactDeleteResponse:
       type: object
       properties:
         success:
           type: boolean
-          description: Whether the suppression removal was successful.
           examples:
           - true
         message:
           type: string
           examples:
-          - Email removed from suppression list.
-        removalQuota:
-          $ref: '#/components/schemas/ContactSuppressionRemovalQuota'
+          - Contact deleted.
       required:
       - success
       - message
-      - removalQuota
+    ContactRequest:
+      allOf:
+      - $ref: '#/components/schemas/ContactFields'
+      - type: object
+        required:
+        - email
+    ContactSuppressionRemovalQuota:
+      type: object
+      properties:
+        limit:
+          type: number
+          description: The number of suppression removals allowed in a rolling 30 day period.
+          examples:
+          - 100
+        remaining:
+          type: number
+          description: The remaining number of suppression removals left in the current 30 day period.
+          examples:
+          - 10
+      required:
+      - limit
+      - remaining
   securitySchemes:
     apiKey:
       type: http
