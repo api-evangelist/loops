@@ -85,3 +85,18 @@ capabilities_documented:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+rfc9728:
+  endpoint: https://mcp.loops.so
+  metadata_url: https://mcp.loops.so/.well-known/oauth-protected-resource
+  discovered_via: WWW-Authenticate resource_metadata on an anonymous POST initialize
+  fetched: '2026-09-25'
+  http_status: 200
+  content_type: application/json
+  document:
+    resource: https://mcp.loops.so/
+    authorization_servers:
+    - https://app.loops.so
+    scopes_supported:
+    - mcp
+    bearer_methods_supported:
+    - header
