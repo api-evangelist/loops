@@ -1,0 +1,441 @@
+generated: '2026-10-12'
+method: searched
+source:
+- https://zapier.com/apps/loops/integrations
+checked:
+- https://composio.dev/toolkits/loops
+- https://monid.ai/tools/loops
+- https://n8n.io/integrations/loops/
+- https://zapier.com/apps/loops/integrations
+summary: null
+marketplace_apps:
+- marketplace: zapier
+  channel: ipaas-listing
+  app: loops
+  url: https://zapier.com/apps/loops/integrations
+  external_url: https://loops.so/
+  partner_tier: GOLD
+  triggers:
+  - key: campaign_sent
+    label: Campaign Email Sent
+  - key: contact_list_subscribed
+    label: Contact Subscribed to Mailing List
+  - key: contact_list_unsubscribe
+    label: Contact Unsubscribed From Mailing List
+  - key: contact_unsubscribed
+    label: Contact Unsubscribed
+  - key: create_contact
+    label: Contact Created
+  - key: delete_contact
+    label: Contact Deleted
+  - key: loop_sent
+    label: Workflow Email Sent
+  - key: transactional_sent
+    label: Transactional Email Sent
+  actions:
+  - key: add_contact
+    label: Add Contact
+  - key: delete_contact
+    label: Delete Contact
+  - key: send_event
+    label: Send Event
+  - key: send_transactional
+    label: Send Transactional Email
+  - key: update_contact
+    label: Update Contact
+  searches:
+  - key: find_contact
+    label: Find Contact
+edges:
+- partner_name: Typeform
+  partner: typeform
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/typeform
+  direction: third-party
+  category: Forms & Surveys
+  partner_url: https://www.typeform.com/signup?utm_medium=referral&utm_source=zapier&utm_campaign=zapier_integration&utm_content=marketplace
+- partner_name: Tally
+  partner: tally
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/tally
+  direction: third-party
+  category: Forms & Surveys
+  partner_url: https://try.tally.so/zapier
+- partner_name: Airtable
+  partner: airtable
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/airtable
+  direction: third-party
+  category: Databases
+  partner_url: https://airtable.com/
+- partner_name: HubSpot
+  partner: hubspot
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/hubspot
+  direction: third-party
+  category: Marketing Automation
+  partner_url: http://www.hubspot.com/
+- partner_name: Attio
+  partner: attio
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/attio
+  direction: third-party
+  category: CRM (Customer Relationship Management)
+  partner_url: https://attio.com/
+- partner_name: Webflow
+  partner: webflow
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/webflow
+  direction: third-party
+  category: Website Builders
+  partner_url: https://webflow.com/
+- partner_name: Lemon Squeezy
+  partner: lemon-squeezy
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/lemon-squeezy
+  direction: third-party
+  category: eCommerce
+  partner_url: https://www.lemonsqueezy.com/
+- partner_name: Notion
+  partner: notion
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/notion
+  direction: third-party
+  category: Task Management
+  partner_url: https://www.notion.so/
+- partner_name: Formspark
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/formspark
+  direction: third-party
+  category: Forms & Surveys
+  partner_url: https://formspark.io/
+- partner_name: PostHog
+  partner: posthog
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/posthog
+  direction: third-party
+  category: Analytics
+  partner_url: https://posthog.com/
+- partner_name: Facebook Lead Ads
+  partner: facebook-lead-ads
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/facebook-lead-ads
+  direction: third-party
+  category: Ads & Conversion
+  partner_url: https://www.facebook.com/business/ads/lead-ads
+- partner_name: Calendly
+  partner: calendly
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/calendly
+  direction: third-party
+  category: Scheduling & Booking
+  partner_url: https://calendly.com/?utm_medium=partner&utm_source=zapier&utm_campaign=main_partner_page&utm_content=main_inbound_link
+- partner_name: Circle
+  partner: circle-community
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/circle
+  direction: third-party
+  category: CRM (Customer Relationship Management)
+  partner_url: https://circle.so/
+- partner_name: Google Forms
+  partner: google-forms
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/google-forms
+  direction: third-party
+  category: Forms & Surveys
+  partner_url: http://google.com/
+- partner_name: Google Sheets
+  partner: google-sheets
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/google-sheets
+  direction: third-party
+  category: Google
+  partner_url: http://sheets.google.com/
+- partner_name: Firebase / Firestore
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/firebase
+  direction: third-party
+  category: Databases
+  partner_url: http://www.firebase.com/
+- partner_name: Fillout Forms
+  partner: fillout
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/fillout
+  direction: third-party
+  category: Forms & Surveys
+  partner_url: https://www.fillout.com/?ref=zapier
+- partner_name: Slack
+  partner: slack
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/slack
+  direction: third-party
+  category: Team Chat
+  partner_url: https://slack.com/
+- partner_name: Squarespace Forms
+  partner: squarespace
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/squarespace-forms
+  direction: third-party
+  category: Forms & Surveys
+  partner_url: https://www.squarespace.com/
+- partner_name: Gmail
+  partner: gmail
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/gmail
+  direction: third-party
+  category: Email
+  partner_url: https://mail.google.com/
+- partner_name: Stripe
+  partner: stripe
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/stripe
+  direction: third-party
+  category: Payment Processing
+  partner_url: https://stripe.com/
+- partner_name: Facebook Lead Ads (for Business admins)
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/facebook-lead-ads-beta
+  direction: third-party
+  category: Ads & Conversion
+  partner_url: https://facebook.com/
+- partner_name: Gumroad
+  partner: gumroad
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/gumroad
+  direction: third-party
+  category: eCommerce
+  partner_url: https://gumroad.com/
+- partner_name: Intercom
+  partner: intercom
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/intercom
+  direction: third-party
+  category: Customer Support
+  partner_url: https://www.intercom.com/welcome-to-intercom?utm_source=external-website&utm_medium=partner&utm_campaign=20220503_all_oc_all_global_gl_all_all_par_extmktplc&utm_term=zapier
+- partner_name: Cal.com
+  partner: cal-com
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/calcom
+  direction: third-party
+  category: Scheduling & Booking
+  partner_url: http://go.cal.com/zapier
+- partner_name: Memberstack
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/memberstack
+  direction: third-party
+  category: Developer Tools
+  partner_url: https://www.memberstack.com/
+- partner_name: Mailchimp
+  partner: mailchimp
+  partner_match: name-exact
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/mailchimp
+  direction: third-party
+  category: Marketing Automation
+  partner_url: https://mailchimp.com/
+- partner_name: Bubble
+  partner: bubble
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/bubble
+  direction: third-party
+  category: App Builder
+  partner_url: https://bubble.io/
+- partner_name: Polar
+  partner: polar-sh
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/polar
+  direction: third-party
+  category: eCommerce
+  partner_url: https://polar.sh/
+- partner_name: monday.com
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/monday
+  direction: third-party
+  category: Project Management
+  partner_url: https://monday.com/
+templates:
+- title: Add new Google Sheets rows to Loops as contacts
+  url: https://zapier.com/apps/google-sheets/integrations/loops/1643791/add-new-google-sheets-rows-to-loops-as-contacts
+  apps:
+  - google-sheets
+  - loops
+- title: Update contacts in Loops when new contacts are added to a list in HubSpot
+  url: https://zapier.com/apps/hubspot/integrations/loops/1788143/update-contacts-in-loops-when-new-contacts-are-added-to-a-list-in-hubspot
+  apps:
+  - hubspot
+  - loops
+- title: Create new Loops contacts from new Tally submissions
+  url: https://zapier.com/apps/loops/integrations/tally/1608926/create-new-loops-contacts-from-new-tally-submissions
+  apps:
+  - tally
+  - loops
+- title: Add new Webflow form submissions as contacts in Loops
+  url: https://zapier.com/apps/loops/integrations/webflow/1601886/add-new-webflow-form-submissions-as-contacts-in-loops
+  apps:
+  - webflow
+  - loops
+- title: Add new Formspark submissions to Loops as contacts
+  url: https://zapier.com/apps/formspark/integrations/loops/1631677/add-new-formspark-submissions-to-loops-as-contacts
+  apps:
+  - formspark
+  - loops
+- title: Create new Loops contacts from new Notion database items
+  url: https://zapier.com/apps/loops/integrations/notion/1651525/create-new-loops-contacts-from-new-notion-database-items
+  apps:
+  - notion
+  - loops
+- title: Update contacts in Loops when new payments occur in Stripe
+  url: https://zapier.com/apps/loops/integrations/stripe/1723928/update-contacts-in-loops-when-new-payments-occur-in-stripe
+  apps:
+  - stripe
+  - loops
+- title: Create events in Loops for every new row in PostgreSQL
+  url: https://zapier.com/apps/loops/integrations/postgresql/1628910/create-events-in-loops-for-every-new-row-in-postgresql
+  apps:
+  - postgresql
+  - loops
+- title: '"add new contacts in Loops when contact property changes in HubSpot"'
+  url: https://zapier.com/apps/hubspot/integrations/loops/1603263/add-new-contacts-in-loops-when-contact-property-changes-in-hubspot
+  apps:
+  - hubspot
+  - loops
+- title: Update contacts in Loops when subscriptions are canceled in Stripe
+  url: https://zapier.com/apps/loops/integrations/stripe/1754347/update-contacts-in-loops-when-subscriptions-are-canceled-in-stripe
+  apps:
+  - stripe
+  - loops
+- title: Create new Loops contacts from new Cal.com bookings
+  url: https://zapier.com/apps/calcom/integrations/loops/1749252/create-new-loops-contacts-from-new-calcom-bookings
+  apps:
+  - calcom
+  - loops
+- title: Update Loops contacts when Notion database items are updated
+  url: https://zapier.com/apps/loops/integrations/notion/1621995/update-loops-contacts-when-notion-database-items-are-updated
+  apps:
+  - notion
+  - loops
+template_total: 172
