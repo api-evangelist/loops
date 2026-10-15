@@ -11,6 +11,7 @@ checked:
 - https://registry.modelcontextprotocol.io/v0/servers
 - https://www.twilio.com/docs/segment/connections/destinations/catalog/actions-loops
 - https://zapier.com/apps/loops/integrations
+- stripe/integrations/stripe-integration-edges.yml
 summary: null
 marketplace_apps:
 - marketplace: zapier
@@ -468,6 +469,23 @@ edges:
   - remote-domain
   detected_by: sweep-agent-tools.py
   first_seen: '2026-10-14'
+- partner_name: Stripe (own)
+  partner: stripe
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.stripe.com/apps/loops
+  mirror_of: stripe/integrations/stripe-integration-edges.yml
+  apps:
+  - Loops
+  listing_count: 1
+  detected: '2026-10-15'
+  detected_by: mirror-platform-listings.py
+  category: marketing
 templates:
 - title: Add new Google Sheets rows to Loops as contacts
   url: https://zapier.com/apps/google-sheets/integrations/loops/1643791/add-new-google-sheets-rows-to-loops-as-contacts
