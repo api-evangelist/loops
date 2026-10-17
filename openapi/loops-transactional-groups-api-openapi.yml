@@ -176,6 +176,48 @@ paths:
       - apiKey: []
 components:
   schemas:
+    GroupResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the group.
+          examples:
+          - clg7n5p3q1r9s7t5u3v1w9y7
+        name:
+          type: string
+          description: The name of the group.
+          examples:
+          - Onboarding
+        description:
+          type: string
+          description: The description of the group.
+          examples:
+          - Top of funnel campaigns
+        createdAt:
+          type: string
+          format: date-time
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+          description: ISO 8601 timestamp for when the group was created.
+        updatedAt:
+          type: string
+          format: date-time
+          examples:
+          - 2025-06-29 07:47:39.370000+00:00
+          description: ISO 8601 timestamp for when the group was last updated.
+      required:
+      - id
+      - name
+      - description
+      - createdAt
+      - updatedAt
+      examples:
+      - id: clg7n5p3q1r9s7t5u3v1w9y7
+        name: Onboarding
+        description: Top of funnel campaigns
+        createdAt: 2025-06-29 07:47:39.370000+00:00
+        updatedAt: 2025-06-29 07:47:39.370000+00:00
     Pagination:
       type: object
       properties:
@@ -221,6 +263,28 @@ components:
         totalPages: 1
         nextCursor: null
         nextPage: null
+    GroupFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+          - Group not found.
+      required:
+      - message
+      examples:
+      - message: Group not found.
+    UpdateGroupRequest:
+      type: object
+      description: At least one field must be provided.
+      properties:
+        name:
+          type: string
+          description: The group name. Cannot be the reserved name "Unsorted".
+        description:
+          type: string
+          description: A description for the group.
+      additionalProperties: false
     CreateGroupRequest:
       type: object
       properties:
@@ -240,17 +304,6 @@ components:
       examples:
       - name: Newsletters
         description: Monthly newsletter campaigns
-    GroupFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          examples:
-          - Group not found.
-      required:
-      - message
-      examples:
-      - message: Group not found.
     ListGroupsResponse:
       type: object
       properties:
@@ -282,59 +335,6 @@ components:
           description: ''
           createdAt: 2025-06-30 12:00:00+00:00
           updatedAt: 2025-06-30 12:00:00+00:00
-    UpdateGroupRequest:
-      type: object
-      description: At least one field must be provided.
-      properties:
-        name:
-          type: string
-          description: The group name. Cannot be the reserved name "Unsorted".
-        description:
-          type: string
-          description: A description for the group.
-      additionalProperties: false
-    GroupResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the group.
-          examples:
-          - clg7n5p3q1r9s7t5u3v1w9y7
-        name:
-          type: string
-          description: The name of the group.
-          examples:
-          - Onboarding
-        description:
-          type: string
-          description: The description of the group.
-          examples:
-          - Top of funnel campaigns
-        createdAt:
-          type: string
-          format: date-time
-          examples:
-          - 2025-06-29 07:47:39.370000+00:00
-          description: ISO 8601 timestamp for when the group was created.
-        updatedAt:
-          type: string
-          format: date-time
-          examples:
-          - 2025-06-29 07:47:39.370000+00:00
-          description: ISO 8601 timestamp for when the group was last updated.
-      required:
-      - id
-      - name
-      - description
-      - createdAt
-      - updatedAt
-      examples:
-      - id: clg7n5p3q1r9s7t5u3v1w9y7
-        name: Onboarding
-        description: Top of funnel campaigns
-        createdAt: 2025-06-29 07:47:39.370000+00:00
-        updatedAt: 2025-06-29 07:47:39.370000+00:00
   securitySchemes:
     apiKey:
       type: http

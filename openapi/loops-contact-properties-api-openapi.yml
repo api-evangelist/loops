@@ -78,40 +78,23 @@ paths:
       - apiKey: []
 components:
   schemas:
-    ContactPropertySuccessResponse:
+    ContactPropertyFailureResponse:
       type: object
       properties:
         success:
           type: boolean
           examples:
-          - true
+          - false
+        message:
+          type: string
+          examples:
+          - Property already exists.
       required:
       - success
-    ContactPropertyCreateRequest:
-      type: object
-      required:
-      - name
-      - type
-      description: There are a few [reserved names](https://loops.so/docs/contacts/properties#reserved-names) that you cannot use for contact properties.
-      properties:
-        name:
-          type: string
-          examples:
-          - favoriteColor
-          description: The name of the property. This should be in camelCase, like `planName` or `importDate`.
-        type:
-          type: string
-          examples:
-          - string
-          description: The type of property.
-          enum:
-          - string
-          - number
-          - boolean
-          - date
+      - message
       examples:
-      - name: favoriteColor
-        type: string
+      - success: false
+        message: Property already exists.
     ContactProperty:
       type: object
       properties:
@@ -137,23 +120,40 @@ components:
       - key
       - label
       - type
-    ContactPropertyFailureResponse:
+    ContactPropertyCreateRequest:
+      type: object
+      required:
+      - name
+      - type
+      description: There are a few [reserved names](https://loops.so/docs/contacts/properties#reserved-names) that you cannot use for contact properties.
+      properties:
+        name:
+          type: string
+          examples:
+          - favoriteColor
+          description: The name of the property. This should be in camelCase, like `planName` or `importDate`.
+        type:
+          type: string
+          examples:
+          - string
+          description: The type of property.
+          enum:
+          - string
+          - number
+          - boolean
+          - date
+      examples:
+      - name: favoriteColor
+        type: string
+    ContactPropertySuccessResponse:
       type: object
       properties:
         success:
           type: boolean
           examples:
-          - false
-        message:
-          type: string
-          examples:
-          - Property already exists.
+          - true
       required:
       - success
-      - message
-      examples:
-      - success: false
-        message: Property already exists.
   securitySchemes:
     apiKey:
       type: http

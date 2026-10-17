@@ -266,6 +266,15 @@ paths:
       - apiKey: []
 components:
   schemas:
+    EmailMessageFailureResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      examples:
+      - message: Email message not found.
     EmailMessagePreviewRequest:
       type: object
       properties:
@@ -308,6 +317,47 @@ components:
           planName: Pro
         dataVariables:
           loginUrl: https://app.company.com/login
+    EmailMessageGuardianResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          description: Validation errors. These must be resolved before the email can be published.
+          items:
+            $ref: '#/components/schemas/GuardianRule'
+        warnings:
+          type: array
+          description: Validation warnings. These are advisory and do not block publishing.
+          items:
+            $ref: '#/components/schemas/GuardianRule'
+      required:
+      - errors
+      - warnings
+      example:
+        errors:
+        - rule: missingButtonHrefs
+          title: Missing button link
+          description: Buttons won't work without href value
+          items:
+          - label: Click here
+        - rule: missingLinkHrefs
+          title: Missing text link
+          description: Links won't work without href value
+          items:
+          - label: See more
+        warnings: []
+    EmailMessagePreviewResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the email message the preview was sent for.
+          examples:
+          - cle5f7g9h1i3j5k7l9m1n3p5
+      required:
+      - id
+      examples:
+      - id: cle5f7g9h1i3j5k7l9m1n3p5
     UpdateEmailMessageRequest:
       type: object
       properties:
@@ -379,44 +429,6 @@ components:
         lmx: <Paragraph>Hello, {firstName}!</Paragraph>
         contactPropertiesFallbacks:
           firstName: there
-    EmailMessageFailureResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      examples:
-      - message: Email message not found.
-    EmailMessageGuardianResponse:
-      type: object
-      properties:
-        errors:
-          type: array
-          description: Validation errors. These must be resolved before the email can be published.
-          items:
-            $ref: '#/components/schemas/GuardianRule'
-        warnings:
-          type: array
-          description: Validation warnings. These are advisory and do not block publishing.
-          items:
-            $ref: '#/components/schemas/GuardianRule'
-      required:
-      - errors
-      - warnings
-      example:
-        errors:
-        - rule: missingButtonHrefs
-          title: Missing button link
-          description: Buttons won't work without href value
-          items:
-          - label: Click here
-        - rule: missingLinkHrefs
-          title: Missing text link
-          description: Links won't work without href value
-          items:
-          - label: See more
-        warnings: []
     GuardianRule:
       type: object
       properties:
@@ -469,18 +481,6 @@ components:
       - title
       - description
       - items
-    EmailMessagePreviewResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the email message the preview was sent for.
-          examples:
-          - cle5f7g9h1i3j5k7l9m1n3p5
-      required:
-      - id
-      examples:
-      - id: cle5f7g9h1i3j5k7l9m1n3p5
     EmailMessageResponse:
       type: object
       properties:
