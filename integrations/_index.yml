@@ -15,6 +15,7 @@
   evidence: https://zapier.com/apps/google-sheets/integrations/loops/1643791/add-new-google-sheets-rows-to-loops-as-contacts
   template: https://zapier.com/apps/google-sheets/integrations/loops/1643791/add-new-google-sheets-rows-to-loops-as-contacts
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: loops-update-contacts-in-loops-when-new-contacts-are-added-to-a-list-in-hubspot
@@ -29,6 +30,7 @@
   evidence: https://zapier.com/apps/hubspot/integrations/loops/1788143/update-contacts-in-loops-when-new-contacts-are-added-to-a-list-in-hubspot
   template: https://zapier.com/apps/hubspot/integrations/loops/1788143/update-contacts-in-loops-when-new-contacts-are-added-to-a-list-in-hubspot
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: loops-create-new-loops-contacts-from-new-tally-submissions
@@ -43,6 +45,7 @@
   evidence: https://zapier.com/apps/loops/integrations/tally/1608926/create-new-loops-contacts-from-new-tally-submissions
   template: https://zapier.com/apps/loops/integrations/tally/1608926/create-new-loops-contacts-from-new-tally-submissions
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: loops-add-new-webflow-form-submissions-as-contacts-in-loops
@@ -57,6 +60,7 @@
   evidence: https://zapier.com/apps/loops/integrations/webflow/1601886/add-new-webflow-form-submissions-as-contacts-in-loops
   template: https://zapier.com/apps/loops/integrations/webflow/1601886/add-new-webflow-form-submissions-as-contacts-in-loops
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: loops-add-new-formspark-submissions-to-loops-as-contacts
@@ -70,6 +74,7 @@
   evidence: https://zapier.com/apps/formspark/integrations/loops/1631677/add-new-formspark-submissions-to-loops-as-contacts
   template: https://zapier.com/apps/formspark/integrations/loops/1631677/add-new-formspark-submissions-to-loops-as-contacts
   source: template
+  relationship: ipaas-bridge
   status: pending-partner-spec
   arazzo: null
 - slug: loops-create-new-loops-contacts-from-new-notion-database-items
@@ -84,6 +89,7 @@
   evidence: https://zapier.com/apps/loops/integrations/notion/1651525/create-new-loops-contacts-from-new-notion-database-items
   template: https://zapier.com/apps/loops/integrations/notion/1651525/create-new-loops-contacts-from-new-notion-database-items
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: loops-update-contacts-in-loops-when-new-payments-occur-in-stripe
@@ -98,6 +104,7 @@
   evidence: https://zapier.com/apps/loops/integrations/stripe/1723928/update-contacts-in-loops-when-new-payments-occur-in-stripe
   template: https://zapier.com/apps/loops/integrations/stripe/1723928/update-contacts-in-loops-when-new-payments-occur-in-stripe
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: loops-add-new-contacts-in-loops-when-contact-property-changes-in-hubspot
@@ -112,6 +119,7 @@
   evidence: https://zapier.com/apps/hubspot/integrations/loops/1603263/add-new-contacts-in-loops-when-contact-property-changes-in-hubspot
   template: https://zapier.com/apps/hubspot/integrations/loops/1603263/add-new-contacts-in-loops-when-contact-property-changes-in-hubspot
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: loops-update-contacts-in-loops-when-subscriptions-are-canceled-in-stripe
@@ -126,6 +134,7 @@
   evidence: https://zapier.com/apps/loops/integrations/stripe/1754347/update-contacts-in-loops-when-subscriptions-are-canceled-in-stripe
   template: https://zapier.com/apps/loops/integrations/stripe/1754347/update-contacts-in-loops-when-subscriptions-are-canceled-in-stripe
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: loops-create-new-loops-contacts-from-new-cal-com-bookings
@@ -140,6 +149,7 @@
   evidence: https://zapier.com/apps/calcom/integrations/loops/1749252/create-new-loops-contacts-from-new-calcom-bookings
   template: https://zapier.com/apps/calcom/integrations/loops/1749252/create-new-loops-contacts-from-new-calcom-bookings
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
 - slug: loops-update-loops-contacts-when-notion-database-items-are-updated
@@ -154,267 +164,8 @@
   evidence: https://zapier.com/apps/loops/integrations/notion/1621995/update-loops-contacts-when-notion-database-items-are-updated
   template: https://zapier.com/apps/loops/integrations/notion/1621995/update-loops-contacts-when-notion-database-items-are-updated
   source: template
+  relationship: ipaas-bridge
   status: pending-generation
-  arazzo: null
-- slug: loops-typeform
-  label: Typeform
-  partner: typeform
-  partner_name: Typeform
-  category: Forms & Surveys
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/typeform
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-airtable
-  label: Airtable
-  partner: airtable
-  partner_name: Airtable
-  category: Databases
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/airtable
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-attio
-  label: Attio
-  partner: attio
-  partner_name: Attio
-  category: CRM (Customer Relationship Management)
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/attio
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-lemon-squeezy
-  label: Lemon Squeezy
-  partner: lemon-squeezy
-  partner_name: Lemon Squeezy
-  category: eCommerce
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/lemon-squeezy
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-posthog
-  label: PostHog
-  partner: posthog
-  partner_name: PostHog
-  category: Analytics
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/posthog
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-facebook-lead-ads
-  label: Facebook Lead Ads
-  partner: facebook-lead-ads
-  partner_name: Facebook Lead Ads
-  category: Ads & Conversion
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/facebook-lead-ads
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-calendly
-  label: Calendly
-  partner: calendly
-  partner_name: Calendly
-  category: Scheduling & Booking
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/calendly
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-circle
-  label: Circle
-  partner: circle-community
-  partner_name: Circle
-  category: CRM (Customer Relationship Management)
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/circle
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-google-forms
-  label: Google Forms
-  partner: google-forms
-  partner_name: Google Forms
-  category: Forms & Surveys
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/google-forms
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-firebase-firestore
-  label: Firebase / Firestore
-  partner_name: Firebase / Firestore
-  category: Databases
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/firebase
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: loops-fillout-forms
-  label: Fillout Forms
-  partner: fillout
-  partner_name: Fillout Forms
-  category: Forms & Surveys
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/fillout
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-slack
-  label: Slack
-  partner: slack
-  partner_name: Slack
-  category: Team Chat
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/slack
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-squarespace-forms
-  label: Squarespace Forms
-  partner: squarespace
-  partner_name: Squarespace Forms
-  category: Forms & Surveys
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/squarespace-forms
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-gmail
-  label: Gmail
-  partner: gmail
-  partner_name: Gmail
-  category: Email
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/gmail
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: loops-facebook-lead-ads-for-business-admins
-  label: Facebook Lead Ads (for Business admins)
-  partner_name: Facebook Lead Ads (for Business admins)
-  category: Ads & Conversion
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/facebook-lead-ads-beta
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: loops-gumroad
-  label: Gumroad
-  partner: gumroad
-  partner_name: Gumroad
-  category: eCommerce
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/gumroad
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: loops-intercom
-  label: Intercom
-  partner: intercom
-  partner_name: Intercom
-  category: Customer Support
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/intercom
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-memberstack
-  label: Memberstack
-  partner_name: Memberstack
-  category: Developer Tools
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/memberstack
-  source: edge
-  status: pending-partner-spec
-  arazzo: null
-- slug: loops-mailchimp
-  label: Mailchimp
-  partner: mailchimp
-  partner_name: Mailchimp
-  category: Marketing Automation
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/mailchimp
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-bubble
-  label: Bubble
-  partner: bubble
-  partner_name: Bubble
-  category: App Builder
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/bubble
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-polar
-  label: Polar
-  partner: polar-sh
-  partner_name: Polar
-  category: eCommerce
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/polar
-  source: edge
-  status: pending-generation
-  arazzo: null
-- slug: loops-monday-com
-  label: monday.com
-  partner_name: monday.com
-  category: Project Management
-  type: marketplace
-  marketplace: zapier
-  channel: ipaas-usage
-  evidence: https://zapier.com/apps/loops/integrations/monday
-  source: edge
-  status: pending-partner-spec
   arazzo: null
 - slug: loops-stripe-own
   label: Stripe (own)
@@ -604,4 +355,288 @@
     sources: false
     builder: Pipedream repo (component)
   status: not-a-workflow
+  arazzo: null
+- slug: loops-typeform
+  label: Typeform
+  partner: typeform
+  partner_name: Typeform
+  category: Forms & Surveys
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/typeform
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-airtable
+  label: Airtable
+  partner: airtable
+  partner_name: Airtable
+  category: Databases
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/airtable
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-attio
+  label: Attio
+  partner: attio
+  partner_name: Attio
+  category: CRM (Customer Relationship Management)
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/attio
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-lemon-squeezy
+  label: Lemon Squeezy
+  partner: lemon-squeezy
+  partner_name: Lemon Squeezy
+  category: eCommerce
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/lemon-squeezy
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-posthog
+  label: PostHog
+  partner: posthog
+  partner_name: PostHog
+  category: Analytics
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/posthog
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-facebook-lead-ads
+  label: Facebook Lead Ads
+  partner: facebook-lead-ads
+  partner_name: Facebook Lead Ads
+  category: Ads & Conversion
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/facebook-lead-ads
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-calendly
+  label: Calendly
+  partner: calendly
+  partner_name: Calendly
+  category: Scheduling & Booking
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/calendly
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-circle
+  label: Circle
+  partner: circle-community
+  partner_name: Circle
+  category: CRM (Customer Relationship Management)
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/circle
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-google-forms
+  label: Google Forms
+  partner: google-forms
+  partner_name: Google Forms
+  category: Forms & Surveys
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/google-forms
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-firebase-firestore
+  label: Firebase / Firestore
+  partner_name: Firebase / Firestore
+  category: Databases
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/firebase
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: loops-fillout-forms
+  label: Fillout Forms
+  partner: fillout
+  partner_name: Fillout Forms
+  category: Forms & Surveys
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/fillout
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-slack
+  label: Slack
+  partner: slack
+  partner_name: Slack
+  category: Team Chat
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/slack
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-squarespace-forms
+  label: Squarespace Forms
+  partner: squarespace
+  partner_name: Squarespace Forms
+  category: Forms & Surveys
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/squarespace-forms
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-gmail
+  label: Gmail
+  partner: gmail
+  partner_name: Gmail
+  category: Email
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/gmail
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: loops-facebook-lead-ads-for-business-admins
+  label: Facebook Lead Ads (for Business admins)
+  partner: facebook-lead-ads
+  partner_name: Facebook Lead Ads (for Business admins)
+  category: Ads & Conversion
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/facebook-lead-ads-beta
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-gumroad
+  label: Gumroad
+  partner: gumroad
+  partner_name: Gumroad
+  category: eCommerce
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/gumroad
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: loops-intercom
+  label: Intercom
+  partner: intercom
+  partner_name: Intercom
+  category: Customer Support
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/intercom
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-memberstack
+  label: Memberstack
+  partner_name: Memberstack
+  category: Developer Tools
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/memberstack
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-partner-spec
+  arazzo: null
+- slug: loops-mailchimp
+  label: Mailchimp
+  partner: mailchimp
+  partner_name: Mailchimp
+  category: Marketing Automation
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/mailchimp
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-bubble
+  label: Bubble
+  partner: bubble
+  partner_name: Bubble
+  category: App Builder
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/bubble
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-polar
+  label: Polar
+  partner: polar-sh
+  partner_name: Polar
+  category: eCommerce
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/polar
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
+  arazzo: null
+- slug: loops-monday-com
+  label: monday.com
+  partner: monday-com
+  partner_name: monday.com
+  category: Project Management
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/loops/integrations/monday
+  source: edge
+  relationship: ipaas-bridge
+  status: pending-generation
   arazzo: null
