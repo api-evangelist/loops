@@ -31,6 +31,7 @@ checked:
 - https://hex.pm/api
 - https://packagist.org/packages
 - https://pub.dev/api
+- bubble/integrations/bubble-integration-edges.yml
 summary: null
 marketplace_apps:
 - marketplace: zapier
@@ -71,23 +72,6 @@ marketplace_apps:
   - key: find_contact
     label: Find Contact
 edges:
-- partner_name: Stripe (own)
-  partner: stripe
-  partner_match: mirror
-  mirror_match: domain
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://marketplace.stripe.com/apps/loops
-  mirror_of: stripe/integrations/stripe-integration-edges.yml
-  apps:
-  - Loops
-  listing_count: 1
-  detected: '2026-10-15'
-  detected_by: mirror-platform-listings.py
-  category: marketing
 - partner_name: Go module proxy
   partner: null
   partner_match: null
@@ -751,6 +735,40 @@ edges:
     detected: '2026-10-22'
   detected_by: sweep-php-dart-elixir-package-registries.py
   first_seen: '2026-10-22'
+- partner_name: Stripe (own)
+  partner: stripe
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.stripe.com/apps/loops
+  mirror_of: stripe/integrations/stripe-integration-edges.yml
+  apps:
+  - Loops
+  listing_count: 1
+  detected: '2026-10-15'
+  detected_by: mirror-platform-listings.py
+  category: marketing
+- partner_name: Bubble (own)
+  partner: bubble
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://bubble.io/plugin/loops-1704117562175x705056703666192400
+  mirror_of: bubble/integrations/bubble-integration-edges.yml
+  apps:
+  - Loops
+  listing_count: 1
+  detected: '2026-10-23'
+  detected_by: mirror-platform-listings.py
+  category: Api
 templates:
 - title: Add new Google Sheets rows to Loops as contacts
   url: https://zapier.com/apps/google-sheets/integrations/loops/1643791/add-new-google-sheets-rows-to-loops-as-contacts

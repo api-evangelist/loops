@@ -167,19 +167,6 @@
   relationship: ipaas-bridge
   status: pending-generation
   arazzo: null
-- slug: loops-stripe-own
-  label: Stripe (own)
-  partner: stripe
-  partner_name: Stripe (own)
-  category: marketing
-  type: marketplace
-  marketplace: own
-  channel: partner-built
-  evidence: https://marketplace.stripe.com/apps/loops
-  source: edge
-  relationship: platform-app
-  status: not-a-workflow
-  arazzo: null
 - slug: loops-go-module-proxy
   label: Go module proxy
   partner_name: Go module proxy
@@ -714,5 +701,31 @@
       24 months'
     detected_by: sweep-php-dart-elixir-package-registries.py
     detected: '2026-10-22'
+  status: not-a-workflow
+  arazzo: null
+- slug: loops-stripe-own
+  label: Stripe (own)
+  partner: stripe
+  partner_name: Stripe (own)
+  category: marketing
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://marketplace.stripe.com/apps/loops
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: loops-bubble-own
+  label: Bubble (own)
+  partner: bubble
+  partner_name: Bubble (own)
+  category: Api
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://bubble.io/plugin/loops-1704117562175x705056703666192400
+  source: edge
+  relationship: platform-app
   status: not-a-workflow
   arazzo: null
