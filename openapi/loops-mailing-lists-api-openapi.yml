@@ -76,3 +76,9 @@ components:
     apiKey:
       type: http
       scheme: bearer
+x-provenance:
+  method: harvested
+  publisher: Loops
+  source: https://app.loops.so/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
